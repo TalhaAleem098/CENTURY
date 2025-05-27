@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://centuary.com
+
+# Sitemaps
+Sitemap: https://centuary.com/sitemap.xml

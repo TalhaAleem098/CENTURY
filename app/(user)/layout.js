@@ -1,7 +1,6 @@
-import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
-import { siteConfig } from "./metadata.config";
+import { siteConfig } from "../metadata.config";
 import LayoutClient from "@/components/LayoutClient";
 
 export const metadata = {
@@ -44,43 +43,34 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function userLayout({ children }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Century",
-    "description": siteConfig.description,
-    "url": siteConfig.siteUrl,
-    "potentialAction": {
+    name: "Century",
+    description: siteConfig.description,
+    url: siteConfig.siteUrl,
+    potentialAction: {
       "@type": "SearchAction",
-      "target": {
+      target: {
         "@type": "EntryPoint",
-        "urlTemplate": `${siteConfig.siteUrl}/search?q={search_term_string}`
+        urlTemplate: `${siteConfig.siteUrl}/search?q={search_term_string}`,
       },
-      "query-input": "required name=search_term_string"
+      "query-input": "required name=search_term_string",
     },
-    "sameAs": [
+    sameAs: [
       "https://facebook.com/century",
       "https://twitter.com/century",
-      "https://instagram.com/century"
-    ]
+      "https://instagram.com/century",
+    ],
   };
 
   return (
-    <html lang="en">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
-      </head>
-      <body>
-        <SessionProviderWrapper>
-            {children}
-        </SessionProviderWrapper>
-      </body>
-    </html>
+    <>
+      <SessionProviderWrapper>
+        <Ribon />
+        <LayoutClient>{children}</LayoutClient>
+      </SessionProviderWrapper>
+    </>
   );
 }

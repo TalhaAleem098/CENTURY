@@ -1,0 +1,344 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FiMail, FiPhone, FiMapPin, FiArrowUp } from "react-icons/fi";
+
+const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState("");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const currentYear = new Date().getFullYear();
+
+  // Show/hide scroll to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (!email) {
+      setSubscriptionStatus("Please enter a valid email address");
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubscriptionStatus("Please enter a valid email address");
+      return;
+    }
+    
+    // Simulate subscription (replace with actual API call)
+    setSubscriptionStatus("Thanks for subscribing!");
+    setEmail("");
+    
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      setSubscriptionStatus("");
+    }, 3000);
+  };
+
+  return (
+    <footer className="bg-gray-900 text-white">
+      {/* Newsletter Section */}
+      <div className="bg-black py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Stay Updated with Century Fashion
+            </h3>
+            <p className="text-gray-300 mb-8 text-lg">
+              Subscribe to our newsletter for exclusive offers, new arrivals, and fashion tips
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+                required
+              />
+              <button 
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              >
+                Subscribe
+              </button>
+            </form>
+            {subscriptionStatus && (
+              <p className={`mt-4 text-sm ${subscriptionStatus.includes("Thanks") ? "text-green-400" : "text-red-400"}`}>
+                {subscriptionStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="lg:col-span-1">
+            <div className="mb-6">
+              <h2 className="text-3xl font-bold text-white mb-4">Century</h2>
+              <p className="text-gray-300 leading-relaxed">
+                Your trusted premium fashion marketplace. Delivering quality, comfort, and style 
+                since our founding. Experience fashion that defines excellence.
+              </p>
+            </div>
+            
+            {/* Social Media */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
+              <div className="flex space-x-4">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                  aria-label="Facebook"
+                >
+                  <FaFacebookF className="text-sm" />
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter className="text-sm" />
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram className="text-sm" />
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedinIn className="text-sm" />
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                  aria-label="YouTube"
+                >
+                  <FaYoutube className="text-sm" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Shop All
+                </Link>
+              </li>
+              <li>
+                <Link href="/category" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Sale
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Product Categories */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Categories</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/category?type=hoodies" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Hoodies
+                </Link>
+              </li>
+              <li>
+                <Link href="/category?type=t-shirts" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  T-Shirts
+                </Link>
+              </li>
+              <li>
+                <Link href="/category?type=sweatshirts" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Sweatshirts
+                </Link>
+              </li>
+              <li>
+                <Link href="/category?type=oversized" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Oversized Tees
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?sale=true" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  Sale Items
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?new=true" className="text-gray-300 hover:text-green-500 transition-colors duration-200">
+                  New Arrivals
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Contact Info</h4>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <FiMapPin className="text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">
+                    123 Fashion Street<br />
+                    Style District, ST 12345<br />
+                    United States
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <FiPhone className="text-green-500 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">+1 (555) 123-4567</p>
+                  <p className="text-sm text-gray-400">Mon-Fri 9AM-6PM</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <FiMail className="text-green-500 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">support@century.com</p>
+                  <p className="text-sm text-gray-400">24/7 Support</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Customer Service Section */}
+      <div className="border-t border-gray-800">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7" />
+                </svg>
+              </div>
+              <h5 className="font-semibold mb-1">Free Shipping</h5>
+              <p className="text-sm text-gray-400">On orders over $50</p>
+            </div>
+            
+            <div>
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h5 className="font-semibold mb-1">Quality Guarantee</h5>
+              <p className="text-sm text-gray-400">100% authentic products</p>
+            </div>
+            
+            <div>
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h5 className="font-semibold mb-1">Easy Returns</h5>
+              <p className="text-sm text-gray-400">30-day return policy</p>
+            </div>
+            
+            <div>
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.18l6.364 6.364a9 9 0 010 12.728L12 21.82l-6.364-6.364a9 9 0 010-12.728L12 2.18z" />
+                </svg>
+              </div>
+              <h5 className="font-semibold mb-1">24/7 Support</h5>
+              <p className="text-sm text-gray-400">Always here to help</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Footer */}
+      <div className="border-t border-gray-800 bg-black">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-center md:text-left">
+              <p className="text-gray-400">
+                © {currentYear} Century Fashion Store. All rights reserved.
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
+              <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors duration-200">
+                Privacy Policy
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors duration-200">
+                Terms of Service
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors duration-200">
+                Cookie Policy
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors duration-200">
+                Sitemap
+              </Link>
+            </div>          </div>
+        </div>
+      </div>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 w-12 h-12 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-50"
+          aria-label="Scroll to top"
+        >
+          <FiArrowUp className="text-lg" />
+        </button>
+      )}
+    </footer>
+  );
+};
+
+export default Footer;

@@ -1,26 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+*, body>div {
+  font-family: 'Raleway', sans-serif !important;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Sidebar Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Smooth scrollbar for sidebar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Contact Form Animations */
+@keyframes inputFocus {
+  from {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  to {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+}
+
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.contact-input:focus {
+  animation: inputFocus 0.3s ease-out;
+}
+
+.contact-button:hover {
+  animation: buttonPulse 0.6s ease-in-out;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Hero Section Animations */
+@keyframes heroFade {
+  0% { opacity: 0; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-hero-fade {
+  animation: heroFade 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes heroContent {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-hero-content > * {
+  animation: heroContent 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.animate-hero-title { animation-delay: 0.1s; }
+.animate-hero-subtitle { animation-delay: 0.2s; }
+.animate-hero-desc { animation-delay: 0.3s; }
+.animate-hero-cta { animation-delay: 0.4s; }
+
+/* Contact Page Specific Animations */
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cardHover {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-4px) scale(1.02); }
+}
+
+@keyframes buttonHover {
+  0% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+  100% { transform: scale(1.05); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+}
+
+@keyframes socialHover {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.1) rotate(5deg); }
+}
+
+/* Animation utility classes */
+.successPulse {
+  animation: successPulse 0.6s ease-in-out;
+}
+
+.cardHover:hover {
+  animation: cardHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.buttonHover:hover {
+  animation: buttonHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.socialHover:hover {
+  animation: socialHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.heroFade {
+  animation: heroFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.heroContent {
+  animation: heroContent 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
