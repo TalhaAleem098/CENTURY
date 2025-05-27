@@ -79,6 +79,8 @@ export default function AdminLoginPage() {
     try {
       const baseUrl =
         process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        console.log("We are submitting to : ", process.env.NEXT_PUBLIC_BASE_URL)
+        console.log("Pay load shall be like", email, password);
       const res = await fetch(`${baseUrl}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
