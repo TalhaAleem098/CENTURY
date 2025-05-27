@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
     <nav className="w-full bg-white shadow-md py-4 px-8 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <Image
-          src="/century.png"
+          src="/century.svg"
           alt="Brand Logo"
           width={140}
           height={140}
@@ -141,7 +141,7 @@ export default function AdminLoginPage() {
             <Image
               width={150}
               height={150}
-              src="/century.png"
+              src="/century.svg"
               alt="Century Logo"
             />
             <p className="mt-3 text-center text-gray-500 text-sm font-light max-w-xs">
