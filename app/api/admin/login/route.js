@@ -37,8 +37,16 @@ export async function POST(req) {
       JWT_SECRET,
       { expiresIn: '1h' }
     );
-    const response = NextResponse.json({ success: true, message: 'Admin logged in successfully.' });
+    // Set token in both Authorization header and as a cookie
+    const response = NextResponse.json({ success: true, message: 'Admin logged in successfully.', token });
     response.headers.set('Authorization', `Bearer ${token}`);
+    response.cookies.set('admin_token', token, {
+      httpOnly: false, // Allow access from JS for localStorage sync
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60, // 1 hour
+    });
     return response;
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

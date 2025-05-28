@@ -56,46 +56,58 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="p-6 space-y-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-
-      {/* KPI Cards - Dark Modern Style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="sm:p-4 md:p-6 space-y-8 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl mt-10 md:mt-2 font-bold text-gray-800">Admin Dashboard</h1>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {[
-          { label: "Total Sales", value: "$102,450", color: "text-green-400" },
-          { label: "Total Orders", value: "2,134", color: "text-blue-400" },
+          {
+            label: "Total Sales",
+            value: "$102,450",
+            color: "text-green-400",
+          },
+          {
+            label: "Total Orders",
+            value: "2,134",
+            color: "text-blue-400",
+          },
           {
             label: "Total Customers",
             value: "1,430",
             color: "text-purple-400",
           },
-          { label: "Refunds", value: "64", color: "text-red-400" },
+          {
+            label: "Refunds",
+            value: "64",
+            color: "text-red-400",
+          },
         ].map(({ label, value, color }) => (
           <div
             key={label}
-            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg border border-gray-800 hover:shadow-xl transition-all duration-300"
+            className="bg-gray-900 text-white p-4 sm:p-5 rounded-lg shadow-lg border border-gray-800 hover:shadow-xl transition-all duration-300"
           >
-            <h3 className="text-sm text-gray-400">{label}</h3>
-            <p className={`mt-2 text-3xl font-semibold ${color}`}>{value}</p>
+            <h3 className="text-xs sm:text-sm text-gray-400">{label}</h3>
+            <p
+              className={`mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold ${color}`}
+            >
+              {value}
+            </p>
           </div>
         ))}
       </div>
-      {/* Graphs */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Sales Chart */}
-        <div className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-6">
+      <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
+        <div className="w-full bg-gradient-to-br from-white to-gray-50 p-2 sm:p-4 md:p-6 xl:p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div className="flex items-center justify-between mb-2 sm:mb-4 md:mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
                 Monthly Sales
               </h2>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs sm:text-sm">
                 Revenue performance over time
               </p>
             </div>
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl shadow-md">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-md flex items-center justify-center w-10 h-10">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -109,77 +121,101 @@ const Page = () => {
               </svg>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart
-              data={dummySalesData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          <div className="flex-1 flex flex-col m-0 p-0 justify-center">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={200}
+              minHeight={200}
             >
-              <defs>
-                <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#e5e7eb"
-                strokeOpacity={0.6}
-              />
-              <XAxis
-                dataKey="month"
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-              />
-              <YAxis
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-                tickFormatter={(value) => `$${value / 1000}k`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1f2937",
-                  border: "none",
-                  borderRadius: "12px",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                  color: "#fff",
-                }}
-                labelStyle={{ color: "#e5e7eb" }}
-                formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
-              />
-              <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-              <Line
-                type="monotone"
-                dataKey="sales"
-                stroke="#10b981"
-                strokeWidth={4}
-                name="Sales ($)"
-                dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
-                activeDot={{
-                  r: 8,
-                  fill: "#10b981",
-                  stroke: "#fff",
-                  strokeWidth: 3,
-                }}
-                fill="url(#salesGradient)"
-              />
-            </LineChart>
-          </ResponsiveContainer>
+              <LineChart
+                data={dummySalesData}
+                margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient
+                    id="salesGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  strokeOpacity={0.6}
+                />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                />
+                <YAxis
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                  tickFormatter={(value) => `$${value / 1000}k`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1f2937",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                    color: "#fff",
+                  }}
+                  labelStyle={{ color: "#e5e7eb" }}
+                  formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
+                />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: "10px",
+                    textAlign: "center",
+                    width: "100%",
+                  }}
+                  iconType="circle"
+                  align="center"
+                  verticalAlign="top"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="sales"
+                  stroke="#10b981"
+                  strokeWidth={4}
+                  name="Sales ($)"
+                  dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
+                  activeDot={{
+                    r: 8,
+                    fill: "#10b981",
+                    stroke: "#fff",
+                    strokeWidth: 3,
+                  }}
+                  fill="url(#salesGradient)"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Orders Chart */}
-        <div className="bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-6">
+        <div className="w-full bg-gradient-to-br from-white to-blue-50 p-2 sm:p-4 md:p-6 xl:p-8 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div className="flex items-center justify-between mb-2 sm:mb-4 md:mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
                 Monthly Orders
               </h2>
-              <p className="text-gray-500 text-sm">Order volume trends</p>
+              <p className="text-gray-500 text-xs sm:text-sm">
+                Order volume trends
+              </p>
             </div>
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-xl shadow-md">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-md flex items-center justify-center w-10 h-10">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -193,81 +229,103 @@ const Page = () => {
               </svg>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart
-              data={dummySalesData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          <div className="flex-1 flex flex-col justify-center">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={200}
+              minHeight={200}
             >
-              <defs>
-                <linearGradient id="ordersGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#e5e7eb"
-                strokeOpacity={0.6}
-              />
-              <XAxis
-                dataKey="month"
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-              />
-              <YAxis
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1e40af",
-                  border: "none",
-                  borderRadius: "12px",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                  color: "#fff",
-                }}
-                labelStyle={{ color: "#e5e7eb" }}
-                formatter={(value) => [value.toLocaleString(), "Orders"]}
-              />
-              <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-              <Line
-                type="monotone"
-                dataKey="orders"
-                stroke="#3b82f6"
-                strokeWidth={4}
-                name="Orders"
-                dot={{ fill: "#3b82f6", strokeWidth: 2, r: 6 }}
-                activeDot={{
-                  r: 8,
-                  fill: "#3b82f6",
-                  stroke: "#fff",
-                  strokeWidth: 3,
-                }}
-                fill="url(#ordersGradient)"
-              />{" "}
-            </LineChart>
-          </ResponsiveContainer>
+              <LineChart
+                data={dummySalesData}
+                margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient
+                    id="ordersGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  strokeOpacity={0.6}
+                />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                />
+                <YAxis
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1e40af",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                    color: "#fff",
+                  }}
+                  labelStyle={{ color: "#e5e7eb" }}
+                  formatter={(value) => [value.toLocaleString(), "Orders"]}
+                />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: "10px",
+                    textAlign: "center",
+                    width: "100%",
+                  }}
+                  iconType="circle"
+                  align="center"
+                  verticalAlign="top"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="orders"
+                  stroke="#3b82f6"
+                  strokeWidth={4}
+                  name="Orders"
+                  dot={{ fill: "#3b82f6", strokeWidth: 2, r: 6 }}
+                  activeDot={{
+                    r: 8,
+                    fill: "#3b82f6",
+                    stroke: "#fff",
+                    strokeWidth: 3,
+                  }}
+                  fill="url(#ordersGradient)"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
       {/* Additional Enhanced Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="w-full  grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
         {/* Category Sales - Bar Chart */}
-        <div className="bg-gradient-to-br from-white to-purple-50 p-8 rounded-2xl shadow-lg border border-purple-100 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-6">
+        <div className="w-full bg-gradient-to-br from-white to-purple-50 p-2 sm:p-4 md:p-6 xl:p-8 rounded-2xl shadow-lg border border-purple-100 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div className="flex items-center justify-between mb-2 sm:mb-4 md:mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
                 Sales by Category
               </h2>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs sm:text-sm">
                 Revenue distribution across categories
               </p>
             </div>
-            <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-3 rounded-xl shadow-md">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-md flex items-center justify-center w-10 h-10">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -281,92 +339,109 @@ const Page = () => {
               </svg>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart
-              data={categoryData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          <div className="flex-1 flex flex-col justify-center">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={200}
+              minHeight={200}
             >
-              <defs>
-                {categoryData.map((entry, index) => (
-                  <linearGradient
-                    key={`gradient-${index}`}
-                    id={`barGradient-${index}`}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={entry.color}
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={entry.color}
-                      stopOpacity={0.4}
-                    />
-                  </linearGradient>
-                ))}
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#e5e7eb"
-                strokeOpacity={0.6}
-              />
-              <XAxis
-                dataKey="name"
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-              />
-              <YAxis
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-                tickFormatter={(value) => `$${value / 1000}k`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#7c3aed",
-                  border: "none",
-                  borderRadius: "12px",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                  color: "#fff",
-                }}
-                labelStyle={{ color: "#e5e7eb" }}
-                formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
-              />
-              <Bar
-                dataKey="sales"
-                radius={[8, 8, 0, 0]}
-                fill={(entry, index) => `url(#barGradient-${index})`}
+              <BarChart
+                data={categoryData}
+                margin={{ top: 20, right: 0, left: 0, bottom: 5 }}
               >
-                {categoryData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={`url(#barGradient-${index})`}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                <defs>
+                  {categoryData.map((entry, index) => (
+                    <linearGradient
+                      key={`gradient-${index}`}
+                      id={`barGradient-${index}`}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={entry.color}
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={entry.color}
+                        stopOpacity={0.4}
+                      />
+                    </linearGradient>
+                  ))}
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  strokeOpacity={0.6}
+                />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                />
+                <YAxis
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                  tickFormatter={(value) => `$${value / 1000}k`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#7c3aed",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                    color: "#fff",
+                  }}
+                  labelStyle={{ color: "#e5e7eb" }}
+                  formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
+                />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: "10px",
+                    textAlign: "center",
+                    width: "100%",
+                  }}
+                  iconType="circle"
+                  align="center"
+                  verticalAlign="top"
+                />
+                <Bar
+                  dataKey="sales"
+                  radius={[8, 8, 0, 0]}
+                  fill={(entry, index) => `url(#barGradient-${index})`}
+                >
+                  {categoryData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={`url(#barGradient-${index})`}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Revenue vs Profit - Area Chart */}
-        <div className="bg-gradient-to-br from-white to-orange-50 p-8 rounded-2xl shadow-lg border border-orange-100 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-6">
+        <div className="w-full bg-gradient-to-br from-white to-orange-50 p-2 sm:p-4 md:p-6 xl:p-8 rounded-2xl shadow-lg border border-orange-100 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div className="flex items-center justify-between mb-2 sm:mb-4 md:mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
                 Revenue & Profit
               </h2>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs sm:text-sm">
                 Quarterly performance comparison
               </p>
             </div>
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-md">
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-md flex items-center justify-center w-10 h-10">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -380,185 +455,180 @@ const Page = () => {
               </svg>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={350}>
-            <AreaChart
-              data={revenueData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          <div className="flex-1 flex flex-col justify-center">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={200}
+              minHeight={200}
             >
-              <defs>
-                <linearGradient
-                  id="revenueGradient"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1} />
-                </linearGradient>
-                <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#e5e7eb"
-                strokeOpacity={0.6}
-              />
-              <XAxis
-                dataKey="period"
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-              />
-              <YAxis
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={{ stroke: "#d1d5db" }}
-                tickLine={{ stroke: "#d1d5db" }}
-                tickFormatter={(value) => `$${value / 1000}k`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ea580c",
-                  border: "none",
-                  borderRadius: "12px",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                  color: "#fff",
-                }}
-                labelStyle={{ color: "#e5e7eb" }}
-                formatter={(value, name) => [
-                  `$${value.toLocaleString()}`,
-                  name === "revenue" ? "Revenue" : "Profit",
-                ]}
-              />
-              <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-              <Area
-                type="monotone"
-                dataKey="revenue"
-                stackId="1"
-                stroke="#f59e0b"
-                fill="url(#revenueGradient)"
-                strokeWidth={3}
-                name="Revenue"
-              />
-              <Area
-                type="monotone"
-                dataKey="profit"
-                stackId="2"
-                stroke="#10b981"
-                fill="url(#profitGradient)"
-                strokeWidth={3}
-                name="Profit"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Additional Widgets - Dark Theme with Updated Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick Actions */}
-        <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-800">
-          <h2 className="text-xl font-semibold mb-4 text-gray-100">
-            Quick Actions
-          </h2>
-          <ul className="space-y-3">
-            <li>
-              <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
-                ➕ Add New Product
-              </button>
-            </li>
-            <li>
-              <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
-                📦 View Order History
-              </button>
-            </li>
-            <li>
-              <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
-                📧 Send Marketing Email
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* System Alerts - Updated */}
-        <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-800">
-          <h2 className="text-xl font-semibold mb-4 text-gray-100">
-            System Alerts
-          </h2>
-          <ul className="text-sm space-y-2 text-red-400">
-            <li>
-              ⚠️ Low inventory on <strong>5 products</strong>
-            </li>
-            <li>
-              🕓 <strong>8 unfulfilled orders</strong> pending
-            </li>
-            <li>
-              📬 <strong>12 unread messages</strong> in contact form
-            </li>
-            <li>
-              🖼️ <strong>3 products</strong> missing images
-            </li>
-            <li>
-              🔐 New admin login detected from <strong>unknown device</strong>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Top Selling Products - Dark Theme */}
-      <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-800 mt-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-100">
-          Top Selling Products
-        </h2>
-        <ul className="divide-y divide-gray-800">
-          {[
-            { name: "Wireless Headphones", sold: 320 },
-            { name: "Smart Watch", sold: 289 },
-            { name: "Bluetooth Speaker", sold: 245 },
-            { name: "Fitness Tracker", sold: 210 },
-            { name: "USB-C Cable", sold: 198 },
-          ].map((product) => (
-            <li
-              key={product.name}
-              className="py-3 flex justify-between items-center hover:bg-gray-800 px-2 rounded transition"
-            >
-              <span className="text-sm">{product.name}</span>
-              <span className="font-bold text-green-400">
-                {product.sold} sold
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Inventory Overview - Dark Theme */}
-      <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-800 mt-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-100">
-          Inventory Overview
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-gray-800 p-4 rounded shadow-inner">
-            <h4 className="text-sm text-gray-400">In Stock</h4>
-            <p className="text-xl font-semibold text-green-400">1,250</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded shadow-inner">
-            <h4 className="text-sm text-gray-400">Low Stock</h4>
-            <p className="text-xl font-semibold text-yellow-400">32</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded shadow-inner">
-            <h4 className="text-sm text-gray-400">Out of Stock</h4>
-            <p className="text-xl font-semibold text-red-400">7</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded shadow-inner">
-            <h4 className="text-sm text-gray-400">Backordered</h4>
-            <p className="text-xl font-semibold text-blue-400">15</p>
+              <AreaChart
+                data={revenueData}
+                margin={{ top: 20, right: 0, left: 0, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient
+                    id="revenueGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient
+                    id="profitGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  strokeOpacity={0.6}
+                />
+                <XAxis
+                  dataKey="period"
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                />
+                <YAxis
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#d1d5db" }}
+                  tickLine={{ stroke: "#d1d5db" }}
+                  tickFormatter={(value) => `$${value / 1000}k`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#ea580c",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                    color: "#fff",
+                  }}
+                  labelStyle={{ color: "#e5e7eb" }}
+                  formatter={(value, name) => [
+                    `$${value.toLocaleString()}`,
+                    name === "revenue" ? "Revenue" : "Profit",
+                  ]}
+                />
+                <Legend
+                  wrapperStyle={{
+                    paddingTop: "10px",
+                    textAlign: "center",
+                    width: "100%",
+                  }}
+                  iconType="circle"
+                  align="center"
+                  verticalAlign="top"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stackId="1"
+                  stroke="#f59e0b"
+                  fill="url(#revenueGradient)"
+                  strokeWidth={3}
+                  name="Revenue"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="profit"
+                  stackId="2"
+                  stroke="#10b981"
+                  fill="url(#profitGradient)"
+                  strokeWidth={3}
+                  name="Profit"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+  <div className="bg-gray-900 text-white p-4 sm:p-6 rounded-lg shadow-lg border border-gray-800">
+    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-100">Quick Actions</h2>
+    <ul className="space-y-2 sm:space-y-3">
+      <li>
+        <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
+          ➕ Add New Product
+        </button>
+      </li>
+      <li>
+        <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
+          📦 View Order History
+        </button>
+      </li>
+      <li>
+        <button className="w-full text-left text-blue-400 hover:text-blue-300 transition">
+          📧 Send Marketing Email
+        </button>
+      </li>
+    </ul>
+  </div>
 
-      {/* Upcoming Tasks/Reminders */}
+  <div className="bg-gray-900 text-white p-4 sm:p-6 rounded-lg shadow-lg border border-gray-800">
+    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-100">System Alerts</h2>
+    <ul className="text-sm space-y-2 text-red-400">
+      <li>⚠️ Low inventory on <strong>5 products</strong></li>
+      <li>🕓 <strong>8 unfulfilled orders</strong> pending</li>
+      <li>📬 <strong>12 unread messages</strong> in contact form</li>
+      <li>🖼️ <strong>3 products</strong> missing images</li>
+      <li>🔐 New admin login detected from <strong>unknown device</strong></li>
+    </ul>
+  </div>
+</div>
+
+<div className="bg-gray-900 text-white p-4 sm:p-6 rounded-lg shadow-lg border border-gray-800 mt-6 sm:mt-8">
+  <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-100">Top Selling Products</h2>
+  <ul className="divide-y divide-gray-800">
+    {[
+      { name: "Wireless Headphones", sold: 320 },
+      { name: "Smart Watch", sold: 289 },
+      { name: "Bluetooth Speaker", sold: 245 },
+      { name: "Fitness Tracker", sold: 210 },
+      { name: "USB-C Cable", sold: 198 },
+    ].map((product) => (
+      <li
+        key={product.name}
+        className="py-2 sm:py-3 px-2 flex justify-between items-center hover:bg-gray-800 rounded transition"
+      >
+        <span className="text-sm">{product.name}</span>
+        <span className="font-bold text-green-400">{product.sold} sold</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<div className="bg-gray-900 text-white p-4 sm:p-6 rounded-lg shadow-lg border border-gray-800 mt-6 sm:mt-8">
+  <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-100">Inventory Overview</h2>
+  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div className="bg-gray-800 p-3 sm:p-4 rounded shadow-inner">
+      <h4 className="text-sm text-gray-400">In Stock</h4>
+      <p className="text-lg sm:text-xl font-semibold text-green-400">1,250</p>
+    </div>
+    <div className="bg-gray-800 p-3 sm:p-4 rounded shadow-inner">
+      <h4 className="text-sm text-gray-400">Low Stock</h4>
+      <p className="text-lg sm:text-xl font-semibold text-yellow-400">32</p>
+    </div>
+    <div className="bg-gray-800 p-3 sm:p-4 rounded shadow-inner">
+      <h4 className="text-sm text-gray-400">Out of Stock</h4>
+      <p className="text-lg sm:text-xl font-semibold text-red-400">7</p>
+    </div>
+    <div className="bg-gray-800 p-3 sm:p-4 rounded shadow-inner">
+      <h4 className="text-sm text-gray-400">Backordered</h4>
+      <p className="text-lg sm:text-xl font-semibold text-blue-400">15</p>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };

@@ -6,9 +6,14 @@ const TShirtSchema = new mongoose.Schema({
   color: { type: String },
   material: { type: String },
   gender: { type: String, enum: ['Men', 'Women', 'Unisex'] },
+  // Map of size to dimensions
   dimensions: {
-    height: { type: Number },
-    width: { type: Number }
+    type: Map,
+    of: new mongoose.Schema({
+      height: { type: Number },
+      width: { type: Number }
+    }, { _id: false }),
+    default: {}
   },
 }, { _id: false });
 

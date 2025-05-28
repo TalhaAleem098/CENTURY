@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import Loading from "./dashboard/loading";
-
 export default function AdminAuthGuard({ children }) {
   const router = useRouter();
   const [verifying, setVerifying] = useState(true);
   const [authorized, setAuthorized] = useState(false);
-
   useEffect(() => {
     const token =
       typeof window !== "undefined"
@@ -36,7 +34,6 @@ export default function AdminAuthGuard({ children }) {
       router.replace("404");
     }
   }, [router]);
-
   if (verifying) {
     return <Loading />;
   }

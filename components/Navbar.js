@@ -57,7 +57,7 @@ const Navbar = () => {
       <ul className="flex gap-1 items-center text-[16px] font-semibold text-gray-700 relative">
         {navItems.map((item) => {
           const activeClass = isActive(item.href)
-            ? "bg-black-100 text-green-800"
+            ? "bg-green-100 text-green-800"
             : "hover:bg-gray-100 hover:text-green-600";
 
           return (
@@ -106,9 +106,9 @@ const Navbar = () => {
                       <li key={drop.name}>
                         <Link
                           href={drop.href}
-                          className={`block px-5 py-2 text-[15px] text-gray-600 hover:bg-black-100 hover:text-green-800 transition rounded-lg ${
+                          className={`block px-5 py-2 text-[15px] text-gray-600 hover:bg-green-100 hover:text-green-800 transition rounded-lg ${
                             pathname === drop.href
-                              ? "bg-black-100 text-green-800"
+                              ? "bg-green-100 text-green-800z"
                               : ""
                           }`}
                           onClick={() => setOpenDropdown(null)}

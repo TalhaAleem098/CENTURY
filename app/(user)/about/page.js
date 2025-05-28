@@ -2,216 +2,266 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'About Us - Centuary Fashion Store',
-  description: 'Learn about Centuary, your trusted premium fashion marketplace. Discover our story, mission, and commitment to quality clothing.',
-  keywords: 'about centuary, fashion store, premium clothing, company story, mission, values',
+  description: 'Learn about Centuary, your trusted premium fashion marketplace. Discover our journey, mission, values, and dedication to excellence.',
+  keywords: 'Centuary, fashion, about us, premium clothing, our story, values, team',
 };
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative h-96 bg-gray-900">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(/assets/carousel-1.webp)' }}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-60" />
-        <div className="relative z-10 flex items-center justify-center h-full px-4">
-          <div className="text-center text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              About Centuary
-            </h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto">
-              Your trusted premium fashion marketplace
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 text-black">
+      <div className="max-w-6xl mx-auto px-6 py-20 space-y-24">
+        <section className="space-y-6">
+          <h2 className="text-4xl font-extrabold mb-4">Our Journey</h2>
+          <p className="text-lg leading-relaxed text-gray-700">
+            Centuary was founded with a vision to redefine everyday fashion by blending luxury, comfort, and affordability. What began as a niche clothing line quickly grew into a trusted marketplace for premium streetwear and timeless essentials. Our dedication to innovation and quality has fueled our growth, while customer satisfaction remains our guiding principle.
+          </p>
+          <p className="text-lg leading-relaxed text-gray-700">
+            Over the years, we&apos;ve expanded our offerings to include exclusive collections of oversized tees, hoodies, sweatshirts, and more. Our in-house designers meticulously curate each piece, ensuring it reflects both trend-forward style and enduring craftsmanship. Today, Centuary stands as a beacon for those who value both individuality and quality.
+          </p>
+        </section>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-16">
-        {/* Our Story Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Story
-            </h2>
-            <div className="w-24 h-1 bg-black mx-auto"></div>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Founded with a passion for premium fashion, Centuary has been at the forefront of 
-                delivering high-quality clothing that combines comfort, style, and affordability. 
-                We believe that everyone deserves access to exceptional fashion.
-              </p>
-              
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our journey began with a simple mission: to create a marketplace where quality 
-                meets accessibility. Today, we&apos;re proud to offer an extensive collection of 
-                oversized tees, hoodies, sweatshirts, and more, all carefully curated to meet 
-                the highest standards.
-              </p>
-              
-              <p className="text-lg text-gray-700 leading-relaxed">
-                From our signature winter collections to our everyday essentials, every piece 
-                in our catalog represents our commitment to excellence and customer satisfaction.
-              </p>
-            </div>
-            
-            <div className="relative">
-              <div className="aspect-square rounded-lg overflow-hidden shadow-lg">
-                <div 
-                  className="w-full h-full bg-cover bg-center bg-no-repeat"
-                  style={{ backgroundImage: 'url(/assets/carousel-2.webp)' }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Mission & Vision */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Our Mission</h2>
+          <p className="text-lg text-gray-700 mb-4">
+            To empower self-expression through fashion that is accessible, sustainable, and always on-trend. We believe everyone deserves to feel confident and comfortable in what they wear.
+          </p>
+          <h2 className="text-3xl font-bold mb-2">Our Vision</h2>
+          <p className="text-lg text-gray-700">
+            To be the leading destination for modern, conscious consumers seeking quality, style, and value. We strive to set new standards in customer experience, product innovation, and community engagement.
+          </p>
+        </section>
 
-        {/* Values Section */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Values
-            </h2>
-            <div className="w-24 h-1 bg-black mx-auto"></div>
-          </div>
-          
+        {/* What We Stand For */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">What We Stand For</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Quality First</h3>
-              <p className="text-gray-600">
-                We never compromise on quality. Every product undergoes rigorous quality checks 
-                to ensure it meets our high standards.
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <h3 className="text-xl font-semibold mb-2">Integrity</h3>
+              <p className="text-gray-700">
+                We operate with honesty and transparency in all we do — from how we source our materials to how we serve our customers.
               </p>
             </div>
-            
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Customer Focused</h3>
-              <p className="text-gray-600">
-                Our customers are at the heart of everything we do. We&apos;re committed to providing 
-                exceptional service and support.
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <h3 className="text-xl font-semibold mb-2">Excellence</h3>
+              <p className="text-gray-700">
+                Our products undergo stringent quality checks. Every thread, every seam, every fit — perfected to offer you nothing but the best.
               </p>
             </div>
-            
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Innovation</h3>
-              <p className="text-gray-600">
-                We continuously innovate our designs, technology, and processes to bring you 
-                the latest in fashion trends.
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <h3 className="text-xl font-semibold mb-2">Community</h3>
+              <p className="text-gray-700">
+                Our brand is built on the strength of our community — from our team to our customers. We listen, evolve, and grow together.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Stats Section */}
-        <div className="bg-black text-white rounded-lg p-8 mb-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">50K+</div>
-              <div className="text-sm md:text-base opacity-90">Happy Customers</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">500+</div>
-              <div className="text-sm md:text-base opacity-90">Products</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">99%</div>
-              <div className="text-sm md:text-base opacity-90">Satisfaction Rate</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">24/7</div>
-              <div className="text-sm md:text-base opacity-90">Support</div>
-            </div>
-          </div>
-        </div>
+        {/* Sustainability & Innovation */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Sustainability & Innovation</h2>
+          <p className="text-lg text-gray-700 mb-2">
+            We are committed to reducing our environmental impact by using eco-friendly materials, ethical manufacturing, and minimal packaging. Our innovation lab is constantly exploring new fabrics and processes to make fashion more sustainable and future-ready.
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 space-y-1">
+            <li>Organic and recycled fabrics in our core collections</li>
+            <li>Water-saving dyeing and finishing processes</li>
+            <li>Carbon-neutral shipping options</li>
+            <li>Recyclable and compostable packaging</li>
+            <li>Partnerships with green initiatives and charities</li>
+          </ul>
+        </section>
 
-        {/* Team Section */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Meet Our Team
-            </h2>
-            <div className="w-24 h-1 bg-black mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our dedicated team works tirelessly to bring you the best fashion experience
-            </p>
+        {/* Who We Serve */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">Who We Serve</h2>
+          <p className="text-lg leading-relaxed text-gray-700">
+            Centuary is for the bold, the expressive, the minimalist, and the style-savvy. Whether you&apos;re layering up for winter or dressing down in casual classics, our range caters to all. We believe great fashion is not exclusive — it&apos;s inclusive, accessible, and universal.
+          </p>
+        </section>
+
+        {/* In Numbers */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">In Numbers</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <p className="text-3xl font-bold">75K+</p>
+              <p className="text-gray-700">Happy Customers</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">600+</p>
+              <p className="text-gray-700">Products Delivered</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">98%</p>
+              <p className="text-gray-700">Repeat Buyers</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">5+</p>
+              <p className="text-gray-700">Years in Fashion</p>
+            </div>
           </div>
-          
+        </section>
+
+        {/* Meet the Minds */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">Meet the Minds</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Sarah Johnson',
-                role: 'Founder & CEO',
-                description: 'Passionate about fashion and customer experience'
-              },
-              {
-                name: 'Mike Chen',
-                role: 'Head of Design',
-                description: 'Creative mind behind our stunning collections'
-              },
-              {
-                name: 'Emma Davis',
-                role: 'Customer Success',
-                description: 'Ensuring every customer has an amazing experience'
-              }
-            ].map((member, index) => (
-              <div key={index} className="text-center p-6 bg-white rounded-lg shadow-md">
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <svg className="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                <p className="text-green-600 font-semibold mb-3">{member.role}</p>
-                <p className="text-gray-600">{member.description}</p>
+            <div className="text-center p-6 border rounded-lg bg-gray-50">
+              <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl font-bold">SJ</span>
               </div>
-            ))}
+              <h3 className="font-semibold text-xl">Sarah Johnson</h3>
+              <p className="text-sm text-gray-600">Founder & Visionary</p>
+            </div>
+            <div className="text-center p-6 border rounded-lg bg-gray-50">
+              <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl font-bold">MC</span>
+              </div>
+              <h3 className="font-semibold text-xl">Mike Chen</h3>
+              <p className="text-sm text-gray-600">Creative Director</p>
+            </div>
+            <div className="text-center p-6 border rounded-lg bg-gray-50">
+              <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <span className="text-3xl font-bold">ED</span>
+              </div>
+              <h3 className="font-semibold text-xl">Emma Davis</h3>
+              <p className="text-sm text-gray-600">Head of Support</p>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* CTA Section */}
-        <div className="text-center bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Ready to Explore Our Collection?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Discover our premium fashion collection and find your perfect style. 
-            From oversized tees to cozy hoodies, we have something for everyone.
+        {/* Our Community & Social Impact */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Our Community & Social Impact</h2>
+          <p className="text-lg text-gray-700 mb-2">
+            We believe in giving back. Centuary regularly donates a portion of profits to local charities, supports youth empowerment programs, and hosts community events. Our customers are at the heart of everything we do.
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 space-y-1">
+            <li>Annual clothing drives for those in need</li>
+            <li>Workshops and mentorship for aspiring designers</li>
+            <li>Collaborations with artists and creators</li>
+            <li>Inclusive campaigns celebrating diversity</li>
+          </ul>
+        </section>
+
+        {/* Call to Action */}
+        <section className="text-center bg-gray-100 py-16 rounded-xl shadow-inner">
+          <h2 className="text-3xl font-bold mb-4">Be a Part of Our Journey</h2>
+          <p className="text-lg text-gray-700 max-w-xl mx-auto mb-8">
+            Explore our latest collections and step into fashion that&apos;s made for you — stylish, sustainable, and standout.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/shop"
-              className="inline-block bg-black hover:bg-black text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
-            >
+            <Link href="/shop" className="bg-black text-white px-6 py-3 rounded-md font-semibold hover:opacity-90">
               Shop Now
             </Link>
-            <Link
-              href="/contact"
-              className="inline-block border-2 border-green-600 text-green-600 hover:bg-black hover:text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
-            >
+            <Link href="/contact" className="border border-black text-black px-6 py-3 rounded-md font-semibold hover:bg-black hover:text-white transition">
               Contact Us
             </Link>
           </div>
-        </div>
+        </section>
+
+        {/* Brand Story - Expanded */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Our Brand Story</h2>
+          <p className="text-lg text-gray-700 mb-2">
+            From humble beginnings in a small studio, Centuary was born out of a passion for redefining the boundaries of fashion. Our founders, inspired by the vibrant street culture and timeless classics, set out to create a brand that bridges the gap between luxury and everyday wear. Each collection is a testament to our relentless pursuit of creativity, quality, and authenticity.
+          </p>
+          <p className="text-lg text-gray-700 mb-2">
+            We believe that fashion is more than just clothing—it&apos;s a statement, a movement, and a way to connect with the world. Our journey has been shaped by the stories of our customers, the dedication of our team, and the ever-evolving landscape of style. As we continue to grow, our commitment to excellence and innovation remains unwavering.
+          </p>
+        </section>
+
+        {/* Customer Testimonials */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">What Our Customers Say</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <p className="italic text-gray-700">“Centuary’s oversized tees are my go-to for comfort and style. The quality is unmatched!”</p>
+              <p className="mt-4 font-semibold text-gray-900">— Priya S.</p>
+            </div>
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <p className="italic text-gray-700">“I love how inclusive and sustainable the brand is. Fast shipping and great support!”</p>
+              <p className="mt-4 font-semibold text-gray-900">— Alex R.</p>
+            </div>
+            <div className="p-6 border rounded-lg shadow-sm bg-gray-50">
+              <p className="italic text-gray-700">“The attention to detail in every product is amazing. I’m a repeat buyer for a reason.”</p>
+              <p className="mt-4 font-semibold text-gray-900">— Fatima K.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Timeline of Milestones */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Our Journey in Milestones</h2>
+          <ol className="relative border-l border-gray-300 pl-6 space-y-6">
+            <li>
+              <span className="block text-lg font-semibold">2019</span>
+              <span className="block text-gray-700">Centuary founded and first collection launched</span>
+            </li>
+            <li>
+              <span className="block text-lg font-semibold">2020</span>
+              <span className="block text-gray-700">Expanded to nationwide shipping and introduced eco-friendly packaging</span>
+            </li>
+            <li>
+              <span className="block text-lg font-semibold">2022</span>
+              <span className="block text-gray-700">Reached 50,000+ customers and launched the Innovation Lab</span>
+            </li>
+            <li>
+              <span className="block text-lg font-semibold">2024</span>
+              <span className="block text-gray-700">Recognized as a top sustainable fashion brand</span>
+            </li>
+          </ol>
+        </section>
+
+        {/* FAQs */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold">Where do you ship?</h3>
+              <p className="text-gray-700">We ship across India and select international destinations. See our Shipping Policy for details.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold">How do I return or exchange an item?</h3>
+              <p className="text-gray-700">Returns and exchanges are easy! Visit our Returns page or contact support for assistance within 14 days of delivery.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold">Are your products sustainable?</h3>
+              <p className="text-gray-700">Yes, we use organic and recycled materials, and our processes are designed to minimize environmental impact.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold">How can I contact customer support?</h3>
+              <p className="text-gray-700">Reach us anytime via our <Link href="/contact" className="underline">Contact page</Link> or email support@centuary.com.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Press & Media Mentions */}
+        <section className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold mb-2">Press & Media</h2>
+          <ul className="list-disc pl-6 text-gray-700 space-y-1">
+            <li><span className="font-semibold">Vogue India:</span> “Centuary is setting new standards for sustainable streetwear.”</li>
+            <li><span className="font-semibold">The Times of Fashion:</span> “A brand to watch in the premium essentials space.”</li>
+            <li><span className="font-semibold">EcoStyle Magazine:</span> “Leading the way in eco-conscious fashion.”</li>
+          </ul>
+        </section>
+
+        {/* Careers & Join Us */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold">Careers at Centuary</h2>
+          <p className="text-lg text-gray-700">We’re always looking for passionate, creative individuals to join our growing team. If you’re excited about fashion, sustainability, and innovation, <Link href="/contact" className="underline">reach out to us</Link> or check our Careers page for openings.</p>
+        </section>
+
+        {/* Newsletter Signup CTA */}
+        <section className="text-center bg-gradient-to-r from-gray-200 to-gray-50 py-12 rounded-xl shadow-inner mt-8">
+          <h2 className="text-2xl font-bold mb-2">Stay in the Loop</h2>
+          <p className="text-gray-700 mb-4">Subscribe to our newsletter for exclusive offers, style tips, and the latest news from Centuary.</p>
+          <form className="flex flex-col sm:flex-row gap-2 justify-center max-w-md mx-auto">
+            <input type="email" placeholder="Your email address" className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black" required />
+            <button type="submit" className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-90">Subscribe</button>
+          </form>
+        </section>
       </div>
     </div>
   );

@@ -98,22 +98,17 @@ const BrandBar = ({ onToggleSidebar }) => {
           </div>
         </div>
       )}
-
-      {/* BrandBar */}      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">
-        
-        {/* Desktop Layout: 3-column grid */}
+      {/* BrandBar */}{" "}
+      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">
         <div className="hidden lg:grid lg:grid-cols-3 lg:items-center w-full">
-          
-          {/* Left Column - Search */}
           <div className="flex justify-start">
             <div className="flex items-center relative">
-              {/* Desktop search input */}
               {showSearch && (
                 <input
                   ref={searchRef}
                   type="text"
                   placeholder="Search products..."
-                  className="absolute right-12 top-1/2 -translate-y-1/2 w-64 px-4 py-2 border border-gray-200 rounded-lg shadow-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 z-50 search-bar-parent transition-all"
+                  className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-4 py-2 border border-gray-200 rounded-lg shadow-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 z-50 search-bar-parent transition-all"
                   autoFocus
                 />
               )}
@@ -187,7 +182,9 @@ const BrandBar = ({ onToggleSidebar }) => {
                       </button>
                     </div>
                   ) : (
-                    <div className="text-gray-500 text-center">Not signed in</div>
+                    <div className="text-gray-500 text-center">
+                      Not signed in
+                    </div>
                   )}
                 </div>
               )}
@@ -197,7 +194,6 @@ const BrandBar = ({ onToggleSidebar }) => {
 
         {/* Mobile Layout: Sidebar toggle + Brand + Search & Cart */}
         <div className="flex lg:hidden items-center justify-between w-full">
-          
           {/* Left - Sidebar Toggle */}
           <div className="flex items-center">
             <button
