@@ -12,6 +12,11 @@ import {
   FaChevronUp,
   FaBars,
   FaTags, // Sale icon
+  FaEnvelopeOpenText, // New icon for Subscribers Mail
+  FaRegStickyNote, // New icon for Notes/Reminders
+  FaRegBell, // Notification icon
+  FaClipboardList, // New icon for Orders Viewing
+  FaUserCheck, // New icon for Login Logs
 } from 'react-icons/fa';
 
 export default function AdminSidebar() {
@@ -50,7 +55,6 @@ export default function AdminSidebar() {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  // Toggle sidebar on mobile by clicking the menu button (FaBars)
   useEffect(() => {
     if (!isMobile) return;
     const handleKeyDown = (e) => {
@@ -82,8 +86,11 @@ export default function AdminSidebar() {
         { name: 'Remove Sale', href: '/admin/remove-sale' },
       ],
     },
-    { name: 'Contact Messages', href: '/admin/contacts', icon: <FaEnvelope /> },
-    { name: 'Orders Viewing', href: '/admin/orders', icon: <FaBoxOpen /> },
+    { name: 'Complains/Messages', href: '/admin/contacts', icon: <FaEnvelope /> },
+    { name: 'Orders Viewing', href: '/admin/orders', icon: <FaClipboardList /> },
+    { name: 'Subscribers Mail', href: '/mail-subscribers', icon: <FaEnvelopeOpenText /> },
+    { name: 'Notes/Reminders', href: '/reminders', icon: <FaRegBell /> },
+    { name: 'Login Logs', href: '/admin/login-logs', icon: <FaUserCheck /> },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
