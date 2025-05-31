@@ -74,7 +74,7 @@ export default function AdminSidebar() {
         { name: 'Add Product', href: '/admin/products/add' },
         { name: 'Edit/Delete Product', href: '/admin/products/edit' },
         { name: 'Product Returnings', href: '/admin/products/returns' },
-        { name: 'Inventory Checis', href: '/admin/products/inventory' },
+        { name: 'Inventory Check', href: '/admin/products/inventory' },
       ],
     },
     {

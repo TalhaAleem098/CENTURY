@@ -17,7 +17,7 @@ export default function CustomError({ statusCode }) {
           className="text-5xl font-extrabold mb-3 animate__animated animate__bounce animate__delay-1s"
           style={{ color: "var(--bold-text-color)" }}
         >
-          Error {statusCode || 404}
+          Error {statusCode || 500}
         </h1>
         <h2
           className="text-xl font-semibold mb-4 animate__animated animate__fadeIn animate__delay-1s"

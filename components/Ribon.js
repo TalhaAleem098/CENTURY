@@ -49,8 +49,6 @@ const Ribon = () => {
 
   return (
     <div className="w-full bg-gradient-to-r from-black via-gray-900 to-black text-white flex items-center justify-between px-3 sm:px-4 py-4 sm:py-3 border-b border-gray-800">
-      
-      {/* Social Icons */}
       <div className="hidden md:flex gap-3 items-center">
         <a
           href="https://facebook.com"

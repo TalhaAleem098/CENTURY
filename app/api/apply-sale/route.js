@@ -6,9 +6,11 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'centuarySuperSecretJwtKey';
 
 function verifyAdminToken(req) {
-  const auth = req.headers.get('authorization') || '';
-  if (!auth.startsWith('Bearer ')) return false;
-  const token = auth.replace('Bearer ', '');
+  // Get the cookie named 'admin_token' from the request
+  const cookieHeader = req.headers.get('cookie') || '';
+  const match = cookieHeader.match(/(?:^|; )admin_token=([^;]*)/);
+  if (!match) return false;
+  const token = decodeURIComponent(match[1]);
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     return decoded && decoded.name === 'admin';

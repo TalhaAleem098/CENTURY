@@ -51,52 +51,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-white to-gray-100 text-black border-t border-gray-200">
-      {/* Newsletter Section */}
-      <div className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Stay Updated with Century Fashion
-            </h3>
-            <p className="text-gray-600 mb-8 text-lg">
-              Subscribe to our newsletter for exclusive offers, new arrivals,
-              and fashion tips
-            </p>
-            <form
-              onSubmit={handleNewsletterSubmit}
-              className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 rounded-lg text-black border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
-              >
-                Subscribe
-              </button>
-            </form>
-            {subscriptionStatus && (
-              <p
-                className={`mt-4 text-sm ${
-                  subscriptionStatus.includes("Thanks")
-                    ? "text-green-600"
-                    : "text-red-500"
-                }`}
-              >
-                {subscriptionStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
 
-      {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">

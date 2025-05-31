@@ -1,18 +1,95 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 
-const page = () => {
+function Toast({ message, onClose, success }) {
+  return (
+    <div
+      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-semibold transition-all duration-300 ${
+        success ? "bg-black" : "bg-black"
+      }`}
+      role="alert"
+    >
+      <div className="flex items-center gap-4">
+        <span>{message}</span>
+        <button
+          onClick={onClose}
+          className="ml-2 text-white text-xl leading-none font-bold"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const ContactPage = () => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    success: false,
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setToast({ show: false, message: "", success: false });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setToast({ show: true, message: data.message, success: true });
+        setForm({ name: "", email: "", subject: "", message: "" });
+      } else {
+        setToast({
+          show: true,
+          message: data.error || "Something went wrong.",
+          success: false,
+        });
+      }
+    } catch {
+      setToast({
+        show: true,
+        message: "Something went wrong. Please try again later.",
+        success: false,
+      });
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-12 px-4 md:px-12">
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          onClose={() => setToast({ ...toast, show: false })}
+          success={toast.success}
+        />
+      )}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <section className="bg-white border border-gray-300 rounded-2xl shadow-lg p-8">
           <h1 className="text-4xl font-bold text-black mb-4 text-center">
             Contact Us
           </h1>
           <p className="text-gray-600 text-center mb-6">
-            Wed love to hear from you. Fill out the form and our team will get
-            back to you shortly.
+            We&apos;d love to hear from you. Fill out the form and our team will
+            get back to you shortly.
           </p>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="name"
@@ -27,6 +104,9 @@ const page = () => {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Your Name"
                 required
+                value={form.name}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
             <div>
@@ -43,6 +123,9 @@ const page = () => {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="you@example.com"
                 required
+                value={form.email}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
             <div>
@@ -59,6 +142,9 @@ const page = () => {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Subject"
                 required
+                value={form.subject}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
             <div>
@@ -75,13 +161,17 @@ const page = () => {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black resize-none"
                 placeholder="Type your message here..."
                 required
+                value={form.message}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-black text-white hover:bg-gray-900 font-semibold py-3 rounded-lg transition duration-200 shadow"
+              className="w-full bg-black text-white hover:bg-gray-900 font-semibold py-3 rounded-lg transition duration-200 shadow disabled:opacity-60"
+              disabled={loading}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </form>
         </section>
@@ -267,4 +357,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ContactPage;
