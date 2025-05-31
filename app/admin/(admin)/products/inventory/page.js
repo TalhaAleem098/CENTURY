@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 export default function InventoryPage() {
   const [products, setProducts] = useState([])
@@ -11,8 +12,15 @@ export default function InventoryPage() {
   
   const limit = 12
   const totalPages = Math.ceil(totalProducts / limit)
-
   const fetchProducts = async (page = 1) => {
+    // Check if page is cached
+    if (cachedPages[page]) {
+      setProducts(cachedPages[page].products)
+      setTotalProducts(cachedPages[page].total)
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
     try {
       const skip = (page - 1) * limit
@@ -26,17 +34,27 @@ export default function InventoryPage() {
       setProducts(data.products || [])
       setTotalProducts(data.total || 0)
       setError(null)
+      
+      // Cache the data
+      setCachedPages(prev => ({
+        ...prev,
+        [page]: {
+          products: data.products || [],
+          total: data.total || 0
+        }
+      }))
     } catch (err) {
       setError(err.message)
       setProducts([])
     } finally {
-      setLoading(false)
-    }
+      setLoading(false)    }
   }
 
   useEffect(() => {
     fetchProducts(currentPage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage])
+
   const getStockStatus = (stock, sold) => {
     const remainingStock = stock || 0
     const totalSold = sold || 0
@@ -171,14 +189,47 @@ export default function InventoryPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+      <div className="max-w-7xl mx-auto">        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Inventory</h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
             <span>Total Products: {totalProducts}</span>
             <span>•</span>
             <span>Page {currentPage} of {totalPages}</span>
+          </div>
+            {/* Instructions */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-blue-800 mb-3 flex items-center">
+              📋 Inventory Management Guide
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4 text-sm text-blue-700">
+              <div className="space-y-2">
+                <div>• <span className="font-medium">Stock Status Colors:</span></div>
+                <div className="ml-4 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                    <span>Red = Out of Stock (0 items)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                    <span>Yellow = Low Stock (&lt;20%)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                    <span>Green = In Stock (≥20%)</span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div>• <span className="font-medium">Card Information:</span></div>
+                <div className="ml-4 space-y-1">
+                  <div>Stock numbers show remaining/total quantity</div>
+                  <div>Progress bar indicates stock percentage</div>
+                  <div>Sold count displays total items sold</div>
+                  <div>Navigate pages for cached faster loading</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -190,59 +241,89 @@ export default function InventoryPage() {
               <div className="mt-4 text-center text-gray-600">Loading inventory...</div>
             </div>
           </div>
-        )}
-
-        {/* Products Grid */}
+        )}        {/* Products Grid */}
         {!loading && products.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+          <>            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 mb-8">
               {products.map((product) => {
                 const stockInfo = getStockStatus(product.stock, product.sold)
-                return (                  <div
+                return (
+                  <div
                     key={product._id}
-                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-200 hover:border-blue-300"
-                  >{/* Product Image */}
-                    <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                      {product.images && product.images.length > 0 ? (
-                        <img
+                    className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 hover:border-blue-300 group relative"
+                  >
+                    {/* Stock Status Corner Badge */}
+                    <div className="absolute top-0 right-0 z-10">
+                      <div className={`${stockInfo.color} text-white text-xs px-2 py-1 rounded-bl-lg font-medium`}>
+                        {stockInfo.status === 'Out of Stock' ? 'OUT' : 
+                         stockInfo.status === 'Low Stock' ? 'LOW' : 'OK'}
+                      </div>
+                    </div>
+
+                    {/* Product Image - Natural aspect ratio */}
+                    <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden aspect-[3/4]">                      {product.images && product.images.length > 0 ? (
+                        <Image
                           src={product.images[0].url || product.images[0]}
                           alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                         />
-                      ) : (                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                          <div className="text-gray-400 text-3xl">📦</div>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <div className="text-gray-400 text-3xl sm:text-4xl">📦</div>
                         </div>
-                      )}                      
-                      {/* Stock Status Badge */}
-                      <div className="absolute top-2 right-2">
-                        <span className={`${stockInfo.color} text-white text-xs px-2 py-1 rounded-md font-medium shadow-sm`}>
-                          {stockInfo.status}
-                        </span>
-                      </div>
-                    </div>                    {/* Product Info */}
-                    <div className="p-2">
-                      <h3 className="font-semibold text-gray-800 text-xs mb-2 truncate" title={product.name}>
+                      )}
+                      
+                      {/* Overlay gradient for better text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>                    {/* Product Details */}
+                    <div className="p-3 md:p-4">
+                      {/* Product Name */}
+                      <h3 className="font-semibold text-gray-800 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-tight" title={product.name}>
                         {product.name}
                       </h3>
                       
-                      {/* Prominent Stock Display */}
-                      <div className="bg-gray-50 rounded-md p-2 mb-2">
-                        <div className="text-center">
-                          <div className={`text-lg font-bold ${stockInfo.textColor} mb-1`}>
-                            {stockInfo.remainingStock}/{stockInfo.totalQuantity}
-                          </div>
-                          <div className="text-xs text-gray-600">Remaining/Total</div>
+                      {/* Stock Info Row */}
+                      <div className="flex items-center justify-between mb-2 sm:mb-3">
+                        <div className="flex items-baseline gap-1">
+                          <span className={`text-lg sm:text-xl font-bold ${stockInfo.textColor}`}>
+                            {stockInfo.remainingStock}
+                          </span>
+                          <span className="text-gray-400 text-xs sm:text-sm">/{stockInfo.totalQuantity}</span>
+                        </div>
+                        <div className={`text-xs font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md ${
+                          stockInfo.status === 'Out of Stock' ? 'bg-red-100 text-red-700' :
+                          stockInfo.status === 'Low Stock' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-green-100 text-green-700'
+                        }`}>
+                          {Math.round(stockInfo.percentage)}%
                         </div>
                       </div>
-                      
-                      {/* Stock Progress Bar */}
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full transition-all duration-300 ${stockInfo.color}`}
-                          style={{
-                            width: `${Math.min(100, stockInfo.percentage)}%`
-                          }}
-                        ></div>
+
+                      {/* Progress Bar */}
+                      <div className="mb-2 sm:mb-3">
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-700 ease-out ${stockInfo.color} relative`}
+                            style={{
+                              width: `${Math.min(100, Math.max(3, stockInfo.percentage))}%`
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-white/30 rounded-full animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom Stats */}
+                      <div className="flex justify-between items-center text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-green-500 rounded-full"></div>
+                          <span className="text-xs">{stockInfo.remainingStock} left</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-500 rounded-full"></div>
+                          <span className="text-xs">{stockInfo.totalSold} sold</span>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -88,8 +88,8 @@ export default function AdminSidebar() {
     },
     { name: 'Complains/Messages', href: '/admin/contacts', icon: <FaEnvelope /> },
     { name: 'Orders Viewing', href: '/admin/orders', icon: <FaClipboardList /> },
-    { name: 'Subscribers Mail', href: '/mail-subscribers', icon: <FaEnvelopeOpenText /> },
-    { name: 'Notes/Reminders', href: '/reminders', icon: <FaRegBell /> },
+    { name: 'Subscribers Mail', href: '/admin/mail-subscribers', icon: <FaEnvelopeOpenText /> },
+    { name: 'Notes/Reminders', href: '/admin/reminders', icon: <FaRegBell /> },
     { name: 'Login Logs', href: '/admin/login-logs', icon: <FaUserCheck /> },
   ];
 
