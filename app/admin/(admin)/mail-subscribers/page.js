@@ -1,6 +1,85 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 
-const page = () => {
+const Page = () => {
+  const [formData, setFormData] = useState({
+    subject: "",
+    title: "",
+    message: "",
+    contactEmail: "",
+    contactInfo: "",
+    senderEmail: "",
+    senderPassword: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [loadingCount, setLoadingCount] = useState(true);
+
+  // Fetch subscriber count on component mount
+  React.useEffect(() => {
+    const fetchSubscriberCount = async () => {
+      try {
+        const response = await fetch("/api/subscribers");
+        const data = await response.json();
+        if (data.success) {
+          setSubscriberCount(data.count);
+        }
+      } catch (error) {
+        console.error("Failed to fetch subscriber count:", error);
+      } finally {
+        setLoadingCount(false);
+      }
+    };
+
+    fetchSubscriberCount();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess(false);
+
+    try {
+      const response = await fetch("/api/send-campaign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({
+          subject: "",
+          title: "",
+          message: "",
+          contactEmail: "",
+          contactInfo: "",
+          senderEmail: "",
+          senderPassword: ""
+        });
+      } else {
+        setError(data.error || "Failed to send campaign");
+      }
+    } catch (error) {
+      setError("Network error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">        {/* Header */}
@@ -15,23 +94,218 @@ const page = () => {
           </p>
         </div>
 
-        {/* Restriction Notice */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H8m13-9.5a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+        {/* Subscriber Stats */}
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">Email Subscribers</h3>
+                <p className="text-gray-600">Total active email subscribers ready to receive updates</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Access Restricted</h2>            <p className="text-gray-600 mb-6">
-              This feature enables you to send product update emails, sale announcements, and marketing campaigns to your customer subscriber list. It requires a premium Google Workspace business email address to access advanced mailing capabilities.
-            </p>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-              <p className="text-yellow-800 text-sm">
-                <strong>Current Status:</strong> You are using a standard email account. Upgrade to Google Workspace to unlock this feature.
-              </p>
+            <div className="text-right">
+              {loadingCount ? (
+                <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+              ) : (
+                <div className="text-3xl font-bold text-green-600">{subscriberCount}</div>
+              )}
+              <p className="text-sm text-gray-500">Active Subscribers</p>
             </div>
           </div>
+        </div>{/* Email Campaign Form */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">📤 Send Email Campaign</h2>
+            <p className="text-gray-600">Create and send product updates to all your subscribers</p>
+          </div>
+
+          {/* Warning Notice */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start">
+              <svg className="w-6 h-6 text-yellow-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.96-.833-2.732 0L3.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <div>
+                <h3 className="text-yellow-800 font-semibold mb-1">⚠️ Important: Use Premium Gmail Account</h3>
+                <p className="text-yellow-700 text-sm">
+                  Using a standard Gmail account may result in your emails being marked as spam. 
+                  For best delivery rates, use a Google Workspace premium business email account.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email Credentials */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📧 Sender Email Address *
+                </label>
+                <input
+                  type="email"
+                  name="senderEmail"
+                  value={formData.senderEmail}
+                  onChange={handleChange}
+                  placeholder="your-business@company.com"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  🔑 Email Password *
+                </label>
+                <input
+                  type="password"
+                  name="senderPassword"
+                  value={formData.senderPassword}
+                  onChange={handleChange}
+                  placeholder="Your email password or app password"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email Content */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📋 Email Subject *
+                </label>
+                <input
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  placeholder="🎉 New Product Launch - Don't Miss Out!"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  🏷️ Email Title *
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="Exciting New Products Just Arrived!"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Message */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                💬 Email Message *
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Write your exciting product update message here... 
+
+Examples:
+- Announce new product launches
+- Share special discounts and promotions  
+- Notify about restocked items
+- Highlight seasonal collections
+- Feature customer favorites"
+                rows={8}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                required
+              />
+            </div>
+
+            {/* Contact Information (Optional) */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📞 Contact Information (Optional)
+                </label>
+                <input
+                  type="text"
+                  name="contactInfo"
+                  value={formData.contactInfo}
+                  onChange={handleChange}
+                  placeholder="Phone: +1-234-567-8900 | Address: 123 Business St"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📧 Contact Email (Optional)
+                </label>
+                <input
+                  type="email"
+                  name="contactEmail"
+                  value={formData.contactEmail}
+                  onChange={handleChange}
+                  placeholder="support@yourcompany.com"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            {/* Success/Error Messages */}
+            {success && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <svg className="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-green-800 font-semibold">✅ Email campaign started successfully! Emails are being sent in the background.</p>
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <svg className="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-red-800 font-semibold">❌ {error}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300 ${
+                  loading 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'
+                }`}
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending Campaign...
+                  </div>
+                ) : (
+                  '🚀 Send Email Campaign'
+                )}
+              </button>
+            </div>
+          </form>
         </div>
 
         {/* What You Can Send */}
@@ -266,4 +540,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

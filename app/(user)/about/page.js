@@ -252,16 +252,6 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold">Careers at Centuary</h2>
           <p className="text-lg text-gray-700">We’re always looking for passionate, creative individuals to join our growing team. If you’re excited about fashion, sustainability, and innovation, <Link href="/contact" className="underline">reach out to us</Link> or check our Careers page for openings.</p>
         </section>
-
-        {/* Newsletter Signup CTA */}
-        <section className="text-center bg-gradient-to-r from-gray-200 to-gray-50 py-12 rounded-xl shadow-inner mt-8">
-          <h2 className="text-2xl font-bold mb-2">Stay in the Loop</h2>
-          <p className="text-gray-700 mb-4">Subscribe to our newsletter for exclusive offers, style tips, and the latest news from Centuary.</p>
-          <form className="flex flex-col sm:flex-row gap-2 justify-center max-w-md mx-auto">
-            <input type="email" placeholder="Your email address" className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black" required />
-            <button type="submit" className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-90">Subscribe</button>
-          </form>
-        </section>
       </div>
     </div>
   );

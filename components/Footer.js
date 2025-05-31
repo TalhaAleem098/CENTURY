@@ -33,20 +33,49 @@ const Footer = () => {
       behavior: "smooth",
     });
   };
-
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
+    
     if (!email) {
       toast.error("Please enter a valid email address");
       return;
     }
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address");
       return;
     }
-    toast.success("Thanks for subscribing!");
-    setEmail("");
+
+    setSubscriptionStatus("loading");
+    
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "Thanks for subscribing!");
+        setEmail("");
+        setSubscriptionStatus("success");
+      } else {
+        toast.error(data.error || "Subscription failed. Please try again.");
+        setSubscriptionStatus("error");
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast.error("Network error. Please check your connection and try again.");
+      setSubscriptionStatus("error");
+    } finally {
+      // Reset status after a short delay
+      setTimeout(() => setSubscriptionStatus(""), 2000);
+    }
   };
 
   return (
@@ -63,7 +92,31 @@ const Footer = () => {
                 defines excellence.
               </p>
             </div>
-            <div>
+            {/* Newsletter Subscription Box */}
+            <div className="mt-8">
+              <h4 className="text-lg font-semibold mb-2">Subscribe to Newsletter</h4>
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row items-center gap-2">
+                <input
+                  type="email"
+                  className="w-full sm:w-auto flex-1 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  disabled={subscriptionStatus === 'loading'}
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition disabled:opacity-60"
+                  disabled={subscriptionStatus === 'loading'}
+                >
+                  {subscriptionStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </form>
+              <p className="text-xs text-gray-500 mt-2">Stay updated with our latest news and offers.</p>
+            </div>
+            {/* End Newsletter Subscription Box */}
+            <div className="mt-8">
               <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-4">
                 <a

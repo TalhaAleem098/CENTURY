@@ -298,8 +298,7 @@ export default function AddProductPage() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
-      <div className="w-full max-w-5xl mb-10 text-center">
+      />      <div className="w-full max-w-5xl mb-10 text-center">
         <h1 className="text-4xl font-black text-black mb-2 tracking-tight">
           Admin Product Management
         </h1>
@@ -312,320 +311,731 @@ export default function AddProductPage() {
           as needed.
         </p>
       </div>
+
+      {/* Professional Product Management Instructions */}
+      <div className="w-full max-w-5xl bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-8">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-6 py-5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-sm">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-black">Product Creation Guide</h2>
+              <p className="text-gray-600 text-sm mt-1">Complete guide for adding products to your inventory</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          <div className="grid lg:grid-cols-4 gap-6">
+            {/* Basic Information */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-black text-lg">Basic Details</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-black rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-semibold text-black text-sm">Product Name</div>
+                    <div className="text-gray-600 text-xs">Clear, descriptive title for your product</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-semibold text-black text-sm">Price & Stock</div>
+                    <div className="text-gray-600 text-xs">Set competitive pricing and inventory count</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-semibold text-black text-sm">Description</div>
+                    <div className="text-gray-600 text-xs">Detailed product information and features</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Image Management */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-black text-lg">Image Upload</h3>
+              </div>
+              <div className="space-y-3 text-sm">
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">📸 Main Image</div>
+                  <div className="text-gray-600 text-xs">First image becomes the primary product display</div>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">🖼️ Multiple Images</div>
+                  <div className="text-gray-600 text-xs">Drag & drop or click to upload additional photos</div>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">☁️ Cloud Storage</div>
+                  <div className="text-gray-600 text-xs">Images automatically saved to Cloudinary</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Category-Specific Fields */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-black text-lg">T-Shirt Details</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
+                  <span className="w-4 h-4 bg-blue-600 rounded-full flex-shrink-0"></span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-black text-sm">Sizes</div>
+                    <div className="text-gray-600 text-xs">S, M, L, XL (comma-separated)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
+                  <span className="w-4 h-4 bg-purple-600 rounded-full flex-shrink-0"></span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-black text-sm">Dimensions</div>
+                    <div className="text-gray-600 text-xs">Height × Width for each size</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
+                  <span className="w-4 h-4 bg-green-600 rounded-full flex-shrink-0"></span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-black text-sm">Color & Material</div>
+                    <div className="text-gray-600 text-xs">Product specifications and gender</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Validation & Submit */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-black text-lg">Validation</h3>
+              </div>
+              <div className="space-y-3 text-sm">
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">✅ Required Fields</div>
+                  <div className="text-gray-600 text-xs">All marked fields must be completed</div>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">🔍 Auto-Validation</div>
+                  <div className="text-gray-600 text-xs">Real-time checking prevents errors</div>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                  <div className="font-semibold text-black mb-1">💾 Auto-Save</div>
+                  <div className="text-gray-600 text-xs">Product data saved automatically</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Tips Section */}
+          <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div className="flex-1">
+                <h4 className="font-bold text-black mb-2">💡 Pro Tips for Better Product Listings</h4>
+                <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                  <div>
+                    <div className="font-semibold text-black">Image Quality:</div>
+                    <div>Use high-resolution images (1200x1200px minimum) with good lighting</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-black">Descriptions:</div>
+                    <div>Include material, care instructions, and unique features</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-black">Pricing:</div>
+                    <div>Research competitor prices and consider your profit margins</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-black">Stock Management:</div>
+                    <div>Set realistic stock levels and update regularly</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Status Bar */}
+          <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-black font-semibold text-sm">Form Status:</span>
+                <span className="text-green-600 font-bold text-sm">Ready for input</span>
+              </div>
+              <div className="text-xs text-gray-500">
+                Auto-save enabled • Last updated: {new Date().toLocaleTimeString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      {/* Enhanced Product Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 border border-black"
+        className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200 hover:shadow-xl transition-shadow duration-300"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-black font-semibold mb-2">
-                Product Name *
-              </label>
-              <input
-                type="text"
-                {...register("name", { required: true })}
-                className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter product name"
-              />
+        {/* Form Header */}
+        <div className="text-center mb-8 pb-6 border-b border-gray-200">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
             </div>
-            <div>
-              <label className="block text-black font-semibold mb-2">
-                Brand
-              </label>
-              <input
-                type="text"
-                {...register("brand")}
-                className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Brand name (optional)"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-black font-semibold mb-2">
-                  Price (₹) *
-                </label>
-                <input
-                  type="number"
-                  {...register("price", { required: true, min: 0 })}
-                  className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="0.00"
-                  step="0.01"
-                />
+            <h2 className="text-2xl font-bold text-black">Product Information</h2>
+          </div>
+          <p className="text-gray-600 text-sm">Fill in all required details to add your product to the inventory</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Product Details */}
+          <div className="space-y-6">
+            {/* Basic Information Section */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-black">Basic Information</h3>
               </div>
-              <div>
-                <label className="block text-black font-semibold mb-2">
-                  Stock *
-                </label>
-                <input
-                  type="number"
-                  {...register("stock", { required: true, min: 0 })}
-                  className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-black font-semibold mb-2">
-                Description *
-              </label>
-              <textarea
-                {...register("description", { required: true })}
-                rows={3}
-                className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Describe the product..."
-              />
-            </div>
-            <div>
-              <label className="block text-black font-semibold mb-2">
-                Category *
-              </label>
-              <select
-                {...register("category", { required: true })}
-                className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-              >
-                <option value="">Select Category</option>
-                <option value="TShirt">TShirt</option>
-                {/* Add more categories as needed */}
-              </select>
-            </div>
-            {watch("category") === "TShirt" && (
-              <>
-                <div>
-                  <label className="block text-black font-semibold mb-2">
-                    Sizes * (comma separated)
+              
+              <div className="space-y-4">
+                <div className="relative">
+                  <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    Product Name *
                   </label>
                   <input
                     type="text"
-                    {...register("sizes", {
-                      required: watch("category") === "TShirt",
-                    })}
-                    className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="e.g. S, M, L, XL"
-                    onBlur={handleSizesBlur}
+                    {...register("name", { required: true })}
+                    className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400"
+                    placeholder="Enter a clear, descriptive product name"
                   />
                 </div>
-                {/* Dimensions for each size */}
-                {watch("sizes") && watch("sizes").length > 0 && (
-                  <div className="space-y-2">
-                    <label className="block text-black font-semibold mb-2">
-                      Dimensions (cm) for each size
-                    </label>
-                    {Array.from(
-                      new Set(
-                        watch("sizes")
-                          .split(",")
-                          .map((size) => size.trim())
-                          .filter(Boolean)
-                      )
-                    ).map((size, idx) => {
-                      const sizeKey = size;
-                      return (
-                        <div
-                          key={sizeKey}
-                          className="flex items-center gap-4 mb-2"
-                        >
-                          <span className="w-12 font-bold text-black">
-                            {sizeKey}
-                          </span>
-                          <input
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="Height"
-                            className="px-2 py-1 rounded border border-black w-24 bg-white text-black focus:outline-none"
-                            value={watch(`dimensions.${sizeKey}.height`) || ""}
-                            onChange={(e) =>
-                              setValue(
-                                `dimensions.${sizeKey}.height`,
-                                e.target.value
-                              )
-                            }
-                          />
-                          <span className="text-gray-500">x</span>
-                          <input
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="Width"
-                            className="px-2 py-1 rounded border border-black w-24 bg-white text-black focus:outline-none"
-                            value={watch(`dimensions.${sizeKey}.width`) || ""}
-                            onChange={(e) =>
-                              setValue(
-                                `dimensions.${sizeKey}.width`,
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  <div>
-                    <label className="block text-black font-semibold mb-2">
-                      Color *
-                    </label>
+                
+                <div className="relative">
+                  <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+                    Brand
+                  </label>
+                  <input
+                    type="text"
+                    {...register("brand")}
+                    className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400"
+                    placeholder="Brand name (optional)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing & Inventory Section */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-black">Pricing & Inventory</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    Price (₹) *
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">₹</span>
                     <input
-                      type="text"
-                      {...register("color", {
-                        required: watch("category") === "TShirt",
-                      })}
-                      className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="e.g. Black, White"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black font-semibold mb-2">
-                      Material
-                    </label>
-                    <input
-                      type="text"
-                      {...register("material")}
-                      className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="e.g. Cotton"
+                      type="number"
+                      {...register("price", { required: true, min: 0 })}
+                      className="w-full pl-8 pr-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400"
+                      placeholder="0.00"
+                      step="0.01"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-black font-semibold mb-2">
-                      Gender *
+                <div className="relative">
+                  <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    Stock Quantity *
+                  </label>
+                  <input
+                    type="number"
+                    {...register("stock", { required: true, min: 0 })}
+                    className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400"
+                    placeholder="Available units"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Description Section */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-black">Product Description</h3>
+              </div>
+              
+              <div className="relative">
+                <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                  Description *
+                </label>
+                <textarea
+                  {...register("description", { required: true })}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400 resize-none"
+                  placeholder="Provide detailed product information, features, materials, care instructions..."
+                />
+                <div className="absolute bottom-3 right-3 text-xs text-gray-400">
+                  {watch("description")?.length || 0}/500
+                </div>
+              </div>
+            </div>
+
+            {/* Category Section */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-black">Product Category</h3>
+              </div>
+              
+              <div className="relative">
+                <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                  Category *
+                </label>
+                <select
+                  {...register("category", { required: true })}
+                  className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all duration-200 hover:border-gray-400 cursor-pointer"
+                >
+                  <option value="">Choose product category</option>
+                  <option value="TShirt">🎽 T-Shirt</option>
+                  {/* Add more categories as needed */}
+                </select>
+              </div>
+            </div>            {/* T-Shirt Specific Fields */}
+            {watch("category") === "TShirt" && (
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 animate-in slide-in-from-top-2 duration-300">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-black">T-Shirt Specifications</h3>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">Required</span>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Sizes */}
+                  <div className="relative">
+                    <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                      Available Sizes *
+                    </label>
+                    <input
+                      type="text"
+                      {...register("sizes", {
+                        required: watch("category") === "TShirt",
+                      })}
+                      className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200 hover:border-gray-400"
+                      placeholder="e.g. S, M, L, XL, XXL"
+                      onBlur={handleSizesBlur}
+                    />
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {watch("sizes") && watch("sizes").split(",").map((size, idx) => {
+                        const trimmedSize = size.trim();
+                        return trimmedSize ? (
+                          <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {trimmedSize}
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Dimensions for each size */}
+                  {watch("sizes") && watch("sizes").length > 0 && (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      <label className="block text-black font-semibold mb-4 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                        Dimensions (cm) for each size
+                      </label>
+                      <div className="grid gap-3">
+                        {Array.from(
+                          new Set(
+                            watch("sizes")
+                              .split(",")
+                              .map((size) => size.trim())
+                              .filter(Boolean)
+                          )
+                        ).map((size, idx) => {
+                          const sizeKey = size;
+                          return (
+                            <div
+                              key={sizeKey}
+                              className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                            >
+                              <span className="w-12 font-bold text-black bg-white px-2 py-1 rounded border text-center">
+                                {sizeKey}
+                              </span>
+                              <div className="flex items-center gap-2 flex-1">
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  placeholder="Height"
+                                  className="px-3 py-2 rounded-lg border-2 border-gray-300 w-24 bg-white text-black focus:outline-none focus:border-blue-500 transition-all"
+                                  value={watch(`dimensions.${sizeKey}.height`) || ""}
+                                  onChange={(e) =>
+                                    setValue(
+                                      `dimensions.${sizeKey}.height`,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <span className="text-gray-500 font-bold">×</span>
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  placeholder="Width"
+                                  className="px-3 py-2 rounded-lg border-2 border-gray-300 w-24 bg-white text-black focus:outline-none focus:border-blue-500 transition-all"
+                                  value={watch(`dimensions.${sizeKey}.width`) || ""}
+                                  onChange={(e) =>
+                                    setValue(
+                                      `dimensions.${sizeKey}.width`,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <span className="text-xs text-gray-500">cm</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Color and Material */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="relative">
+                      <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        Color *
+                      </label>
+                      <input
+                        type="text"
+                        {...register("color", {
+                          required: watch("category") === "TShirt",
+                        })}
+                        className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200 hover:border-gray-400"
+                        placeholder="e.g. Black, Navy Blue"
+                      />
+                    </div>
+                    <div className="relative">
+                      <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+                        Material
+                      </label>
+                      <input
+                        type="text"
+                        {...register("material")}
+                        className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200 hover:border-gray-400"
+                        placeholder="e.g. 100% Cotton"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Gender */}
+                  <div className="relative">
+                    <label className="block text-black font-semibold mb-2 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                      Target Gender *
                     </label>
                     <select
                       {...register("gender", {
                         required: watch("category") === "TShirt",
                       })}
-                      className="w-full px-4 py-2 rounded-lg bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black"
+                      className="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200 hover:border-gray-400 cursor-pointer"
                     >
-                      <option value="">Select</option>
-                      <option value="Men">Men</option>
-                      <option value="Women">Women</option>
-                      <option value="Unisex">Unisex</option>
+                      <option value="">Select target audience</option>
+                      <option value="Men">👨 Men</option>
+                      <option value="Women">👩 Women</option>
+                      <option value="Unisex">👥 Unisex</option>
                     </select>
                   </div>
                 </div>
-              </>
+              </div>
             )}
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                {...register("isFeatured")}
-                className="accent-black"
-              />
-              <label className="text-black font-semibold">
-                Featured Product
-              </label>
+
+            {/* Featured Product Toggle */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-black">Product Promotion</h3>
+              </div>
+              
+              <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg">
+                <input
+                  type="checkbox"
+                  {...register("isFeatured")}
+                  className="w-5 h-5 text-black bg-gray-100 border-2 border-gray-300 rounded focus:ring-black focus:ring-2 accent-black"
+                />
+                <div className="flex-1">
+                  <label className="text-black font-semibold cursor-pointer">
+                    ⭐ Featured Product
+                  </label>
+                  <p className="text-sm text-gray-600 mt-1">Mark as featured to highlight this product on the homepage</p>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 w-full items-center">
-            <div className="grid grid-cols-3 gap-4 w-full">
-              {imageFiles.length === 0 && (
-                <div
-                  className="relative group border-2 border-dashed border-black rounded-lg bg-gray-50 flex flex-col items-center justify-center aspect-square min-h-[160px] min-w-[160px] max-w-[200px] cursor-pointer hover:bg-gray-100 transition"
-                  onDrop={(e) => handleBoxDrop(e, 0)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onClick={() =>
-                    document.getElementById("image-upload-0").click()
-                  }
-                >
-                  <FaUpload className="text-black text-2xl mb-2" />
-                  <p className="text-black font-semibold text-center">
-                    Drop or select image
-                  </p>
-                  <input
-                    id="image-upload-0"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageBoxChange(e, 0)}
-                    multiple
-                  />
-                </div>
-              )}
-              {imageFiles.map((file, idx) => (
-                <div
-                  key={idx}
-                  className="relative group border-2 border-black rounded-lg bg-gray-50 flex flex-col items-center justify-center aspect-square min-h-[160px] min-w-[160px] max-w-[200px] cursor-pointer hover:bg-gray-100 transition"
-                  onDrop={(e) => handleBoxDrop(e, idx)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onClick={() =>
-                    document.getElementById(`image-upload-${idx}`).click()
-                  }
-                >
-                  {file ? (
-                    <Image
-                      src={URL.createObjectURL(file)}
-                      alt={`Preview ${idx + 1}`}
-                      fill
-                      className={`object-cover rounded-lg ${
-                        idx === 0 ? "ring-2 ring-black" : ""
-                      }`}
-                    />
-                  ) : (
-                    <>
-                      <FaUpload className="text-black text-2xl mb-2" />
-                      <p className="text-black font-semibold text-center">
-                        Drop or select image
-                      </p>
-                    </>
-                  )}
-                  <input
-                    id={`image-upload-${idx}`}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageBoxChange(e, idx)}
-                    multiple={idx === 0}
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-2 right-2 p-1 bg-white rounded-full text-red-600 hover:text-red-800 shadow group-hover:scale-110 transition"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveImageBox(idx);
-                    }}
+
+          {/* Right Column - Image Upload */}
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-black">Product Images</h3>
+                <p className="text-sm text-gray-600">Upload high-quality product photos</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {/* Image Upload Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {imageFiles.length === 0 && (
+                  <div
+                    className="relative group border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col items-center justify-center aspect-square min-h-[140px] cursor-pointer hover:border-black hover:bg-gray-50 transition-all duration-200"
+                    onDrop={(e) => handleBoxDrop(e, 0)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onClick={() =>
+                      document.getElementById("image-upload-0").click()
+                    }
                   >
-                    <FaTrash />
-                  </button>
-                  {idx === 0 && (
-                    <span className="absolute bottom-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">
-                      Main
-                    </span>
-                  )}
-                </div>
-              ))}
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-gray-200 transition-colors">
+                      <FaUpload className="text-gray-500 text-lg" />
+                    </div>
+                    <p className="text-black font-semibold text-center text-sm">Upload Image</p>
+                    <p className="text-gray-500 text-xs text-center mt-1">Drag & drop or click</p>
+                    <input
+                      id="image-upload-0"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageBoxChange(e, 0)}
+                      multiple
+                    />
+                  </div>
+                )}
+                {imageFiles.map((file, idx) => (
+                  <div
+                    key={idx}
+                    className="relative group border-2 border-gray-300 rounded-xl bg-white flex flex-col items-center justify-center aspect-square min-h-[140px] cursor-pointer hover:border-black hover:shadow-md transition-all duration-200 overflow-hidden"
+                    onDrop={(e) => handleBoxDrop(e, idx)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onClick={() =>
+                      document.getElementById(`image-upload-${idx}`).click()
+                    }
+                  >
+                    {file ? (
+                      <>
+                        <Image
+                          src={URL.createObjectURL(file)}
+                          alt={`Preview ${idx + 1}`}
+                          fill
+                          className={`object-cover rounded-xl transition-transform group-hover:scale-105 ${
+                            idx === 0 ? "ring-2 ring-black ring-offset-2" : ""
+                          }`}
+                        />
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-gray-200 transition-colors">
+                          <FaUpload className="text-gray-500 text-lg" />
+                        </div>
+                        <p className="text-black font-semibold text-center text-sm">Add Image</p>
+                        <p className="text-gray-500 text-xs text-center mt-1">Click to browse</p>
+                      </>
+                    )}
+                    <input
+                      id={`image-upload-${idx}`}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageBoxChange(e, idx)}
+                      multiple={idx === 0}
+                    />
+                    {file && (
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 p-2 bg-white rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveImageBox(idx);
+                        }}
+                      >
+                        <FaTrash className="text-sm" />
+                      </button>
+                    )}
+                    {idx === 0 && file && (
+                      <span className="absolute bottom-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md font-semibold">
+                        Main Image
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Add More Images Button */}
+              <button
+                type="button"
+                className="w-full mt-4 px-4 py-3 bg-white border-2 border-dashed border-gray-400 text-black rounded-xl flex items-center justify-center gap-2 hover:border-black hover:bg-gray-50 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleAddImageBox}
+                disabled={
+                  imageFiles.length > 0 && !imageFiles[imageFiles.length - 1]
+                }
+              >
+                <FaPlus className="text-sm" />
+                Add Another Image
+              </button>
+
+              {/* Image Guidelines */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4 mt-4">
+                <h4 className="font-semibold text-black mb-2 text-sm">📸 Image Guidelines</h4>
+                <ul className="text-xs text-gray-600 space-y-1">
+                  <li>• Use high-resolution images (1200x1200px minimum)</li>
+                  <li>• First image will be the main product display</li>
+                  <li>• Include multiple angles and detail shots</li>
+                  <li>• Ensure good lighting and clean backgrounds</li>
+                </ul>
+              </div>
             </div>
-            <button
-              type="button"
-              className="mt-2 px-4 py-2 bg-black text-white rounded-lg flex items-center gap-2 hover:bg-neutral-900 disabled:opacity-60"
-              onClick={handleAddImageBox}
-              disabled={
-                imageFiles.length > 0 && !imageFiles[imageFiles.length - 1]
-              }
-            >
-              <FaPlus /> Add Image
-            </button>
           </div>
+        </div>        {/* Form Status Messages */}
+        <div className="mt-8 space-y-3">
+          {error && (
+            <div className="flex items-center gap-3 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-red-800 mb-1">Error occurred</h4>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </div>
+          )}
+          
+          {success && (
+            <div className="flex items-center gap-3 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-green-800 mb-1">Success!</h4>
+                <p className="text-green-700 text-sm">Product has been added to your inventory successfully!</p>
+              </div>
+            </div>
+          )}
         </div>
-        {error && (
-          <div className="mb-4 text-red-600 font-semibold">{error}</div>
-        )}
-        {success && (
-          <div className="mb-4 text-green-700 font-semibold">
-            Product added successfully!
-          </div>
-        )}
-        <div className="flex justify-center m-0 p-0 w-ful">
+
+        {/* Enhanced Submit Button */}
+        <div className="flex justify-center mt-10">
           <button
             type="submit"
             disabled={loading}
-            className="w-50 mt-8 py-3 rounded-lg bg-black text-white font-bold text-lg shadow-lg hover:bg-neutral-900 transition-all flex items-center justify-center gap-2 disabled:opacity-60 border border-black"
+            className="group relative px-8 py-4 bg-black text-white font-bold text-lg rounded-xl shadow-lg hover:bg-gray-800 hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px] transform hover:scale-105 disabled:hover:scale-100"
           >
-            <FaPlus /> {loading ? "Adding..." : "Add Product"}
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Adding Product...</span>
+              </>
+            ) : (
+              <>
+                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                  <FaPlus className="text-black text-sm" />
+                </div>
+                <span>Add Product to Inventory</span>
+              </>
+            )}
+            
+            {/* Button Glow Effect */}
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
           </button>
         </div>
+
+        {/* Loading Tooltip */}
+        {tooltip && (
+          <div className="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm font-medium">{tooltip}</span>
+            </div>
+          </div>
+        )}
       </form>
       <Tooltip open={!!tooltip} content={tooltip} />
     </div>
