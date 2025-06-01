@@ -2,7 +2,6 @@ import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
 import { siteConfig } from "./metadata.config";
-import LayoutClient from "@/components/LayoutClient";
 
 export const metadata = {
   title: "Century – Premium Fashion Store",

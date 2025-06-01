@@ -6,6 +6,7 @@ import Loading from "./loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProductEditModal from "./ProductEditModal";
+import ProductInstructions from "./ProductInstructions";
 import { ToastContainer } from "react-toastify";
 
 const MAX_LIMIT = 12;
@@ -69,10 +70,8 @@ const Page = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchProduct(page);
-    // eslint-disable-next-line
   }, [page]);
 
   const handlePrev = () => {
@@ -131,16 +130,13 @@ const Page = () => {
         theme="colored"
         toastClassName="rounded-xl shadow-lg text-base font-semibold"
         bodyClassName="text-gray-900"
-      />
-      <div className="max-w-7xl mx-auto">
+      />      <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-2 text-black text-center tracking-tight">
           Product Management
         </h1>
-        <p className="text-lg text-gray-600 mb-8 text-center max-w-2xl mx-auto">
-          Manage your product catalog efficiently. Use the navigation below to
-          browse, and click &quot;Edit Product&quot; to update details. Each
-          page shows up to 10 products.
-        </p>
+        
+        <ProductInstructions />
+        
         <div className="border-b border-black mb-10" />
         {loading ? (
           <Loading />

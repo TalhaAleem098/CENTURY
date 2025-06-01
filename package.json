@@ -17,6 +17,7 @@
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.4.9",
     "cloudinary": "^2.6.1",
+    "framer-motion": "^12.15.0",
     "gsap": "^3.13.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

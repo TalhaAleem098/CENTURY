@@ -141,9 +141,17 @@ const ProductSaleCard = ({ product, selected, onSelect }) => {
   const mainImage = product.images?.[0]?.url;
   return (
     <div
-      className={`rounded-xl md:p-6 flex flex-col items-center w-full max-w-xs bg-white hover:shadow-md cursor-pointer transition-shadow duration-300 relative overflow-hidden group border border-gray-300`}
+      className={`rounded-xl md:p-6 flex flex-col items-center w-full max-w-xs cursor-pointer transition-all duration-300 relative overflow-hidden group ${
+        selected 
+          ? 'bg-gradient-to-br from-blue-50 via-white to-blue-100 border-2 border-blue-500 shadow-xl transform scale-105 ring-4 ring-blue-200 ring-opacity-50' 
+          : 'bg-white hover:shadow-md border border-gray-300 hover:border-gray-400'
+      }`}
     >
-      <div className="relative w-full aspect-[2/3] overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 via-white to-gray-200 border border-black shadow-sm">
+      <div className={`relative w-full aspect-[2/3] overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 via-white to-gray-200 shadow-sm transition-all duration-300 ${
+        selected 
+          ? 'border-2 border-blue-500 shadow-lg' 
+          : 'border border-black'
+      }`}>
         {mainImage && (
           <Image
             src={mainImage}
@@ -153,12 +161,24 @@ const ProductSaleCard = ({ product, selected, onSelect }) => {
             sizes="(max-width: 600px) 100vw, 300px"
           />
         )}
+        
+        {/* Selection Overlay */}
+        {selected && (
+          <div className="absolute inset-0 bg-blue-500 bg-opacity-10 border-2 border-blue-500 rounded-2xl pointer-events-none">
+            <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+              SELECTED
+            </div>
+          </div>
+        )}
+        
         {/* Selection tick button over image */}
         {typeof onSelect === "function" && (
           <button
             type="button"
-            className={`absolute top-3 right-3 z-10 rounded-full p-2 shadow-lg border-2 transition-colors duration-200 focus:outline-none bg-white/90 hover:bg-black flex items-center justify-center ${
-              selected ? "border-black" : "border-gray-300"
+            className={`absolute top-3 right-3 z-10 rounded-full p-2 shadow-lg border-2 transition-all duration-200 focus:outline-none flex items-center justify-center ${
+              selected 
+                ? 'bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700 shadow-xl ring-2 ring-blue-300' 
+                : 'bg-white/90 hover:bg-gray-100 border-gray-300 hover:border-gray-400'
             }`}
             onClick={(e) => {
               e.stopPropagation();
@@ -166,50 +186,46 @@ const ProductSaleCard = ({ product, selected, onSelect }) => {
             }}
             aria-label={selected ? "Deselect product" : "Select product"}
             style={{ width: 36, height: 36 }}
-          >
-            {selected ? (
-              <span className="flex items-center justify-center w-full h-full rounded-full bg-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-6 h-6 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </span>
+          >            {selected ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6 text-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             ) : (
-              <span className="flex items-center justify-center w-full h-full rounded-full bg-white border-2 border-gray-300">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-6 h-6 text-gray-400"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                  />
-                </svg>
-              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 h-5 text-gray-400"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
             )}
           </button>
-        )}
-        {/* View Details button */}
+        )}        {/* View Details button */}
         <button
           type="button"
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded bg-black text-white font-semibold shadow hover:bg-black transition text-xs flex items-center justify-center gap-2 w-[89%] sm:min-w-[120px]"
+          className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded font-semibold shadow transition-all duration-200 text-xs flex items-center justify-center gap-2 w-[89%] sm:min-w-[120px] ${
+            selected 
+              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg' 
+              : 'bg-black text-white hover:bg-gray-800'
+          }`}
           onClick={(e) => {
             e.stopPropagation();
             setDetailsOpen(true);
@@ -239,18 +255,21 @@ const ProductSaleCard = ({ product, selected, onSelect }) => {
           onClose={() => setDetailsOpen(false)}
           product={product}
         />
-      </div>
-      <div className="flex flex-col items-start w-full flex-1 justify-between py-3">
+      </div>      <div className="flex flex-col items-start w-full flex-1 justify-between py-3">
         <h2
-          className="text-lg font-bold mb-1 text-left text-black truncate w-full"
+          className={`text-lg font-bold mb-1 text-left truncate w-full transition-colors duration-200 ${
+            selected ? 'text-blue-700' : 'text-black'
+          }`}
           title={product.name}
         >
           {product.name}
         </h2>
         {product.price && (
           <p
-            className="text-left font-semibold mb-2 w-full"
-            style={{ fontFamily: "sans-serif", color: "#15803d" }}
+            className={`text-left font-semibold mb-2 w-full transition-colors duration-200 ${
+              selected ? 'text-blue-600' : 'text-green-700'
+            }`}
+            style={{ fontFamily: "sans-serif" }}
           >
             Price: {product.price}
           </p>

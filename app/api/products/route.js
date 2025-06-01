@@ -6,11 +6,15 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const featured = searchParams.get('featured');
   const skip = (page - 1) * limit;
 
+  // Build query based on featured parameter
+  const query = featured === 'true' ? { isFeatured: true } : {};
+
   const [products, total] = await Promise.all([
-    Product.find().skip(skip).limit(limit),
-    Product.countDocuments()
+    Product.find(query).skip(skip).limit(limit),
+    Product.countDocuments(query)
   ]);
 
   return Response.json({
@@ -18,6 +22,12 @@ export async function GET(req) {
     total,
     page,
     totalPages: Math.ceil(total / limit)
+  }, {
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
   });
 }
 

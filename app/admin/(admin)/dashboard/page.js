@@ -58,9 +58,7 @@ const Page = () => {
     <div className="sm:p-4 md:p-6 space-y-8 bg-white min-h-screen">
       <h1 className="text-3xl mt-10 md:mt-2 font-bold text-black">Admin Dashboard</h1>
       
-      {/* Professional Dashboard Instructions */}
       <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        {/* Header */}
         <div className="bg-white border-b border-gray-200 px-6 py-5">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-sm">
@@ -75,10 +73,8 @@ const Page = () => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           <div className="grid lg:grid-cols-4 gap-6">
-            {/* Performance Metrics */}
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">

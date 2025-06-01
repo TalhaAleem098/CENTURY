@@ -1,7 +1,10 @@
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
 import { siteConfig } from "../metadata.config";
-import LayoutClient from "@/components/LayoutClient";
+import Navbar from "@/components/Navbar";
+import BrandBar from "@/components/BrandBar";
+import Sidebar from "@/components/sidebar";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Century – Premium Fashion Store",
@@ -69,7 +72,11 @@ export default function userLayout({ children }) {
     <>
       <SessionProviderWrapper>
         <Ribon />
-        <LayoutClient>{children}</LayoutClient>
+        <BrandBar />
+        <Navbar />
+        <Sidebar />
+        {children}
+        <Footer/>
       </SessionProviderWrapper>
     </>
   );

@@ -71,7 +71,6 @@ export default function AddProductPage() {
     [setValue, imageFiles]
   );
 
-  // Dropzone handler for a specific box (now supports multiple images dropped)
   const handleBoxDrop = (e, idx) => {
     e.preventDefault();
     let files = Array.from(e.dataTransfer.files).filter((f) =>
@@ -79,7 +78,6 @@ export default function AddProductPage() {
     );
     if (!files.length) return;
     const newFiles = [...imageFiles];
-    // Insert dropped files starting at idx, shifting others to the right
     files.forEach((file, i) => {
       newFiles[idx + i] = file;
     });
