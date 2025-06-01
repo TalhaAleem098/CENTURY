@@ -1,9 +1,7 @@
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
 import { siteConfig } from "../metadata.config";
-import Navbar from "@/components/Navbar";
-import BrandBar from "@/components/BrandBar";
-import Sidebar from "@/components/sidebar";
+import LayoutClient from "../LayoutClient";
 import Footer from "@/components/Footer";
 
 export const metadata = {
@@ -67,15 +65,13 @@ export default function userLayout({ children }) {
       "https://instagram.com/century",
     ],
   };
-
   return (
     <>
       <SessionProviderWrapper>
         <Ribon />
-        <BrandBar />
-        <Navbar />
-        <Sidebar />
-        {children}
+        <LayoutClient>
+          {children}
+        </LayoutClient>
         <Footer/>
       </SessionProviderWrapper>
     </>

@@ -1,42 +1,38 @@
-"use client"
-import React, { useState, useEffect } from "react"
-import { FaFacebookF, FaInstagram } from "react-icons/fa"
-import Image from "next/image"
+"use client";
+import React, { useState, useEffect } from "react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import Image from "next/image";
 
 const carouselTexts = [
-  "FREE SHIPPING ON ORDERS ABOVE 3999",
-  "GET 5% DISCOUNT ON YOUR FIRST ORDER",
+  "FREE SHIPPING ON ORDERS ABOVE 4999",
   "CULT OF CYPHER VOLUME 1 IS LIVE NOW",
   "LIMITED TIME DEALS JUST FOR YOU",
-  "SIGN UP & GET 10% OFF INSTANTLY",
-  "NEW DROPS EVERY FRIDAY — DON’T MISS OUT",
-  "EASY RETURNS WITHIN 7 WORKING DAYS",
   "COD AVAILABLE ACROSS PAKISTAN",
   "FOLLOW US FOR STYLE UPDATES",
-  "QUALITY GUARANTEED OR MONEY BACK"
-]
+];
 
 const Ribon = () => {
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % carouselTexts.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
+      setCurrent((prev) => (prev + 1) % carouselTexts.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const nextText = () => {
-    setCurrent((prev) => (prev + 1) % carouselTexts.length)
-  }
+    setCurrent((prev) => (prev + 1) % carouselTexts.length);
+  };
 
   const prevText = () => {
-    setCurrent((prev) => (prev - 1 + carouselTexts.length) % carouselTexts.length)
-  }
+    setCurrent(
+      (prev) => (prev - 1 + carouselTexts.length) % carouselTexts.length
+    );
+  };
 
   return (
     <div className="w-full bg-black text-white text-sm py-2 px-4 flex items-center justify-between gap-4 border-b border-gray-800">
-      
       {/* Left Icons */}
       <div className="hidden md:flex gap-2">
         <a
@@ -93,7 +89,7 @@ const Ribon = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Ribon
+export default Ribon;

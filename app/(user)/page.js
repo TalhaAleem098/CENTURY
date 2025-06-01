@@ -26,7 +26,7 @@ async function fetchFeaturedProducts() {
 }
 
 // Product Card Component
-function ProductCard({ product, index }) {
+function ProductCard({ product, index, onCartSuccess }) {
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
@@ -86,6 +86,12 @@ function ProductCard({ product, index }) {
         pauseOnHover: true,
         draggable: true,
       });
+      // Show modal for quantity update
+      onCartSuccess({
+        ...cartItem,
+        quantity: existingCart[existingItemIndex].quantity,
+        isUpdate: true
+      });
     } else {
       existingCart.push(cartItem);
       toast.success('Product added to cart successfully! 🎉', {
@@ -95,6 +101,11 @@ function ProductCard({ product, index }) {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
+      });
+      // Show modal for new item
+      onCartSuccess({
+        ...cartItem,
+        isUpdate: false
       });
     }
 
@@ -107,18 +118,18 @@ function ProductCard({ product, index }) {
 
   return (
     <div 
-      className="flex-shrink-0 w-80 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
+      className="w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container - 1.5:1 aspect ratio */}
-      <div className="relative h-[480px] overflow-hidden rounded-t-lg">
+      <div className="relative h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden rounded-t-lg">
         <Image
           src={currentImage}
           alt={product.name}
           fill
           className="object-cover transition-opacity duration-500"
-          sizes="320px"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           priority={index < 6}
         />
         
@@ -195,99 +206,60 @@ function ProductCard({ product, index }) {
   );
 }
 
-// Products Scroll Container with Navigation
-function ProductsScrollContainer({ products }) {
-  const scrollRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const checkScrollButtons = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      if (scrollLeft <= 0) {
-        // Infinite scroll: jump to end
-        scrollRef.current.scrollTo({ left: scrollWidth - clientWidth, behavior: 'smooth' });
-      } else {
-        scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
-      }
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      if (scrollLeft >= scrollWidth - clientWidth - 10) {
-        // Infinite scroll: jump to beginning
-        scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
-      }
-    }
-  };
-
-  useEffect(() => {
-    checkScrollButtons();
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      scrollElement.addEventListener('scroll', checkScrollButtons);
-      return () => scrollElement.removeEventListener('scroll', checkScrollButtons);
-    }
-  }, [products]);
+// Products Grid Container
+function ProductsGridContainer({ products, onCartSuccess }) {
+  const [showAll, setShowAll] = useState(false);
+  const productsToShow = showAll ? products : products.slice(0, 9); // Show 9 products initially (3 rows)
 
   return (
-    <div className="relative w-full">
-      {/* Navigation Buttons */}
-      <button
-        onClick={scrollLeft}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 hover:bg-gray-100 hover:border-gray-900 text-gray-900"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      <button
-        onClick={scrollRight}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 hover:bg-gray-100 hover:border-gray-900 text-gray-900"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Products Container */}
-      <div 
-        ref={scrollRef}
-        className="flex gap-6 overflow-x-auto px-4 py-2 scrollbar-hide"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
-      >
-        {products.map((product, index) => (
+    <div className="w-full">
+      {/* Products Grid - 3 products per row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-2">
+        {productsToShow.map((product, index) => (
           <ProductCard 
             key={product._id || index} 
             product={product} 
             index={index}
+            onCartSuccess={onCartSuccess}
           />
         ))}
       </div>
+
+      {/* Show More Button */}
+      {products.length > 9 && !showAll && (
+        <div className="text-center mt-8">
+          <button
+            onClick={() => setShowAll(true)}
+            className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
+          >
+            Show More Products ({products.length - 9} more)
+          </button>
+        </div>
+      )}
+
+      {/* Show Less Button */}
+      {showAll && products.length > 9 && (
+        <div className="text-center mt-8">
+          <button
+            onClick={() => {
+              setShowAll(false);
+              // Scroll to products section
+              document.querySelector('.products-section')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="px-8 py-3 border border-gray-900 text-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition-all duration-200 font-medium"
+          >
+            Show Less
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 // Main Products Section Component
-function ProductsSection({ products }) {
+function ProductsSection({ products, onCartSuccess }) {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gray-50 products-section">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -303,7 +275,7 @@ function ProductsSection({ products }) {
 
         {/* Products Display */}
         {products && products.length > 0 ? (
-          <ProductsScrollContainer products={products} />
+          <ProductsGridContainer products={products} onCartSuccess={onCartSuccess} />
         ) : (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🛍️</div>
@@ -367,9 +339,135 @@ function VideoSection() {
   );
 }
 
+// Cart Success Modal Component
+function CartSuccessModal({ isOpen, onClose, cartItem }) {
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Calculate total cart items
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      setCartCount(totalItems);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || !cartItem) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full mx-4 overflow-hidden shadow-2xl">
+        {/* Header */}
+        <div className="bg-green-50 px-6 py-4 border-b border-green-100">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-green-800">
+                  {cartItem.isUpdate ? 'Cart Updated!' : 'Added to Cart!'}
+                </h3>
+                <p className="text-sm text-green-600">
+                  {cartItem.isUpdate ? 'Quantity increased' : 'Product successfully added'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 p-1"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Product Details */}
+        <div className="p-6">
+          <div className="flex gap-4 mb-6">
+            <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+              <Image
+                src={cartItem.image}
+                alt={cartItem.name}
+                width={80}
+                height={80}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium text-gray-900 line-clamp-2 mb-2">
+                {cartItem.name}
+              </h4>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-semibold text-gray-900">
+                  ₨{cartItem.price.toLocaleString()}
+                </span>
+                {cartItem.originalPrice !== cartItem.price && (
+                  <span className="text-sm text-gray-500 line-through">
+                    ₨{cartItem.originalPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {cartItem.size && (
+                  <span>Size: <span className="font-medium">{cartItem.size}</span></span>
+                )}
+                <span>Qty: <span className="font-medium">{cartItem.quantity}</span></span>
+              </div>
+            </div>
+          </div>
+
+          {/* Cart Summary */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Total items in cart:</span>
+              <span className="font-semibold text-gray-900">{cartCount}</span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Continue Shopping
+            </button>
+            <button
+              onClick={() => {
+                onClose();
+                window.location.href = '/cart';
+              }}
+              className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
+            >
+              View Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [cartModalData, setCartModalData] = useState(null);
+
+  const handleCartSuccess = (cartItem) => {
+    setCartModalData(cartItem);
+    setShowCartModal(true);
+  };
+
+  const closeCartModal = () => {
+    setShowCartModal(false);
+    setCartModalData(null);
+  };
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -405,8 +503,13 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-      <ProductsSection products={products} />
+      <ProductsSection products={products} onCartSuccess={handleCartSuccess} />
       <VideoSection />
+      <CartSuccessModal 
+        isOpen={showCartModal} 
+        onClose={closeCartModal} 
+        cartItem={cartModalData} 
+      />
       <ToastContainer
         position="top-right"
         autoClose={3000}

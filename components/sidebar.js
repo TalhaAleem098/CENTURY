@@ -13,6 +13,9 @@ import {
   FaTshirt,
   FaUserCircle,
   FaSignOutAlt,
+  FaQuestionCircle,
+  FaShieldAlt,
+  FaFileContract,
 } from "react-icons/fa";
 
 const navItems = [
@@ -32,14 +35,17 @@ const navItems = [
   { name: "Contact", href: "/contact", icon: <FaEnvelope /> },
   { name: "Shop All", href: "/shop", icon: <FaStore /> },
   { name: "About", href: "/about", icon: <FaInfoCircle /> },
+  { name: "FAQ", href: "/faq", icon: <FaQuestionCircle /> },
+  { name: "Privacy Policy", href: "/privacy", icon: <FaShieldAlt /> },
+  { name: "Terms & Conditions", href: "/terms", icon: <FaFileContract /> },
 ];
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
-  const { data: session } = useSession();
-  const sidebarRef = useRef(null);
+  const { data: session } = useSession();  const sidebarRef = useRef(null);
   const overlayRef = useRef(null);
   const menuItemsRef = useRef([]);
+
   // Initialize sidebar position on mount
   useEffect(() => {
     // Clear menu items ref array on mount
@@ -192,22 +198,23 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 <FaSignOutAlt size={18} />
                 <span className="font-medium">Logout</span>
               </button>
-            </div>
-          ) : (
+            </div>          ) : (
             <div className="text-center py-4">
-              <div className="text-gray-500 text-sm mb-2">Not signed in</div>              <button 
+              <div className="text-gray-500 text-sm mb-2">Not signed in</div>
+              <Link 
+                href="/login"
                 className="text-green-600 font-medium text-sm hover:text-green-700 transition-all duration-300 hover:scale-105"
                 onClick={handleLinkClick}
               >
                 Sign In
-              </button>
+              </Link>
             </div>
           )}
         </div>
       </nav>      {/* Overlay */}
       <div
-        onClick={handleLinkClick}
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-0 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={onToggle}
+        className={`fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       ></div>
     </>
   );
