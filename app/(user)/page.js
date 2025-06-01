@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import HeroSection from '../../components/HeroSection';
 import Image from 'next/image';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Fetch featured products from API
 async function fetchFeaturedProducts() {
@@ -38,50 +40,62 @@ function ProductCard({ product, index }) {
   const originalPrice = product.price;
   const discountedPrice = hasDiscount ? originalPrice * (1 - product.sale.percentage / 100) : originalPrice;
 
-  // Handle image hover animation - just transition, no zoom
+  // Handle image hover animation - quick transition, no delay
   useEffect(() => {
-    let timeout;
     if (isHovered && hasMultipleImages) {
-      timeout = setTimeout(() => {
-        setCurrentImageIndex(1);
-      }, 300);
+      setCurrentImageIndex(1);
     } else {
       setCurrentImageIndex(0);
     }
-    return () => clearTimeout(timeout);
   }, [isHovered, hasMultipleImages]);
 
   // Add to cart function
   const addToCart = () => {
-    if (!selectedSize && product.sizes?.length > 0) {
-      alert('Please select a size');
-      return;
-    }
-
+    // Create cart item object
     const cartItem = {
       id: product._id,
       name: product.name,
       price: discountedPrice,
       originalPrice: originalPrice,
       image: currentImage,
-      size: selectedSize,
       category: product.category,
       quantity: 1,
       addedAt: new Date().toISOString()
     };
 
+    // Only add size if one is selected
+    if (selectedSize) {
+      cartItem.size = selectedSize;
+    }
+
     // Get existing cart from localStorage
     const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
     
-    // Check if item already exists with same size
+    // Check if item already exists (with same size if size is selected)
     const existingItemIndex = existingCart.findIndex(
-      item => item.id === product._id && item.size === selectedSize
+      item => item.id === product._id && (selectedSize ? item.size === selectedSize : !item.size)
     );
 
     if (existingItemIndex > -1) {
       existingCart[existingItemIndex].quantity += 1;
+      toast.success('Quantity updated in cart! 🛒', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } else {
       existingCart.push(cartItem);
+      toast.success('Product added to cart successfully! 🎉', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
 
     localStorage.setItem('cart', JSON.stringify(existingCart));
@@ -89,18 +103,16 @@ function ProductCard({ product, index }) {
     // Show success message
     const event = new CustomEvent('cartUpdated', { detail: existingCart });
     window.dispatchEvent(event);
-    
-    alert('Product added to cart!');
   };
 
   return (
     <div 
-      className="flex-shrink-0 w-80 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-200"
+      className="flex-shrink-0 w-80 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image Container - Larger */}
-      <div className="relative h-96 overflow-hidden rounded-t-lg">
+      {/* Image Container - 1.5:1 aspect ratio */}
+      <div className="relative h-[480px] overflow-hidden rounded-t-lg">
         <Image
           src={currentImage}
           alt={product.name}
@@ -124,7 +136,7 @@ function ProductCard({ product, index }) {
       </div>
 
       {/* Product Info - Smaller */}
-      <div className="p-4">
+      <div className="p-4 bg-white/90 backdrop-blur-sm rounded-b-lg">
         {/* Title */}
         <h3 className="font-semibold text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
           {product.name}
@@ -199,13 +211,25 @@ function ProductsScrollContainer({ products }) {
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      if (scrollLeft <= 0) {
+        // Infinite scroll: jump to end
+        scrollRef.current.scrollTo({ left: scrollWidth - clientWidth, behavior: 'smooth' });
+      } else {
+        scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+      }
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      if (scrollLeft >= scrollWidth - clientWidth - 10) {
+        // Infinite scroll: jump to beginning
+        scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+      }
     }
   };
 
@@ -223,12 +247,7 @@ function ProductsScrollContainer({ products }) {
       {/* Navigation Buttons */}
       <button
         onClick={scrollLeft}
-        disabled={!canScrollLeft}
-        className={`absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 ${
-          canScrollLeft 
-            ? 'hover:bg-gray-100 hover:border-gray-900 text-gray-900' 
-            : 'text-gray-400 cursor-not-allowed'
-        }`}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 hover:bg-gray-100 hover:border-gray-900 text-gray-900"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -237,12 +256,7 @@ function ProductsScrollContainer({ products }) {
 
       <button
         onClick={scrollRight}
-        disabled={!canScrollRight}
-        className={`absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 ${
-          canScrollRight 
-            ? 'hover:bg-gray-100 hover:border-gray-900 text-gray-900' 
-            : 'text-gray-400 cursor-not-allowed'
-        }`}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center transition-all duration-200 hover:bg-gray-100 hover:border-gray-900 text-gray-900"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -302,6 +316,57 @@ function ProductsSection({ products }) {
   );
 }
 
+// Video Section Component
+function VideoSection() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    // Auto-play video when component mounts
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log("Auto-play was prevented:", error);
+      });
+    }
+  }, []);
+
+  return (
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Background Video - Full Width */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.webm" type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Dark Overlay for Better Text Readability */}
+      <div className="absolute inset-0 bg-black/50"></div>
+
+      {/* Content Overlay */}
+      <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Main Heading */}
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            Experience Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Story</span>
+          </h2>
+          
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+            Dive into the world of premium fashion. Watch how we craft excellence, 
+            one product at a time, bringing you the finest collection curated with passion.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -341,6 +406,19 @@ export default function Home() {
     <div>
       <HeroSection />
       <ProductsSection products={products} />
+      <VideoSection />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
