@@ -78,12 +78,6 @@ export async function POST(req) {
       data = await req.json();
     }
     const { slug, category, images, ...rest } = data;
-    // Debug: log incoming data
-    console.log('Received data:', data);
-    console.log('Slug:', slug);
-    console.log('Category:', category);
-    console.log('Images:', images);
-    // Validate slug
     if (!slug) {
       console.error('Missing required field: slug');
       return NextResponse.json({ error: 'Missing required field: slug' }, { status: 400 });
@@ -116,7 +110,6 @@ export async function POST(req) {
     } else {
       product = await Product.create({ ...rest, slug, images });
     }
-    console.log('Product created:', product);
     return NextResponse.json({ success: true, product });
   } catch (error) {
     console.error('Error creating product:', error);

@@ -23,14 +23,14 @@ export async function DELETE(req) {
         if (img.public_id) {
           try {
             await cloudinary.uploader.destroy(img.public_id);
-            console.log(`Image deleted from Cloudinary: ${img.public_id}`);
+            // console.log(`Image deleted from Cloudinary: ${img.public_id}`);
           } catch (err) {
-            console.log(`Failed to delete image from Cloudinary: ${img.public_id}`, err.message);
+            // console.log(`Failed to delete image from Cloudinary: ${img.public_id}`, err.message);
           }
         }
       }
     }
-    console.log('All images deleted from Cloudinary (or attempted).');
+    // console.log('All images deleted from Cloudinary (or attempted).');
 
     // Delete the product from the correct model
     let deleted = await Product.findByIdAndDelete(id);
@@ -40,11 +40,11 @@ export async function DELETE(req) {
     if (!deleted) {
       return Response.json({ error: 'Product not found for deletion' }, { status: 404 });
     }
-    console.log('Product deleted from database:', deleted._id);
+    // console.log('Product deleted from database:', deleted._id);
 
     return Response.json({ success: true, deleted });
   } catch (e) {
-    console.log('Error during product/image deletion:', e.message);
+    // console.log('Error during product/image deletion:', e.message);
     return Response.json({ error: e.message }, { status: 500 });
   }
 }

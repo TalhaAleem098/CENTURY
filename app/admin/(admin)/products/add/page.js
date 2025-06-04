@@ -159,7 +159,6 @@ export default function AddProductPage() {
   }
   async function uploadToCloudinary(files) {
     setTooltip("Uploading images to Cloudinary...");
-    console.log("Uploading images to Cloudinary:", files);
     const uploaders = files.map(async (file, idx) => {
       const buffer = await readFileAsArrayBuffer(file);
       const baseName = file.name.replace(/\.[^/.]+$/, "");
@@ -170,11 +169,9 @@ export default function AddProductPage() {
       const result = await uploadImageToCloudinary(buffer, fileName);
       if (!result.public_id || !result.url)
         throw new Error("Cloudinary upload failed");
-      console.log(`Image ${idx + 1} uploaded:`, result);
       return { public_id: result.public_id, url: result.url };
     });
     const uploaded = await Promise.all(uploaders);
-    console.log("All images uploaded to Cloudinary:", uploaded);
     setTooltip("Images uploaded successfully!");
     await new Promise((res) => setTimeout(res, 800));
     setTooltip("Uploading product data...");
@@ -262,10 +259,6 @@ export default function AddProductPage() {
           formData.append(key, value);
         }
       });
-      console.log(
-        "Submitting product to backend:",
-        Object.fromEntries(formData.entries())
-      );
       const res = await fetch("/api/add-product", {
         method: "POST",
         body: formData,

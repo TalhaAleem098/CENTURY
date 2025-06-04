@@ -76,22 +76,15 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       const result = await response.json();
 
       if (response.ok) {
-        console.log('=== ORDER SAVED SUCCESSFULLY ===');
-        console.log('Order ID:', result.orderId);
-        console.log('Order Number:', result.orderNumber);
-        console.log('Full Order Data:', JSON.stringify(result.order, null, 2));
-        console.log('=== END ORDER DETAILS ===');
         
         toast.success(`Order placed successfully! Order Number: ${result.orderNumber}`);
         
-        // Clear cart
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
         }
         
         onClose();
         
-        // Refresh page to update cart state
         window.location.reload();
         
       } else {

@@ -22,21 +22,7 @@ import {
 import MonthlySalesChart from "./components/MonthlySalesChart";
 import MonthlyOrdersChart from "./components/MonthlyOrdersChart";
 
-const dummySalesData = [
-  { month: "Jun 2024", sales: 3500, orders: 120 },
-  { month: "Jul 2024", sales: 4800, orders: 145 },
-  { month: "Aug 2024", sales: 5200, orders: 153 },
-  { month: "Sep 2024", sales: 6100, orders: 165 },
-  { month: "Oct 2024", sales: 7100, orders: 189 },
-  { month: "Nov 2024", sales: 6700, orders: 172 },
-  { month: "Dec 2024", sales: 9800, orders: 215 },
-  { month: "Jan 2025", sales: 9200, orders: 201 },
-  { month: "Feb 2025", sales: 8900, orders: 188 },
-  { month: "Mar 2025", sales: 10200, orders: 222 },
-  { month: "Apr 2025", sales: 11600, orders: 240 },
-  { month: "May 2025", sales: 12300, orders: 258 },
-];
-
+// Keep category and revenue data for other sections of dashboard
 const categoryData = [
   { name: "Electronics", sales: 45000, color: "#3b82f6" },
   { name: "Clothing", sales: 32000, color: "#10b981" },
@@ -57,8 +43,12 @@ const Page = () => {
   const [monthlySalesData, setMonthlySalesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Fetch monthly sales data from API
+  const [dashboardStats, setDashboardStats] = useState({
+    totalSales: 0,
+    totalOrders: 0,
+    totalCustomers: 0,
+    refunds: 64, // Static value as no refund tracking yet
+  });
   const fetchMonthlySales = async (year = new Date().getFullYear()) => {
     try {
       setLoading(true);
@@ -67,30 +57,58 @@ const Page = () => {
       const response = await fetch(`/api/monthly-sales?year=${year}`);
       const result = await response.json();
 
+
       if (result.success && result.data && result.data.length > 0) {
         const transformedData = result.data.map((item) => {
-          const monthParts = item.monthName.split(" ");
-          const monthName = monthParts[0].substring(0, 3);
-          const yearShort = monthParts[1]
-            ? monthParts[1].substring(2)
-            : year.toString().substring(2);
+          const monthName = item.monthName.substring(0, 3); // First 3 letters of month
+          const yearShort = item.year.toString().substring(2); // Last 2 digits of year
+
           return {
-            month: `${monthName} ${yearShort}`,
-            sales: item.totalRevenue || 0,
-            orders: item.totalOrders || 0,
-            customers: item.totalCustomers || 0,
-            refunds: item.refunds || 0,
+            month: `${monthName} ${yearShort}`, // e.g., "Jun 25"
+            sales: item.totalSales || 0, // Use totalSales from API
+            orders: item.totalOrders || 0, // Use totalOrders from API
+            monthNumber: item.month, // Keep original month number for sorting
+            fullMonthName: item.monthName, // Keep full month name
+            year: item.year, // Keep year
           };
         });
         setMonthlySalesData(transformedData);
+
+        // Calculate dashboard statistics from API data
+        const totalSales =
+          result.summary?.totalSales ||
+          result.data.reduce((sum, item) => sum + (item.totalSales || 0), 0);
+        const totalOrders =
+          result.summary?.totalOrders ||
+          result.data.reduce((sum, item) => sum + (item.totalOrders || 0), 0);
+
+        setDashboardStats({
+          totalSales: totalSales,
+          totalOrders: totalOrders,
+          totalCustomers: totalOrders, // Assuming 1 customer per order
+          refunds: 64, // Static value for now
+        });
+
       } else {
         setMonthlySalesData([]);
+        setDashboardStats({
+          totalSales: 0,
+          totalOrders: 0,
+          totalCustomers: 0,
+          refunds: 64,
+        });
         setError("No sales data found for the selected year");
       }
     } catch (err) {
       console.error("Error fetching monthly sales:", err);
       setError("Failed to fetch sales data from server");
       setMonthlySalesData([]);
+      setDashboardStats({
+        totalSales: 0,
+        totalOrders: 0,
+        totalCustomers: 0,
+        refunds: 64,
+      });
     } finally {
       setLoading(false);
     }
@@ -105,7 +123,6 @@ const Page = () => {
         method: "POST",
       });
     } catch (err) {
-      console.log("Background cleanup completed");
     }
   };
 
@@ -133,7 +150,6 @@ const Page = () => {
       <h1 className="text-3xl mt-10 md:mt-2 font-bold text-black">
         Admin Dashboard
       </h1>
-
       <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="bg-white border-b border-gray-200 px-6 py-5">
           <div className="flex items-center gap-4">
@@ -409,29 +425,27 @@ const Page = () => {
             </div>
           </div>
         </div>
-      </div>
-
+      </div>{" "}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {" "}
         {[
           {
             label: "Total Sales",
-            value: "$102,450",
+            value: `Rs ${dashboardStats.totalSales.toLocaleString()}`,
             color: "text-green-600",
-          },
-          {
+          },          {
             label: "Total Orders",
-            value: "2,134",
+            value: dashboardStats.totalOrders.toLocaleString(),
             color: "text-blue-600",
           },
           {
             label: "Total Customers",
-            value: "1,430",
+            value: dashboardStats.totalCustomers.toLocaleString(),
             color: "text-purple-600",
           },
           {
             label: "Refunds",
-            value: "64",
+            value: dashboardStats.refunds.toString(),
             color: "text-red-600",
           },
         ].map(({ label, value, color }) => (
@@ -448,7 +462,7 @@ const Page = () => {
           </div>
         ))}
       </div>
-      <div className='space-y-8 bg-white'>
+      <div className="space-y-8 bg-white">
         {error && !loading && (
           <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
             {error}
@@ -470,7 +484,6 @@ const Page = () => {
           </button>
         </div>
       </div>
-
       <div className="w-full  grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
         {/* Category Sales - Bar Chart */}
         <div className="w-full bg-gradient-to-br from-white to-purple-50 p-2 sm:p-4 md:p-6 xl:p-8 rounded-2xl shadow-lg border border-purple-100 hover:shadow-xl transition-shadow duration-300 flex flex-col">
@@ -548,7 +561,7 @@ const Page = () => {
                   tick={{ fill: "#6b7280", fontSize: 12 }}
                   axisLine={{ stroke: "#d1d5db" }}
                   tickLine={{ stroke: "#d1d5db" }}
-                  tickFormatter={(value) => `$${value / 1000}k`}
+                  tickFormatter={(value) => `Rs. ${value / 1000}k`}
                 />
                 <Tooltip
                   contentStyle={{
@@ -559,7 +572,7 @@ const Page = () => {
                     color: "#fff",
                   }}
                   labelStyle={{ color: "#e5e7eb" }}
-                  formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
+                  formatter={(value) => [`Rs. ${value.toLocaleString()}`, "Sales"]}
                 />
                 <Legend
                   wrapperStyle={{
@@ -663,7 +676,7 @@ const Page = () => {
                   tick={{ fill: "#6b7280", fontSize: 12 }}
                   axisLine={{ stroke: "#d1d5db" }}
                   tickLine={{ stroke: "#d1d5db" }}
-                  tickFormatter={(value) => `$${value / 1000}k`}
+                  tickFormatter={(value) => `Rs. ${value / 1000}k`}
                 />
                 <Tooltip
                   contentStyle={{
@@ -675,7 +688,7 @@ const Page = () => {
                   }}
                   labelStyle={{ color: "#e5e7eb" }}
                   formatter={(value, name) => [
-                    `$${value.toLocaleString()}`,
+                    `Rs ${value.toLocaleString()}`,
                     name === "revenue" ? "Revenue" : "Profit",
                   ]}
                 />
@@ -759,7 +772,6 @@ const Page = () => {
           </ul>
         </div>
       </div>
-
       <div className="bg-white text-black p-4 sm:p-6 rounded-lg shadow-lg border border-gray-200 mt-6 sm:mt-8">
         <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-black">
           Top Selling Products
@@ -784,7 +796,6 @@ const Page = () => {
           ))}
         </ul>
       </div>
-
       <div className="bg-white text-black p-4 sm:p-6 rounded-lg shadow-lg border border-gray-200 mt-6 sm:mt-8">
         <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-black">
           Inventory Overview

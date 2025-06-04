@@ -11,7 +11,7 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Status is : ", status)
+    // ("Status is : ", status)
     if (status === "authenticated") {
       router.replace('/');
     }

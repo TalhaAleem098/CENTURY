@@ -28,10 +28,9 @@ export default function TermsPage() {
               </p>
             </section>
 
-            <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Use License</h2>
+            <section className="mb-8">              <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Use License</h2>
               <p className="text-gray-700 mb-4">
-                Permission is granted to temporarily download one copy of the materials on Century's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+                Permission is granted to temporarily download one copy of the materials on Century&apos;s website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
                 <li>modify or copy the materials</li>
@@ -81,19 +80,15 @@ export default function TermsPage() {
               <p className="text-gray-700 mb-4">
                 You may not use our service for any illegal or unauthorized purpose. You agree not to violate any laws in your jurisdiction when using our service.
               </p>
-            </section>
-
-            <section className="mb-8">
+            </section>            <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Disclaimer</h2>
               <p className="text-gray-700 mb-4">
-                The materials on Century's website are provided on an 'as is' basis. Century makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+                The materials on Century&apos;s website are provided on an &apos;as is&apos; basis. Century makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
               </p>
-            </section>
-
-            <section className="mb-8">
+            </section>            <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Limitations</h2>
               <p className="text-gray-700 mb-4">
-                In no event shall Century or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Century's website, even if Century or a Century authorized representative has been notified orally or in writing of the possibility of such damage.
+                In no event shall Century or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Century&apos;s website, even if Century or a Century authorized representative has been notified orally or in writing of the possibility of such damage.
               </p>
             </section>
 

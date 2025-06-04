@@ -281,23 +281,18 @@ function ProductsSection({ products, onCartSuccess }) {
     </section>
   );
 }
-
-// Video Section Component
 function VideoSection() {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Auto-play video when component mounts
     if (videoRef.current) {
       videoRef.current.play().catch(error => {
-        console.log("Auto-play was prevented:", error);
       });
     }
   }, []);
 
   return (
     <section className="relative w-full h-screen overflow-hidden">
-      {/* Background Video - Full Width */}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"

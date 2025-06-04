@@ -149,7 +149,6 @@ export default function PrivacyPage() {
       }
     ]
   };
-
   useEffect(() => {
     const handleScroll = () => {
       const sections = privacyData.sections;
@@ -166,7 +165,7 @@ export default function PrivacyPage() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [privacyData.sections]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);

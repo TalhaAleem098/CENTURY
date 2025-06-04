@@ -91,7 +91,7 @@ const MonthlySalesChart = ({ data = [], loading = false }) => {
                 tick={{ fill: "#6b7280", fontSize: 12 }}
                 axisLine={{ stroke: "#d1d5db" }}
                 tickLine={{ stroke: "#d1d5db" }}
-                tickFormatter={(value) => `$${value / 1000}k`}
+                tickFormatter={(value) => `Rs. ${value / 1000}k`}
               />
               <Tooltip
                 contentStyle={{
@@ -102,7 +102,7 @@ const MonthlySalesChart = ({ data = [], loading = false }) => {
                   color: "#fff",
                 }}
                 labelStyle={{ color: "#e5e7eb" }}
-                formatter={(value) => [`$${value.toLocaleString()}`, "Sales"]}
+                formatter={(value) => [`Rs. ${value.toLocaleString()}`, "Sales"]}
               />
               <Legend
                 wrapperStyle={{
@@ -119,7 +119,7 @@ const MonthlySalesChart = ({ data = [], loading = false }) => {
                 dataKey="sales"
                 stroke="#10b981"
                 strokeWidth={4}
-                name="Sales ($)"
+                name="Sales (Rs)"
                 dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
                 activeDot={{
                   r: 8,

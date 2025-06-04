@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/utils/connectDB';
 import Order from '@/models/Order';
 import Product from '@/models/Product.base';
+import MonthlySales from '@/models/MonthlySales';
 
 export async function POST(request) {
   try {
@@ -9,17 +10,6 @@ export async function POST(request) {
 
     const orderData = await request.json();
     
-    console.log('=== INCOMING ORDER DATA ===');
-    console.log('Order Data Keys:', Object.keys(orderData));
-    console.log('Customer Name:', orderData.customerName);
-    console.log('Customer Email:', orderData.customerEmail);
-    console.log('Customer Phone:', orderData.customerPhone);
-    console.log('Address:', orderData.address);
-    console.log('City:', orderData.city);
-    console.log('Zip Code:', orderData.zipCode);
-    console.log('Items Count:', orderData.items?.length);
-    console.log('Total Amount:', orderData.totalAmount);
-    console.log('=== END INCOMING DATA ===');    // Validate required fields
     const requiredFields = [
       'customerName', 
       'customerEmail', 
@@ -111,20 +101,26 @@ export async function POST(request) {
     });    // Save order to database
     const savedOrder = await newOrder.save();
 
-    console.log('=== ORDER SAVED TO DATABASE ===');
-    console.log('Order ID:', savedOrder._id);
-    console.log('Customer:', savedOrder.customer.name, '-', savedOrder.customer.email);
-    console.log('Customer Address:', savedOrder.customer.address.street, savedOrder.customer.address.city, savedOrder.customer.address.zipCode);
-    console.log('Subtotal Amount:', subtotalAmount);
-    console.log('Shipping Cost:', shippingCost);
-    console.log('Final Total Amount:', savedOrder.totalAmount);
-    console.log('Items Count:', savedOrder.items.length);
-    console.log('Items with Images:', savedOrder.items.map(item => ({
-      productName: item.productName,
-      hasImage: !!item.productImage,
-      imageUrl: item.productImage
-    })));
-    console.log('=== END DATABASE LOG ===');    return NextResponse.json({
+    // console.log('=== END DATABASE LOG ===');
+
+    // Automatically track this order in monthly sales
+    // console.log('=== ADDING ORDER TO MONTHLY SALES ===');
+    try {
+      const monthlySalesResult = await MonthlySales.addOrder(finalTotalAmount, savedOrder.orderDate);
+      if (monthlySalesResult.success) {
+        // console.log('✓ Order successfully added to monthly sales tracking');
+        // console.log(`   Month: ${monthlySalesResult.month} ${monthlySalesResult.year}`);
+        // console.log(`   Total Orders: ${monthlySalesResult.totalOrders}`);
+        // console.log(`   Total Sales: $${monthlySalesResult.totalSales}`);
+      } else {
+        console.error('❌ Failed to add order to monthly sales:', monthlySalesResult.error);
+      }    } catch (salesError) {
+      console.error('❌ Error during monthly sales tracking:', salesError);
+      // Don't fail the order creation if monthly sales tracking fails
+    }
+    // console.log('=== MONTHLY SALES TRACKING COMPLETED ===');
+    
+    return NextResponse.json({
       success: true,
       message: 'Order placed successfully',
       orderId: savedOrder._id,

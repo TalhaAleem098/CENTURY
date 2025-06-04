@@ -49,9 +49,9 @@ const Page = () => {
         if (Array.isArray(product.images)) {
           product.images.forEach((img, idx) => {
             if (img.url) {
-              console.log(
-                `Product: ${product.name} | Image ${idx + 1}: ${img.url}`
-              );
+              // console.log(
+                // `Product: ${product.name} | Image ${idx + 1}: ${img.url}`
+              // );
             }
           });
         }

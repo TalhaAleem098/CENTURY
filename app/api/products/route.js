@@ -48,7 +48,7 @@ export async function POST(req) {
   }
 
   // Log the received and created product to the console for debugging
-  console.log('Created product:', product);
+  // console.log('Created product:', product);
 
   // Return both the received data and the created product
   return Response.json({

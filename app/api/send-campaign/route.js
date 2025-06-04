@@ -490,7 +490,7 @@ export async function POST(request) {
         }
       }
 
-      console.log(`Email campaign completed: ${successCount} sent, ${failCount} failed`);
+      // console.log(`Email campaign completed: ${successCount} sent, ${failCount} failed`);
     });
 
     return response;
