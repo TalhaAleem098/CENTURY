@@ -385,19 +385,7 @@ const ApplySalePage = () => {
         selectedProducts={selected}
         loading={applyLoading}
       />
-      <ToastContainer
-        position="top-right"
-        autoClose={2500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"        toastClassName="rounded-xl shadow-lg bg-black text-base font-semibold"
-        bodyClassName="text-gray-900 bg-black"
-      />
+     
       </div>
     </div>
   );

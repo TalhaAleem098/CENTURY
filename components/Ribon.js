@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si";
 import Image from "next/image";
 
 const carouselTexts = [
@@ -32,11 +33,10 @@ const Ribon = () => {
   };
 
   return (
-    <div className="w-full bg-black text-white text-sm py-2 px-4 flex items-center justify-between gap-4 border-b border-gray-800">
-      {/* Left Icons */}
+    <div className="w-full bg-black text-white text-sm py-2 px-4 flex items-center justify-between gap-4 border-b border-gray-800">      {/* Left Icons */}
       <div className="hidden md:flex gap-2">
         <a
-          href="https://facebook.com"
+          href="https://www.facebook.com/profile.php?id=61576551254002"
           target="_blank"
           rel="noopener noreferrer"
           className="text-white border border-white rounded-full p-2 hover:bg-white hover:text-black transition"
@@ -44,12 +44,20 @@ const Ribon = () => {
           <FaFacebookF size={14} />
         </a>
         <a
-          href="https://instagram.com"
+          href="https://www.instagram.com/century.pk?igsh=aHJvemhjbHdncXhk&utm_source=qr"
           target="_blank"
           rel="noopener noreferrer"
           className="text-white border border-white rounded-full p-2 hover:bg-white hover:text-black transition"
         >
           <FaInstagram size={14} />
+        </a>
+        <a
+          href="http://www.tiktok.com/@century.pk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white border border-white rounded-full p-2 hover:bg-white hover:text-black transition"
+        >
+          <SiTiktok size={14} />
         </a>
       </div>
 

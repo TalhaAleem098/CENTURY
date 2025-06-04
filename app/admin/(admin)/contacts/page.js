@@ -127,18 +127,7 @@ const AdminContactsPage = () => {
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (    <div className="p-2 sm:p-4 md:p-6 max-w-7xl mx-auto">
-      <ToastContainer 
-        position="bottom-right" 
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">

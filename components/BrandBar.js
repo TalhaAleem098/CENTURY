@@ -158,6 +158,8 @@ const BrandBar = ({ onToggleSidebar }) => {
           <div className="flex justify-end items-center gap-2">            <button
               className="p-3 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"
+              onClick={() => router.push('/cart')}
+              type="button"
             >
               <FaShoppingCart size={22} className="text-gray-700" />
               {cartCount > 0 && (
@@ -232,6 +234,8 @@ const BrandBar = ({ onToggleSidebar }) => {
             <button
               className="p-2 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"
+              onClick={() => router.push('/cart')}
+              type="button"
             >
               <FaShoppingCart size={20} className="text-gray-700" />
               {cartCount > 0 && (

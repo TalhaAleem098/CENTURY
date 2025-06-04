@@ -48,4 +48,44 @@ import { Product, TShirt } from './Product.js';
 
 Each schema is separated for clarity and maintainability.
 
-This setup is maintainable and easily extendable for future product categories.
+---
+
+# Monthly Sales Tracking
+
+- `MonthlySales.js`: Tracks monthly sales data with automatic cleanup after 1 year.
+
+## Features
+- Automatic order tracking by month and year
+- Product-wise sales breakdown
+- Daily sales within each month
+- TTL index for automatic data cleanup after 1 year
+- Built-in utility functions for easy data access
+
+## Usage
+
+```js
+import MonthlySales from './MonthlySales.js';
+
+// Track an order
+await MonthlySales.trackOrder({
+  items: [
+    {
+      productId: "product_id",
+      productName: "Product Name",
+      quantity: 2,
+      finalPrice: 29.99,
+      totalPrice: 59.98
+    }
+  ],
+  totalAmount: 59.98,
+  orderDate: new Date()
+});
+
+// Get current month stats
+const currentMonth = await MonthlySales.getCurrentMonthStats();
+
+// Get yearly stats
+const yearData = await MonthlySales.getYearlyStats(2024);
+```
+
+This setup automatically manages data lifecycle and provides comprehensive sales analytics.

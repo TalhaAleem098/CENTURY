@@ -287,16 +287,7 @@ export default function AddProductPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />      <div className="w-full max-w-5xl mb-10 text-center">
+      <div className="w-full max-w-5xl mb-10 text-center">
         <h1 className="text-4xl font-black text-black mb-2 tracking-tight">
           Admin Product Management
         </h1>
@@ -309,20 +300,33 @@ export default function AddProductPage() {
           as needed.
         </p>
       </div>
-
       {/* Professional Product Management Instructions */}
       <div className="w-full max-w-5xl bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-8">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 px-6 py-5">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-sm">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                className="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-black">Product Creation Guide</h2>
-              <p className="text-gray-600 text-sm mt-1">Complete guide for adding products to your inventory</p>
+              <h2 className="text-2xl font-bold text-black">
+                Product Creation Guide
+              </h2>
+              <p className="text-gray-600 text-sm mt-1">
+                Complete guide for adding products to your inventory
+              </p>
             </div>
           </div>
         </div>
@@ -334,8 +338,18 @@ export default function AddProductPage() {
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
                 <h3 className="font-bold text-black text-lg">Basic Details</h3>
@@ -344,22 +358,34 @@ export default function AddProductPage() {
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-black rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <div className="font-semibold text-black text-sm">Product Name</div>
-                    <div className="text-gray-600 text-xs">Clear, descriptive title for your product</div>
+                    <div className="font-semibold text-black text-sm">
+                      Product Name
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      Clear, descriptive title for your product
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-gray-600 rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <div className="font-semibold text-black text-sm">Price & Stock</div>
-                    <div className="text-gray-600 text-xs">Set competitive pricing and inventory count</div>
+                    <div className="font-semibold text-black text-sm">
+                      Price & Stock
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      Set competitive pricing and inventory count
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <div className="font-semibold text-black text-sm">Description</div>
-                    <div className="text-gray-600 text-xs">Detailed product information and features</div>
+                    <div className="font-semibold text-black text-sm">
+                      Description
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      Detailed product information and features
+                    </div>
                   </div>
                 </div>
               </div>
@@ -369,24 +395,46 @@ export default function AddProductPage() {
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                 </div>
                 <h3 className="font-bold text-black text-lg">Image Upload</h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">📸 Main Image</div>
-                  <div className="text-gray-600 text-xs">First image becomes the primary product display</div>
+                  <div className="font-semibold text-black mb-1">
+                    📸 Main Image
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    First image becomes the primary product display
+                  </div>
                 </div>
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">🖼️ Multiple Images</div>
-                  <div className="text-gray-600 text-xs">Drag & drop or click to upload additional photos</div>
+                  <div className="font-semibold text-black mb-1">
+                    🖼️ Multiple Images
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    Drag & drop or click to upload additional photos
+                  </div>
                 </div>
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">☁️ Cloud Storage</div>
-                  <div className="text-gray-600 text-xs">Images automatically saved to Cloudinary</div>
+                  <div className="font-semibold text-black mb-1">
+                    ☁️ Cloud Storage
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    Images automatically saved to Cloudinary
+                  </div>
                 </div>
               </div>
             </div>
@@ -395,32 +443,56 @@ export default function AddProductPage() {
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
                   </svg>
                 </div>
-                <h3 className="font-bold text-black text-lg">T-Shirt Details</h3>
+                <h3 className="font-bold text-black text-lg">
+                  T-Shirt Details
+                </h3>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
                   <span className="w-4 h-4 bg-blue-600 rounded-full flex-shrink-0"></span>
                   <div className="flex-1">
-                    <div className="font-semibold text-black text-sm">Sizes</div>
-                    <div className="text-gray-600 text-xs">S, M, L, XL (comma-separated)</div>
+                    <div className="font-semibold text-black text-sm">
+                      Sizes
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      S, M, L, XL (comma-separated)
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
                   <span className="w-4 h-4 bg-purple-600 rounded-full flex-shrink-0"></span>
                   <div className="flex-1">
-                    <div className="font-semibold text-black text-sm">Dimensions</div>
-                    <div className="text-gray-600 text-xs">Height × Width for each size</div>
+                    <div className="font-semibold text-black text-sm">
+                      Dimensions
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      Height × Width for each size
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
                   <span className="w-4 h-4 bg-green-600 rounded-full flex-shrink-0"></span>
                   <div className="flex-1">
-                    <div className="font-semibold text-black text-sm">Color & Material</div>
-                    <div className="text-gray-600 text-xs">Product specifications and gender</div>
+                    <div className="font-semibold text-black text-sm">
+                      Color & Material
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      Product specifications and gender
+                    </div>
                   </div>
                 </div>
               </div>
@@ -430,24 +502,46 @@ export default function AddProductPage() {
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <h3 className="font-bold text-black text-lg">Validation</h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">✅ Required Fields</div>
-                  <div className="text-gray-600 text-xs">All marked fields must be completed</div>
+                  <div className="font-semibold text-black mb-1">
+                    ✅ Required Fields
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    All marked fields must be completed
+                  </div>
                 </div>
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">🔍 Auto-Validation</div>
-                  <div className="text-gray-600 text-xs">Real-time checking prevents errors</div>
+                  <div className="font-semibold text-black mb-1">
+                    🔍 Auto-Validation
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    Real-time checking prevents errors
+                  </div>
                 </div>
                 <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-                  <div className="font-semibold text-black mb-1">💾 Auto-Save</div>
-                  <div className="text-gray-600 text-xs">Product data saved automatically</div>
+                  <div className="font-semibold text-black mb-1">
+                    💾 Auto-Save
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    Product data saved automatically
+                  </div>
                 </div>
               </div>
             </div>
@@ -456,26 +550,52 @@ export default function AddProductPage() {
           {/* Quick Tips Section */}
           <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4">
             <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-5 h-5 text-black mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <div className="flex-1">
-                <h4 className="font-bold text-black mb-2">💡 Pro Tips for Better Product Listings</h4>
+                <h4 className="font-bold text-black mb-2">
+                  💡 Pro Tips for Better Product Listings
+                </h4>
                 <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
                   <div>
-                    <div className="font-semibold text-black">Image Quality:</div>
-                    <div>Use high-resolution images (1200x1200px minimum) with good lighting</div>
+                    <div className="font-semibold text-black">
+                      Image Quality:
+                    </div>
+                    <div>
+                      Use high-resolution images (1200x1200px minimum) with good
+                      lighting
+                    </div>
                   </div>
                   <div>
-                    <div className="font-semibold text-black">Descriptions:</div>
-                    <div>Include material, care instructions, and unique features</div>
+                    <div className="font-semibold text-black">
+                      Descriptions:
+                    </div>
+                    <div>
+                      Include material, care instructions, and unique features
+                    </div>
                   </div>
                   <div>
                     <div className="font-semibold text-black">Pricing:</div>
-                    <div>Research competitor prices and consider your profit margins</div>
+                    <div>
+                      Research competitor prices and consider your profit
+                      margins
+                    </div>
                   </div>
                   <div>
-                    <div className="font-semibold text-black">Stock Management:</div>
+                    <div className="font-semibold text-black">
+                      Stock Management:
+                    </div>
                     <div>Set realistic stock levels and update regularly</div>
                   </div>
                 </div>
@@ -487,19 +607,35 @@ export default function AddProductPage() {
           <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-5 h-5 text-black"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
-                <span className="text-black font-semibold text-sm">Form Status:</span>
-                <span className="text-green-600 font-bold text-sm">Ready for input</span>
+                <span className="text-black font-semibold text-sm">
+                  Form Status:
+                </span>
+                <span className="text-green-600 font-bold text-sm">
+                  Ready for input
+                </span>
               </div>
               <div className="text-xs text-gray-500">
-                Auto-save enabled • Last updated: {new Date().toLocaleTimeString()}
+                Auto-save enabled • Last updated:{" "}
+                {new Date().toLocaleTimeString()}
               </div>
             </div>
           </div>
         </div>
-      </div>      {/* Enhanced Product Form */}
+      </div>{" "}
+      {/* Enhanced Product Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200 hover:shadow-xl transition-shadow duration-300"
@@ -508,15 +644,28 @@ export default function AddProductPage() {
         <div className="text-center mb-8 pb-6 border-b border-gray-200">
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-black">Product Information</h2>
+            <h2 className="text-2xl font-bold text-black">
+              Product Information
+            </h2>
           </div>
-          <p className="text-gray-600 text-sm">Fill in all required details to add your product to the inventory</p>
+          <p className="text-gray-600 text-sm">
+            Fill in all required details to add your product to the inventory
+          </p>
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Product Details */}
           <div className="space-y-6">
@@ -524,13 +673,25 @@ export default function AddProductPage() {
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black">Basic Information</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Basic Information
+                </h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="relative">
                   <label className="block text-black font-semibold mb-2 flex items-center gap-2">
@@ -544,7 +705,7 @@ export default function AddProductPage() {
                     placeholder="Enter a clear, descriptive product name"
                   />
                 </div>
-                
+
                 <div className="relative">
                   <label className="block text-black font-semibold mb-2 flex items-center gap-2">
                     <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
@@ -559,18 +720,29 @@ export default function AddProductPage() {
                 </div>
               </div>
             </div>
-
             {/* Pricing & Inventory Section */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black">Pricing & Inventory</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Pricing & Inventory
+                </h3>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <label className="block text-black font-semibold mb-2 flex items-center gap-2">
@@ -578,7 +750,9 @@ export default function AddProductPage() {
                     Price (₹) *
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">₹</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">
+                      ₹
+                    </span>
                     <input
                       type="number"
                       {...register("price", { required: true, min: 0 })}
@@ -602,18 +776,29 @@ export default function AddProductPage() {
                 </div>
               </div>
             </div>
-
             {/* Description Section */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h7"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black">Product Description</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Product Description
+                </h3>
               </div>
-              
+
               <div className="relative">
                 <label className="block text-black font-semibold mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 bg-red-500 rounded-full"></span>
@@ -630,18 +815,29 @@ export default function AddProductPage() {
                 </div>
               </div>
             </div>
-
             {/* Category Section */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black">Product Category</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Product Category
+                </h3>
               </div>
-              
+
               <div className="relative">
                 <label className="block text-black font-semibold mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 bg-red-500 rounded-full"></span>
@@ -656,17 +852,32 @@ export default function AddProductPage() {
                   {/* Add more categories as needed */}
                 </select>
               </div>
-            </div>            {/* T-Shirt Specific Fields */}
+            </div>{" "}
+            {/* T-Shirt Specific Fields */}
             {watch("category") === "TShirt" && (
               <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 animate-in slide-in-from-top-2 duration-300">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    <svg
+                      className="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                      />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-black">T-Shirt Specifications</h3>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">Required</span>
+                  <h3 className="text-lg font-bold text-black">
+                    T-Shirt Specifications
+                  </h3>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+                    Required
+                  </span>
                 </div>
 
                 <div className="space-y-6">
@@ -686,14 +897,20 @@ export default function AddProductPage() {
                       onBlur={handleSizesBlur}
                     />
                     <div className="mt-2 flex flex-wrap gap-2">
-                      {watch("sizes") && watch("sizes").split(",").map((size, idx) => {
-                        const trimmedSize = size.trim();
-                        return trimmedSize ? (
-                          <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                            {trimmedSize}
-                          </span>
-                        ) : null;
-                      })}
+                      {watch("sizes") &&
+                        watch("sizes")
+                          .split(",")
+                          .map((size, idx) => {
+                            const trimmedSize = size.trim();
+                            return trimmedSize ? (
+                              <span
+                                key={idx}
+                                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                              >
+                                {trimmedSize}
+                              </span>
+                            ) : null;
+                          })}
                     </div>
                   </div>
 
@@ -701,8 +918,18 @@ export default function AddProductPage() {
                   {watch("sizes") && watch("sizes").length > 0 && (
                     <div className="bg-white border border-gray-200 rounded-lg p-4">
                       <label className="block text-black font-semibold mb-4 flex items-center gap-2">
-                        <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        <svg
+                          className="w-4 h-4 text-gray-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                          />
                         </svg>
                         Dimensions (cm) for each size
                       </label>
@@ -731,7 +958,9 @@ export default function AddProductPage() {
                                   min="0"
                                   placeholder="Height"
                                   className="px-3 py-2 rounded-lg border-2 border-gray-300 w-24 bg-white text-black focus:outline-none focus:border-blue-500 transition-all"
-                                  value={watch(`dimensions.${sizeKey}.height`) || ""}
+                                  value={
+                                    watch(`dimensions.${sizeKey}.height`) || ""
+                                  }
                                   onChange={(e) =>
                                     setValue(
                                       `dimensions.${sizeKey}.height`,
@@ -739,14 +968,18 @@ export default function AddProductPage() {
                                     )
                                   }
                                 />
-                                <span className="text-gray-500 font-bold">×</span>
+                                <span className="text-gray-500 font-bold">
+                                  ×
+                                </span>
                                 <input
                                   type="number"
                                   step="0.1"
                                   min="0"
                                   placeholder="Width"
                                   className="px-3 py-2 rounded-lg border-2 border-gray-300 w-24 bg-white text-black focus:outline-none focus:border-blue-500 transition-all"
-                                  value={watch(`dimensions.${sizeKey}.width`) || ""}
+                                  value={
+                                    watch(`dimensions.${sizeKey}.width`) || ""
+                                  }
                                   onChange={(e) =>
                                     setValue(
                                       `dimensions.${sizeKey}.width`,
@@ -754,7 +987,9 @@ export default function AddProductPage() {
                                     )
                                   }
                                 />
-                                <span className="text-xs text-gray-500">cm</span>
+                                <span className="text-xs text-gray-500">
+                                  cm
+                                </span>
                               </div>
                             </div>
                           );
@@ -814,18 +1049,29 @@ export default function AddProductPage() {
                 </div>
               </div>
             )}
-
             {/* Featured Product Toggle */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black">Product Promotion</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Product Promotion
+                </h3>
               </div>
-              
+
               <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg">
                 <input
                   type="checkbox"
@@ -836,7 +1082,9 @@ export default function AddProductPage() {
                   <label className="text-black font-semibold cursor-pointer">
                     ⭐ Featured Product
                   </label>
-                  <p className="text-sm text-gray-600 mt-1">Mark as featured to highlight this product on the homepage</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Mark as featured to highlight this product on the homepage
+                  </p>
                 </div>
               </div>
             </div>
@@ -846,13 +1094,25 @@ export default function AddProductPage() {
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-black">Product Images</h3>
-                <p className="text-sm text-gray-600">Upload high-quality product photos</p>
+                <p className="text-sm text-gray-600">
+                  Upload high-quality product photos
+                </p>
               </div>
             </div>
 
@@ -871,8 +1131,12 @@ export default function AddProductPage() {
                     <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-gray-200 transition-colors">
                       <FaUpload className="text-gray-500 text-lg" />
                     </div>
-                    <p className="text-black font-semibold text-center text-sm">Upload Image</p>
-                    <p className="text-gray-500 text-xs text-center mt-1">Drag & drop or click</p>
+                    <p className="text-black font-semibold text-center text-sm">
+                      Upload Image
+                    </p>
+                    <p className="text-gray-500 text-xs text-center mt-1">
+                      Drag & drop or click
+                    </p>
                     <input
                       id="image-upload-0"
                       type="file"
@@ -910,8 +1174,12 @@ export default function AddProductPage() {
                         <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-gray-200 transition-colors">
                           <FaUpload className="text-gray-500 text-lg" />
                         </div>
-                        <p className="text-black font-semibold text-center text-sm">Add Image</p>
-                        <p className="text-gray-500 text-xs text-center mt-1">Click to browse</p>
+                        <p className="text-black font-semibold text-center text-sm">
+                          Add Image
+                        </p>
+                        <p className="text-gray-500 text-xs text-center mt-1">
+                          Click to browse
+                        </p>
                       </>
                     )}
                     <input
@@ -958,7 +1226,9 @@ export default function AddProductPage() {
 
               {/* Image Guidelines */}
               <div className="bg-white border border-gray-200 rounded-lg p-4 mt-4">
-                <h4 className="font-semibold text-black mb-2 text-sm">📸 Image Guidelines</h4>
+                <h4 className="font-semibold text-black mb-2 text-sm">
+                  📸 Image Guidelines
+                </h4>
                 <ul className="text-xs text-gray-600 space-y-1">
                   <li>• Use high-resolution images (1200x1200px minimum)</li>
                   <li>• First image will be the main product display</li>
@@ -968,37 +1238,61 @@ export default function AddProductPage() {
               </div>
             </div>
           </div>
-        </div>        {/* Form Status Messages */}
+        </div>{" "}
+        {/* Form Status Messages */}
         <div className="mt-8 space-y-3">
           {error && (
             <div className="flex items-center gap-3 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
               <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </div>
               <div className="flex-1">
-                <h4 className="font-semibold text-red-800 mb-1">Error occurred</h4>
+                <h4 className="font-semibold text-red-800 mb-1">
+                  Error occurred
+                </h4>
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
             </div>
           )}
-          
+
           {success && (
             <div className="flex items-center gap-3 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
               <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-green-800 mb-1">Success!</h4>
-                <p className="text-green-700 text-sm">Product has been added to your inventory successfully!</p>
+                <p className="text-green-700 text-sm">
+                  Product has been added to your inventory successfully!
+                </p>
               </div>
             </div>
           )}
         </div>
-
         {/* Enhanced Submit Button */}
         <div className="flex justify-center mt-10">
           <button
@@ -1019,12 +1313,11 @@ export default function AddProductPage() {
                 <span>Add Product to Inventory</span>
               </>
             )}
-            
+
             {/* Button Glow Effect */}
             <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
           </button>
         </div>
-
         {/* Loading Tooltip */}
         {tooltip && (
           <div className="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">

@@ -118,21 +118,6 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ToastContainer
-        autoClose={2000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="colored"
-        toastClassName={() =>
-          "flex items-center gap-3 max-w-xs bg-gray-800 text-white font-medium rounded-lg shadow-lg px-4 py-3"
-        }
-        bodyClassName={() =>
-          "flex items-center gap-2 text-sm text-white m-0 p-0"
-        }
-        progressClassName="bg-gray-600"
-      />
 
       {Navbar}
       <main className="flex items-center justify-center min-h-[80vh] p-6 bg-gradient-to-tr from-gray-200 via-gray-100 to-gray-200">

@@ -147,9 +147,8 @@ const ContactPage = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </span>
-                </a>
-                <a 
-                  href="tel:+15551234567"
+                </a>                <a 
+                  href="tel:+923227154205"
                   className="border-2 border-gray-500 text-gray-300 px-8 py-4 rounded-xl font-semibold hover:border-white hover:text-white hover:bg-white/5 transition-all duration-300"
                 >
                   <span className="flex items-center justify-center">
@@ -177,11 +176,10 @@ const ContactPage = () => {
                     <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                  </div>
-                  <div>
+                  </div>                  <div>
                     <h3 className="text-white font-semibold text-lg mb-1">Email Support</h3>
                     <p className="text-gray-400 mb-2">Get detailed responses within 24 hours</p>
-                    <p className="text-white text-sm font-medium">hello@centuryfashion.com</p>
+                    <p className="text-white text-sm font-medium">centuryapparelpk@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -204,15 +202,14 @@ const ContactPage = () => {
               <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-lg hover:bg-white/10 transition-all duration-300 group">
                 <div className="flex items-start space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-gray-600 to-gray-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold text-lg mb-1">Visit Our Store</h3>
-                    <p className="text-gray-400 mb-2">Experience our collection in person</p>
-                    <p className="text-white text-sm font-medium">123 Fashion Ave, NYC</p>
+                    <h3 className="text-white font-semibold text-lg mb-1">Follow Us</h3>
+                    <p className="text-gray-400 mb-2">Stay updated with latest collections</p>
+                    <p className="text-green-400 text-sm font-medium">● Social Media</p>
                   </div>
                 </div>
               </div>
@@ -275,8 +272,7 @@ const ContactPage = () => {
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-          >
-            <motion.div 
+          >            <motion.div 
               className="bg-white rounded-3xl p-10 text-center group hover:shadow-2xl hover:scale-105 transition-all duration-500 border border-gray-100"
               variants={fadeInUp}
             >
@@ -286,7 +282,7 @@ const ContactPage = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold text-black mb-3">Email Support</h3>
-              <p className="text-lg text-gray-800 mb-3 font-medium">hello@centuryfashion.com</p>
+              <p className="text-lg text-gray-800 mb-3 font-medium">centuryapparelpk@gmail.com</p>
               <p className="text-gray-500 mb-4">Get detailed responses from our style experts</p>
               <div className="inline-flex items-center text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
@@ -304,30 +300,38 @@ const ContactPage = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold text-black mb-3">Direct Call</h3>
-              <p className="text-lg text-gray-800 mb-3 font-medium">+1 (555) 123-4567</p>
+              <p className="text-lg text-gray-800 mb-3 font-medium">+92 322 7154205</p>
               <p className="text-gray-500 mb-4">Speak directly with our fashion consultants</p>
               <div className="inline-flex items-center text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                Mon-Fri, 9AM-6PM EST
+                Available during business hours
               </div>
             </motion.div>
+
+            
 
             <motion.div 
               className="bg-white rounded-3xl p-10 text-center group hover:shadow-2xl hover:scale-105 transition-all duration-500 border border-gray-100"
               variants={fadeInUp}
             >
               <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-black rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-black mb-3">Visit Our Store</h3>
-              <p className="text-lg text-gray-800 mb-3 font-medium">123 Fashion Avenue</p>
-              <p className="text-gray-500 mb-4">Experience our premium collection in person</p>
-              <div className="inline-flex items-center text-sm text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-                <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                New York City, NY
+              <h3 className="text-2xl font-bold text-black mb-3">Social Media</h3>
+              <p className="text-lg text-gray-800 mb-3 font-medium">Follow @century.pk</p>
+              <p className="text-gray-500 mb-4">Connect with us on social platforms</p>
+              <div className="flex justify-center space-x-2">
+                <a href="https://www.facebook.com/profile.php?id=61576551254002" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded-full hover:bg-blue-100 transition-colors">
+                  Facebook
+                </a>
+                <a href="https://www.instagram.com/century.pk?igsh=aHJvemhjbHdncXhk&utm_source=qr" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-pink-600 bg-pink-50 px-2 py-1 rounded-full hover:bg-pink-100 transition-colors">
+                  Instagram
+                </a>
+                <a href="http://www.tiktok.com/@century.pk" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-full hover:bg-gray-100 transition-colors">
+                  TikTok
+                </a>
               </div>
             </motion.div>
           </motion.div>          {/* Contact Form */}

@@ -1,6 +1,7 @@
 import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
+import { ToastContainer } from "react-toastify";
 import { siteConfig } from "./metadata.config";
 
 export const metadata = {
@@ -47,22 +48,22 @@ export default function RootLayout({ children }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Century",
-    "description": siteConfig.description,
-    "url": siteConfig.siteUrl,
-    "potentialAction": {
+    name: "Century",
+    description: siteConfig.description,
+    url: siteConfig.siteUrl,
+    potentialAction: {
       "@type": "SearchAction",
-      "target": {
+      target: {
         "@type": "EntryPoint",
-        "urlTemplate": `${siteConfig.siteUrl}/search?q={search_term_string}`
+        urlTemplate: `${siteConfig.siteUrl}/search?q={search_term_string}`,
       },
-      "query-input": "required name=search_term_string"
+      "query-input": "required name=search_term_string",
     },
-    "sameAs": [
+    sameAs: [
       "https://facebook.com/century",
       "https://twitter.com/century",
-      "https://instagram.com/century"
-    ]
+      "https://instagram.com/century",
+    ],
   };
 
   return (
@@ -77,7 +78,20 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SessionProviderWrapper>
-            {children}
+          <ToastContainer
+            position="top-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            toastClassName="rounded-xl shadow-lg bg-black text-white text-base font-semibold"
+            bodyClassName="text-white bg-black"
+          />
+          {children}
         </SessionProviderWrapper>
       </body>
     </html>

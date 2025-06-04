@@ -79,12 +79,6 @@ function ProductCard({ product, index, onCartSuccess }) {
     if (existingItemIndex > -1) {
       existingCart[existingItemIndex].quantity += 1;
       toast.success('Quantity updated in cart! 🛒', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
       });
       // Show modal for quantity update
       onCartSuccess({
@@ -510,18 +504,7 @@ export default function Home() {
         onClose={closeCartModal} 
         cartItem={cartModalData} 
       />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      x
     </div>
   );
 }

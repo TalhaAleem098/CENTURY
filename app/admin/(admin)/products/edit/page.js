@@ -117,20 +117,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-white py-8 px-2 sm:px-6 lg:px-12">
-      <ToastContainer
-        position="top-right"
-        autoClose={2500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        toastClassName="rounded-xl shadow-lg text-base font-semibold"
-        bodyClassName="text-gray-900"
-      />      <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-2 text-black text-center tracking-tight">
           Product Management
         </h1>

@@ -35,12 +35,12 @@ const Footer = () => {
   };
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast.error("Please enter a valid email address");
       return;
     }
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address");
@@ -48,12 +48,12 @@ const Footer = () => {
     }
 
     setSubscriptionStatus("loading");
-    
+
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
@@ -69,7 +69,7 @@ const Footer = () => {
         setSubscriptionStatus("error");
       }
     } catch (error) {
-      console.error('Subscription error:', error);
+      console.error("Subscription error:", error);
       toast.error("Network error. Please check your connection and try again.");
       setSubscriptionStatus("error");
     } finally {
@@ -80,7 +80,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-white to-gray-100 text-black border-t border-gray-200">
-
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
@@ -94,65 +93,53 @@ const Footer = () => {
             </div>
             {/* Newsletter Subscription Box */}
             <div className="mt-8">
-              <h4 className="text-lg font-semibold mb-2">Subscribe to Newsletter</h4>
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row items-center gap-2">
+              <h4 className="text-lg font-semibold mb-2">
+                Subscribe to Newsletter
+              </h4>
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="flex flex-col sm:flex-row items-center gap-2"
+              >
                 <input
                   type="email"
                   className="w-full sm:w-auto flex-1 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition"
                   placeholder="Enter your email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  disabled={subscriptionStatus === 'loading'}
+                  disabled={subscriptionStatus === "loading"}
                 />
                 <button
                   type="submit"
                   className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition disabled:opacity-60"
-                  disabled={subscriptionStatus === 'loading'}
+                  disabled={subscriptionStatus === "loading"}
                 >
-                  {subscriptionStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                  {subscriptionStatus === "loading"
+                    ? "Subscribing..."
+                    : "Subscribe"}
                 </button>
               </form>
-              <p className="text-xs text-gray-500 mt-2">Stay updated with our latest news and offers.</p>
+              <p className="text-xs text-gray-500 mt-2">
+                Stay updated with our latest news and offers.
+              </p>
             </div>
             {/* End Newsletter Subscription Box */}
             <div className="mt-8">
               <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-4">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/profile.php?id=61576551254002"
                   className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
                   aria-label="Facebook"
                 >
                   <FaFacebookF className="text-sm" />
                 </a>
                 <a
-                  href="#"
-                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label="Twitter"
-                >
-                  <FaTwitter className="text-sm" />
-                </a>
-                <a
-                  href="#"
+                  href="https://www.instagram.com/century.pk?igsh=aHJvemhjbHdncXhk&utm_source=qr"
                   className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
                   aria-label="Instagram"
                 >
                   <FaInstagram className="text-sm" />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label="LinkedIn"
-                >
-                  <FaLinkedinIn className="text-sm" />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label="YouTube"
-                >
-                  <FaYoutube className="text-sm" />
                 </a>
               </div>
             </div>
@@ -171,10 +158,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/shop"
+                  href="/terms"
                   className="text-gray-700 hover:text-black transition-colors duration-200"
                 >
-                  Shop All
+                  Terms & Conditions
                 </Link>
               </li>
               <li>
@@ -192,7 +179,7 @@ const Footer = () => {
                 >
                   About Us
                 </Link>
-              </li>
+              </li>{" "}
               <li>
                 <Link
                   href="/contact"
@@ -203,10 +190,18 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/faq"
                   className="text-gray-700 hover:text-black transition-colors duration-200"
                 >
-                  Sale
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-gray-700 hover:text-black transition-colors duration-200"
+                >
+                  Privacy & Policy
                 </Link>
               </li>
             </ul>
@@ -273,25 +268,21 @@ const Footer = () => {
                 <FiMapPin className="text-black mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-gray-700">
-                    123 Fashion Street
-                    <br />
-                    Style District, ST 12345
-                    <br />
-                    United States
+                   Lahore, Punjab | Pakistan
                   </p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <FiPhone className="text-black flex-shrink-0" />
                 <div>
-                  <p className="text-gray-700">+1 (555) 123-4567</p>
-                  <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM</p>
+                  <p className="text-gray-700">+92 322 7154205</p>
+                  <p className="text-sm text-gray-500">Mon-Sat 9AM-10PM</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <FiMail className="text-black flex-shrink-0" />
                 <div>
-                  <p className="text-gray-700">support@century.com</p>
+                  <p className="text-gray-700">centuryapparelpk@gmail.com</p>
                   <p className="text-sm text-gray-500">24/7 Support</p>
                 </div>
               </div>
@@ -321,7 +312,7 @@ const Footer = () => {
                 </svg>
               </div>
               <h5 className="font-semibold mb-1">Free Shipping</h5>
-              <p className="text-sm text-gray-500">On orders over $50</p>
+              <p className="text-sm text-gray-500">On orders over 4999</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-3">
@@ -359,7 +350,7 @@ const Footer = () => {
                 </svg>
               </div>
               <h5 className="font-semibold mb-1">Easy Returns</h5>
-              <p className="text-sm text-gray-500">30-day return policy</p>
+              <p className="text-sm text-gray-500">7-day return policy</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-3">
@@ -392,31 +383,31 @@ const Footer = () => {
               <p className="text-gray-500">
                 © {currentYear} Century Fashion Store. All rights reserved.
               </p>
-            </div>
+            </div>{" "}
             <div className="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
               <Link
-                href="#"
+                href="/privacy"
                 className="text-gray-500 hover:text-black transition-colors duration-200"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="#"
+                href="/terms"
                 className="text-gray-500 hover:text-black transition-colors duration-200"
               >
                 Terms of Service
               </Link>
               <Link
-                href="#"
+                href="/faq"
                 className="text-gray-500 hover:text-black transition-colors duration-200"
               >
-                Cookie Policy
+                FAQ
               </Link>
               <Link
-                href="#"
+                href="/contact"
                 className="text-gray-500 hover:text-black transition-colors duration-200"
               >
-                Sitemap
+                Contact
               </Link>
             </div>
           </div>
@@ -432,19 +423,6 @@ const Footer = () => {
           <FiArrowUp className="text-lg" />
         </button>
       )}
-
-      <ToastContainer
-        position="top-center"
-        autoClose={2500}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="dark"
-        toastClassName="bg-black text-white shadow-lg rounded-lg px-4 py-3"
-        bodyClassName="text-sm"
-        progressClassName="bg-white"
-      />
     </footer>
   );
 };
