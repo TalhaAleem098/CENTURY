@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CheckoutModal from "./components/CheckoutModal";
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
   const [cartEntries, setCartEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const cartData = localStorage.getItem("cart");
@@ -193,39 +196,8 @@ const CartPage = () => {
       return;
     }
 
-    const orderData = cartEntries.map(entry => {
-      const product = products.find(p => p._id === entry.id);
-      const salePrice = product.sale && product.sale.percentage 
-        ? Math.round(product.price * (1 - product.sale.percentage / 100))
-        : product.price;
-      
-      return {
-        productId: entry.id,
-        productName: product?.name || 'Unknown Product',
-        selectedSize: entry.size || 'Not Selected',
-        selectedColor: entry.color || 'Not Selected',
-        quantity: entry.quantity,
-        originalPrice: product?.price || 0,
-        salePercentage: product?.sale?.percentage || 0,
-        finalPrice: salePrice,
-        totalPrice: salePrice * entry.quantity,
-        category: product?.category || 'Unknown',
-        brand: product?.brand || 'Unknown',
-        material: product?.material || 'Unknown'
-      };
-    });
-
-    const orderSummary = {
-      items: orderData,
-      totalItems: cartEntries.length,
-      totalQuantity: cartEntries.reduce((sum, entry) => sum + entry.quantity, 0),
-      totalAmount: orderData.reduce((sum, item) => sum + item.totalPrice, 0),
-      orderDate: new Date().toISOString()
-    };
-
-    console.log('=== ORDER DETAILS ===');
-    console.log(JSON.stringify(orderSummary, null, 2));
-    console.log('=== END ORDER DETAILS ===');
+    // Open checkout modal
+    setShowCheckoutModal(true);
   };
 
   const tshirtProducts = products.filter((p) => p.category === "TShirt");
@@ -466,19 +438,114 @@ const CartPage = () => {
               })}
             </div>
 
+            {/* Total Bill Section */}
+            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 max-w-md mx-auto mb-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>Items ({cartEntries.length})</span>
+                  <span>{cartEntries.reduce((sum, entry) => sum + entry.quantity, 0)} pieces</span>
+                </div>
+                
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>Subtotal</span>
+                  <span>Rs. {cartEntries.reduce((sum, entry) => {
+                    const product = products.find(p => p._id === entry.id);
+                    const salePrice = product?.sale?.percentage 
+                      ? Math.round(product.price * (1 - product.sale.percentage / 100))
+                      : product?.price || 0;
+                    return sum + (salePrice * entry.quantity);
+                  }, 0).toLocaleString()}</span>
+                </div>
+                
+                {cartEntries.some(entry => {
+                  const product = products.find(p => p._id === entry.id);
+                  return product?.sale?.percentage > 0;
+                }) && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>You Save</span>
+                    <span>Rs. {cartEntries.reduce((sum, entry) => {
+                      const product = products.find(p => p._id === entry.id);
+                      if (product?.sale?.percentage) {
+                        const originalPrice = product.price * entry.quantity;
+                        const salePrice = Math.round(product.price * (1 - product.sale.percentage / 100)) * entry.quantity;
+                        return sum + (originalPrice - salePrice);
+                      }
+                      return sum;
+                    }, 0).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="border-t pt-3">
+                <div className="flex justify-between text-lg font-bold text-gray-900">
+                  <span>Total</span>
+                  <span>Rs. {cartEntries.reduce((sum, entry) => {
+                    const product = products.find(p => p._id === entry.id);
+                    const salePrice = product?.sale?.percentage 
+                      ? Math.round(product.price * (1 - product.sale.percentage / 100))
+                      : product?.price || 0;
+                    return sum + (salePrice * entry.quantity);
+                  }, 0).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
             {/* Place Order Button */}
-            <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-black p-4 sm:p-6 text-center max-w-4xl mx-auto">
+            <div className="text-center max-w-md mx-auto">
               <button 
                 onClick={handlePlaceOrder}
-                className="bg-black text-white font-bold text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl hover:bg-gray-800 transition-colors w-full sm:w-auto"
+                className="bg-black text-white font-semibold text-base px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors w-full shadow-lg"
               >
-                Place Order ({cartEntries.length} item
-                {cartEntries.length > 1 ? "s" : ""})
+                Place Order ({cartEntries.length} item{cartEntries.length > 1 ? "s" : ""})
               </button>
             </div>
           </>
         )}
       </div>
+
+      {/* Checkout Modal */}
+      <CheckoutModal
+        isOpen={showCheckoutModal}
+        onClose={() => setShowCheckoutModal(false)}
+        orderData={{
+          items: cartEntries.map(entry => {
+            const product = products.find(p => p._id === entry.id);
+            const salePrice = product?.sale?.percentage 
+              ? Math.round(product.price * (1 - product.sale.percentage / 100))
+              : product?.price || 0;
+            
+            return {
+              productId: entry.id,
+              productName: product?.name || 'Unknown Product',
+              selectedSize: entry.size || 'Not Selected',
+              selectedColor: entry.color || 'Not Selected',
+              quantity: entry.quantity,
+              originalPrice: product?.price || 0,
+              salePercentage: product?.sale?.percentage || 0,
+              finalPrice: salePrice,
+              totalPrice: salePrice * entry.quantity,
+              category: product?.category || 'Unknown',
+              brand: product?.brand || 'Unknown',
+              material: product?.material || 'Unknown'
+            };
+          }),
+          totalItems: cartEntries.length,
+          totalQuantity: cartEntries.reduce((sum, entry) => sum + entry.quantity, 0),
+          totalAmount: cartEntries.reduce((sum, entry) => {
+            const product = products.find(p => p._id === entry.id);
+            const salePrice = product?.sale?.percentage 
+              ? Math.round(product.price * (1 - product.sale.percentage / 100))
+              : product?.price || 0;
+            return sum + (salePrice * entry.quantity);
+          }, 0),
+          orderDate: new Date().toISOString()
+        }}
+        cartEntries={cartEntries}
+        products={products}
+      />
+
       <ToastContainer position="top-right" />
     </div>
   );

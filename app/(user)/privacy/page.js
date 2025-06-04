@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         id: 'introduction',
         title: 'Introduction',
         content: [
-          "Century ('we', 'our', or 'us') is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.",
+          "Century (we, our, or us) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.",
           "Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site."
         ]
       },
@@ -293,7 +293,7 @@ export default function PrivacyPage() {
               <h3 className="text-2xl font-bold mb-4">Questions About Our Privacy Policy?</h3>
               <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
                 If you have any questions or concerns about how we handle your personal information, 
-                we're here to help. Contact us anytime.
+                were here to help. Contact us anytime.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a

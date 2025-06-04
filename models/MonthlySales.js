@@ -1,40 +1,49 @@
 import mongoose from 'mongoose';
 
 const MonthlySalesSchema = new mongoose.Schema({
-  month: {
-    type: String,
-    required: true,
-    unique: true, // e.g. "2024-06"
-  },
-  monthName: {
-    type: String,
-    required: true, // e.g. "June 2024"
-  },
+  // Year tracking
   year: {
     type: Number,
-    required: true, // e.g. 2024
+    required: true,
+    index: true
   },
+  
+  // Month tracking (1-12)
+  month: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 12,
+    index: true
+  },
+  
+  // Month name for display
+  monthName: {
+    type: String,
+    required: true
+  },
+  
+  // Order tracking
   totalOrders: {
     type: Number,
     required: true,
     default: 0,
+    min: 0
   },
-  totalRevenue: {
+  
+  // Sales tracking
+  totalSales: {
     type: Number,
     required: true,
     default: 0,
-  },
-  totalCustomers: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  refunds: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-}, { timestamps: true });
+    min: 0
+  }
+}, { 
+  timestamps: true
+});
+
+// Compound index for unique year-month combination
+MonthlySalesSchema.index({ year: 1, month: 1 }, { unique: true });
 
 export default mongoose.models.MonthlySales || mongoose.model('MonthlySales', MonthlySalesSchema);
 
