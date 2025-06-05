@@ -85,8 +85,8 @@ const Page = () => {
         setDashboardStats({
           totalSales: totalSales,
           totalOrders: totalOrders,
-          totalCustomers: totalOrders, // Assuming 1 customer per order
-          refunds: 0, // Static value for now
+          totalCustomers: totalOrders,
+          refunds: 0,
         });
 
       } else {
@@ -116,12 +116,6 @@ const Page = () => {
   // Background cleanup function (called silently)
   const backgroundCleanup = async () => {
     try {
-      const currentYear = new Date().getFullYear();
-      const lastYear = currentYear - 2;
-
-      await fetch(`/api/monthly-sales/cleanup?year=${lastYear}`, {
-        method: "POST",
-      });
     } catch (err) {
     }
   };
