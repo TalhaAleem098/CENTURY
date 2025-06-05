@@ -47,7 +47,7 @@ const Page = () => {
     totalSales: 0,
     totalOrders: 0,
     totalCustomers: 0,
-    refunds: 64, // Static value as no refund tracking yet
+    refunds: 0, // Static value as no refund tracking yet
   });
   const fetchMonthlySales = async (year = new Date().getFullYear()) => {
     try {
@@ -86,7 +86,7 @@ const Page = () => {
           totalSales: totalSales,
           totalOrders: totalOrders,
           totalCustomers: totalOrders, // Assuming 1 customer per order
-          refunds: 64, // Static value for now
+          refunds: 0, // Static value for now
         });
 
       } else {
@@ -95,7 +95,7 @@ const Page = () => {
           totalSales: 0,
           totalOrders: 0,
           totalCustomers: 0,
-          refunds: 64,
+          refunds: 0,
         });
         setError("No sales data found for the selected year");
       }
@@ -107,7 +107,7 @@ const Page = () => {
         totalSales: 0,
         totalOrders: 0,
         totalCustomers: 0,
-        refunds: 64,
+        refunds: 0,
       });
     } finally {
       setLoading(false);
