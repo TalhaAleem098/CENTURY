@@ -88,7 +88,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error || "Login failed", { position: "top-center" });
+        toast(data.error || "Login failed", { position: "top-center" });
         setLoading(false);
         return;
       }
@@ -102,14 +102,14 @@ export default function AdminLoginPage() {
         console.warn("No auth token found in response headers");
       }
 
-      toast.success("Login successful! Redirecting...", {
+      toast("Login successful! Redirecting...", {
         position: "top-center",
       });
       setLoading(false);
 
       setTimeout(() => router.push("/admin/dashboard"), 1200);
     } catch (err) {
-      toast.error(err.message, { position: "top-center" });
+      toast(err.message, { position: "top-center" });
       setLoading(false);
     }
   }

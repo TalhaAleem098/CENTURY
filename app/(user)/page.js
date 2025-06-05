@@ -78,7 +78,7 @@ function ProductCard({ product, index, onCartSuccess }) {
 
     if (existingItemIndex > -1) {
       existingCart[existingItemIndex].quantity += 1;
-      toast.success('Quantity updated in cart! 🛒', {
+      toast('Quantity updated in cart! 🛒', {
       });
       // Show modal for quantity update
       onCartSuccess({
@@ -88,7 +88,7 @@ function ProductCard({ product, index, onCartSuccess }) {
       });
     } else {
       existingCart.push(cartItem);
-      toast.success('Product added to cart successfully! 🎉', {
+      toast('Product added to cart successfully! 🎉', {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

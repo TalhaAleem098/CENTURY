@@ -37,13 +37,13 @@ const Footer = () => {
     e.preventDefault();
 
     if (!email) {
-      toast.error("Please enter a valid email address");
+      toast("Please enter a valid email address");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
+      toast("Please enter a valid email address");
       return;
     }
 
@@ -61,16 +61,16 @@ const Footer = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(data.message || "Thanks for subscribing!");
+        toast(data.message || "Thanks for subscribing!");
         setEmail("");
         setSubscriptionStatus("success");
       } else {
-        toast.error(data.error || "Subscription failed. Please try again.");
+        toast(data.error || "Subscription failed. Please try again.");
         setSubscriptionStatus("error");
       }
     } catch (error) {
       console.error("Subscription error:", error);
-      toast.error("Network error. Please check your connection and try again.");
+      toast("Network error. Please check your connection and try again.");
       setSubscriptionStatus("error");
     } finally {
       // Reset status after a short delay

@@ -72,14 +72,14 @@ const AdminContactsPage = () => {
         
         // Show success message only on first load or when explicitly needed
         if (pageNum === 1 && data.total > 0) {
-          toast.success(`Loaded ${data.total} contact application${data.total > 1 ? 's' : ''}`);
+          toast(`Loaded ${data.total} contact application${data.total > 1 ? 's' : ''}`);
         }
       } else {
-        toast.error(data.error || "Failed to fetch applications");
+        toast(data.error || "Failed to fetch applications");
       }
     } catch (error) {
       console.error('Fetch error:', error);
-      toast.error("Network error: Failed to fetch applications");
+      toast("Network error: Failed to fetch applications");
     }
     setLoading(false);
   };
@@ -104,7 +104,7 @@ const AdminContactsPage = () => {
       const data = await res.json();
       if (data.success) {
         const deletedCount = Array.isArray(ids) ? ids.length : 1;
-        toast.success(`Successfully deleted ${deletedCount} application${deletedCount > 1 ? 's' : ''}`);
+        toast(`Successfully deleted ${deletedCount} application${deletedCount > 1 ? 's' : ''}`);
         setSelected([]);
         
         // If we deleted all items on current page and not on page 1, go to previous page
@@ -115,11 +115,11 @@ const AdminContactsPage = () => {
           fetchContacts(page);
         }
       } else {
-        toast.error(data.error || "Failed to delete applications");
+        toast(data.error || "Failed to delete applications");
       }
     } catch (error) {
       console.error('Delete error:', error);
-      toast.error("Network error: Failed to delete applications");
+      toast("Network error: Failed to delete applications");
     }
     setLoading(false);
   };

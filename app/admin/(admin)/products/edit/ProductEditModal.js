@@ -83,18 +83,18 @@ const ProductEditModal = ({ product, open, onClose, onSave }) => {
       });
       if (!res.ok) {
         const data = await res.json();
-        toast.error(data.error || 'Failed to update product');
+        toast(data.error || 'Failed to update product');
         setSaving(false);
         return;
       }
       const data = await res.json();
-      toast.success('Product updated successfully!');
+      toast('Product updated successfully!');
       setSaving(false);
       setHasChanges(false);
       setInitialForm(getInitialForm(data.updated));
       if (onSave) onSave(data.updated);
     } catch (err) {
-      toast.error('Network error while updating product');
+      toast('Network error while updating product');
       setSaving(false);
     }
   };

@@ -26,7 +26,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     const requiredFields = ['customerName', 'customerEmail', 'customerPhone', 'address', 'city', 'zipCode'];
     for (let field of requiredFields) {
       if (!shippingData[field].trim()) {
-        toast.error(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+        toast(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
         return false;
       }
     }
@@ -34,14 +34,14 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(shippingData.customerEmail)) {
-      toast.error('Please enter a valid email address');
+      toast('Please enter a valid email address');
       return false;
     }
 
     // Phone validation (basic)
     const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
     if (!phoneRegex.test(shippingData.customerPhone)) {
-      toast.error('Please enter a valid phone number');
+      toast('Please enter a valid phone number');
       return false;
     }
 
@@ -77,7 +77,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
 
       if (response.ok) {
         
-        toast.success(`Order placed successfully! Order Number: ${result.orderNumber}`);
+        toast(`Order placed successfully! Order Number: ${result.orderNumber}`);
         
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
@@ -93,7 +93,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       
     } catch (error) {
       console.error('Order submission error:', error);
-      toast.error(`Failed to place order: ${error.message}`);
+      toast(`Failed to place order: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }

@@ -146,7 +146,7 @@ const ApplySalePage = () => {
 
   const handleApplySale = async (saleData) => {
     if (selected.length === 0) {
-      toast.error("No products selected.", {
+      toast("No products selected.", {
         theme: "colored",
         style: { background: "#000", color: "#fff" },
       });
@@ -171,7 +171,7 @@ const ApplySalePage = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Failed to apply sale.", {
+        toast(data.error || "Failed to apply sale.", {
           theme: "colored",
           style: { background: "#000", color: "#fff" },
         });
@@ -182,12 +182,12 @@ const ApplySalePage = () => {
       setProducts((prev) => prev.filter((p) => !selected.includes(p._id)));
       setModalOpen(false);
       setSelected([]);
-      toast.success(
+      toast(
         `Sale applied to ${data.modifiedCount || selected.length} products!`,
         { theme: "colored", style: { background: "#000", color: "#fff" } }
       );
     } catch (err) {
-      toast.error(err.message || "Error applying sale.", {
+      toast(err.message || "Error applying sale.", {
         theme: "colored",
         style: { background: "#000", color: "#fff" },
       });

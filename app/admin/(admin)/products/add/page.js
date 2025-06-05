@@ -134,7 +134,7 @@ export default function AddProductPage() {
       .filter(Boolean);
     const uniqueSizes = Array.from(new Set(sizesArr));
     if (sizesArr.length !== uniqueSizes.length) {
-      toast.error("Duplicate sizes removed. Only unique sizes are allowed.");
+      toast("Duplicate sizes removed. Only unique sizes are allowed.");
       setValue("sizes", uniqueSizes.join(", "));
     }
   };
@@ -186,7 +186,7 @@ export default function AddProductPage() {
         .filter(Boolean);
       const uniqueSizes = Array.from(new Set(sizesArr));
       if (sizesArr.length !== uniqueSizes.length) {
-        toast.error("Duplicate sizes detected. Please remove duplicates.");
+        toast("Duplicate sizes detected. Please remove duplicates.");
         setValue("sizes", uniqueSizes.join(", "));
         return;
       }
@@ -194,11 +194,11 @@ export default function AddProductPage() {
     }
     if (data.category === "TShirt") {
       if (!data.color) {
-        toast.error("Color is required for TShirt.");
+        toast("Color is required for TShirt.");
         return;
       }
       if (!data.gender) {
-        toast.error("Gender is required for TShirt.");
+        toast("Gender is required for TShirt.");
         return;
       }
     }
@@ -268,11 +268,11 @@ export default function AddProductPage() {
       reset();
       setPreviews([]);
       setTooltip("");
-      toast.success("Product added successfully!");
+      toast("Product added successfully!");
     } catch (err) {
       setError(err.message || "Something went wrong");
       setTooltip("");
-      toast.error(err.message || "Something went wrong");
+      toast(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

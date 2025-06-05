@@ -55,7 +55,7 @@ const RemoveSalePage = () => {
 
   const handleRemoveSale = async () => {
     if (selected.length === 0) {
-      toast.error("No products selected.", {
+      toast("No products selected.", {
         theme: "colored",
         style: { background: "#000", color: "#fff" },
       });
@@ -71,7 +71,7 @@ const RemoveSalePage = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Failed to remove sale.", {
+        toast(data.error || "Failed to remove sale.", {
           theme: "colored",
           style: { background: "#000", color: "#fff" },
         });
@@ -92,12 +92,12 @@ const RemoveSalePage = () => {
           theme: "colored",
           style: { background: "#000", color: "#fff" },
         });
-      }      toast.success(
+      }      toast(
         `Sale data completely removed from ${data.modifiedCount || selected.length} products!`,
         { theme: "colored", style: { background: "#000", color: "#fff" } }
       );
     } catch (err) {
-      toast.error(err.message || "Error removing sale.", {
+      toast(err.message || "Error removing sale.", {
         theme: "colored",
         style: { background: "#000", color: "#fff" },
       });

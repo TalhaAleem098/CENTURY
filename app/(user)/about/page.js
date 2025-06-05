@@ -48,8 +48,15 @@ export default function AboutPage() {
           <div className="relative">
             <div className="bg-gray-100 rounded-2xl p-8 border-2 border-gray-200">
               <div className="text-center space-y-4">
-                <div className="w-20 h-20 bg-black rounded-full mx-auto flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold">C</span>
+                <div className="w-20 h-20 mx-auto flex items-center justify-center border rounded-full">
+                  <Image
+                    src="/assets/CENTURY.png"
+                    alt="Century Logo"
+                    width={80}
+                    height={80}
+                    className="object-contain"
+                    loading="lazy"
+                  />
                 </div>
                 <h3 className="text-2xl font-bold">Century Fashion</h3>
                 <p className="text-gray-600">
@@ -170,8 +177,8 @@ export default function AboutPage() {
             <h2 className="text-4xl font-bold">Meet Our Founders</h2>
             <div className="w-16 h-1 bg-black mx-auto"></div>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-              Behind Century&apos;s success are two dedicated founders
-              committed to delivering excellence in fashion.
+              Behind Century&apos;s success are two dedicated founders committed
+              to delivering excellence in fashion.
             </p>
           </div>
           <div className="space-y-16 max-w-5xl mx-auto">
@@ -184,11 +191,10 @@ export default function AboutPage() {
                 </p>
                 <div className="w-12 h-1 bg-black"></div>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Visionary leader with over 8 years of experience in fashion
-                  retail and e-commerce, driving Century&apos;s growth and
-                  innovation strategy. His passion for quality and customer
-                  satisfaction has been instrumental in establishing Century
-                  as a trusted fashion brand.
+                  Jahanzeb leads the creative direction at Century, crafting
+                  bold, culture-driven designs that stand out. His unique vision
+                  shapes the brand’s identity, turning streetwear
+                  into statements.
                 </p>
               </div>
               <div className="flex justify-center">
@@ -209,20 +215,6 @@ export default function AboutPage() {
 
             {/* Founder 2 */}
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <h3 className="text-3xl font-bold">Daoud Ramzan</h3>
-                <p className="text-xl text-gray-600 font-medium">
-                  Co-Founder & Owner
-                </p>
-                <div className="w-12 h-1 bg-black"></div>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Creative visionary specializing in contemporary fashion,
-                  bringing innovative designs and trendsetting collections
-                  to Century. His artistic expertise and understanding of
-                  modern fashion trends ensure Century stays at the forefront
-                  of style and design.
-                </p>
-              </div>
               <div className="flex justify-center">
                 <div className="w-64 h-64 rounded-2xl overflow-hidden shadow-lg">
                   <Image
@@ -236,6 +228,18 @@ export default function AboutPage() {
                     blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                   />
                 </div>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-3xl font-bold">Dawood Ramzan</h3>
+                <p className="text-xl text-gray-600 font-medium">
+                  Co-Founder & Owner
+                </p>
+                <div className="w-12 h-1 bg-black"></div>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Dawood ensures every Century piece meets top-tier quality
+                  standards. From premium fabrics to perfect finishes, he brings
+                  the craftsmanship that defines the brand.
+                </p>
               </div>
             </div>
           </div>

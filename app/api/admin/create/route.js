@@ -10,8 +10,8 @@ export async function POST(req) {
     }
     await connectDB();
     const body = await req.json();
-    const { email, password, twoFactor } = body;
-    if (!email || !password || !twoFactor) {
+    const { email, password } = body;
+    if (!email || !password) {
       return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 });
     }
     const existing = await Admin.findOne({ email });
@@ -19,7 +19,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Admin already exists.' }, { status: 400 });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await Admin.create({ email, password: hashedPassword, twoFactor });
+    await Admin.create({ email, password: hashedPassword });
     return NextResponse.json({ success: true, message: 'Admin created successfully.' });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

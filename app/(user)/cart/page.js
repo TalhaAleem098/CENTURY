@@ -29,7 +29,7 @@ const CartPage = () => {
         .then(async (res) => {
           const data = await res.json();
           if (!res.ok) {
-            toast.error(`Error: ${data.error || res.status}`);
+            toast(`Error: ${data.error || res.status}`);
             setProducts([]);
           } else {
             setProducts(data.products || []);
@@ -79,7 +79,7 @@ const CartPage = () => {
           }
         })
         .catch((err) => {
-          toast.error("Failed to fetch cart products");
+          toast("Failed to fetch cart products");
           setProducts([]);
         })
         .finally(() => {
@@ -178,7 +178,7 @@ const CartPage = () => {
       setCart([]);
       setCartEntries([]);
       setProducts([]);
-      toast.success("Cart cleared successfully!");
+      toast("Cart cleared successfully!");
     }
   };
 
@@ -192,7 +192,7 @@ const CartPage = () => {
         return product?.name || 'Unknown Product';
       });
       
-      toast.error(`Please select size and color for: ${invalidProductNames.join(', ')}`);
+      toast(`Please select size and color for: ${invalidProductNames.join(', ')}`);
       return;
     }
 
@@ -546,7 +546,6 @@ const CartPage = () => {
         products={products}
       />
 
-      <ToastContainer position="top-right" />
     </div>
   );
 };

@@ -34,13 +34,13 @@ const Page = () => {
         `/api/products?page=${pageNum}&limit=${MAX_LIMIT}`
       );
       if (!res.ok) {
-        toast.error("Failed to fetch products");
+        toast("Failed to fetch products");
         setLoading(false);
         return;
       }
       const data = await res.json();
       if (!data.products || !Array.isArray(data.products)) {
-        toast.error("Invalid product data format");
+        toast("Invalid product data format");
         setLoading(false);
         return;
       }
@@ -64,9 +64,9 @@ const Page = () => {
         totalPages: data.totalPages || 1,
       };
       setLoading(false);
-      toast.success("Products loaded successfully");
+      toast("Products loaded successfully");
     } catch (error) {
-      toast.error("Error fetching products");
+      toast("Error fetching products");
       setLoading(false);
     }
   };
@@ -102,7 +102,7 @@ const Page = () => {
     });
     setModalOpen(false);
     setSelectedProduct(null);
-    toast.success("Product updated!");
+    toast("Product updated!");
   };
 
   const handleDeleteProduct = (id) => {
