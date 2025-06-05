@@ -45,14 +45,7 @@ export default function AdminLoginPage() {
   const Navbar = (
     <nav className="w-full bg-white shadow-md py-4 px-8 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <Image
-          src="/assets/century.png"
-          alt="Brand Logo"
-          width={140}
-          height={140}
-          className="rounded-full"
-          priority
-        />
+        CENTURY
       </div>
       <div className="flex items-center gap-4">
         <button
@@ -121,12 +114,7 @@ export default function AdminLoginPage() {
       <main className="flex items-center justify-center min-h-[80vh] p-6 bg-gradient-to-tr from-gray-200 via-gray-100 to-gray-200">
         <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-300 p-12 space-y-8">
           <div className="flex flex-col items-center p-0 m-0 w-full">
-            <Image
-              width={150}
-              height={150}
-              src="/assets/century.png"
-              alt="Century Logo"
-            />
+           Century.com
             <p className="mt-3 text-center text-gray-500 text-sm font-light max-w-xs">
               Securely manage your admin dashboard and access exclusive
               features.
