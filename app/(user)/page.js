@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import HeroSection from '../../components/HeroSection';
 import Image from 'next/image';
 import { toast, ToastContainer } from 'react-toastify';
@@ -27,6 +28,7 @@ async function fetchFeaturedProducts() {
 
 // Product Card Component
 function ProductCard({ product, index, onCartSuccess }) {
+  const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
@@ -110,6 +112,11 @@ function ProductCard({ product, index, onCartSuccess }) {
     window.dispatchEvent(event);
   };
 
+  // Navigate to product details
+  const handleViewDetails = () => {
+    router.push(`/product/${product._id}`);
+  };
+
   return (
     <div 
       className="w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
@@ -189,7 +196,7 @@ function ProductCard({ product, index, onCartSuccess }) {
             Add to Cart
           </button>
           <button
-            onClick={() => window.location.href = `/user/product/${product._id}`}
+            onClick={handleViewDetails}
             className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200"
           >
             View Details
@@ -330,6 +337,7 @@ function VideoSection() {
 
 // Cart Success Modal Component
 function CartSuccessModal({ isOpen, onClose, cartItem }) {
+  const router = useRouter();
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -429,7 +437,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
             <button
               onClick={() => {
                 onClose();
-                window.location.href = '/cart';
+                router.push('/cart');
               }}
               className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
             >

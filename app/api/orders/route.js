@@ -77,8 +77,7 @@ export async function POST(request) {
 
     const subtotalAmount = orderData.totalAmount;
     const shippingCost = subtotalAmount >= 4999 ? 0 : 150;
-    const finalTotalAmount = subtotalAmount + shippingCost;
-    const newOrder = new Order({
+    const finalTotalAmount = subtotalAmount + shippingCost;    const newOrder = new Order({
       customer: {
         name: orderData.customerName,
         email: orderData.customerEmail.toLowerCase(),
@@ -95,10 +94,10 @@ export async function POST(request) {
       subtotalAmount: subtotalAmount,
       shippingCost: shippingCost,
       totalAmount: finalTotalAmount,
-      orderDate: new Date(orderData.orderDate) || new Date(),
+      // orderDate will use default value (Date.now) from schema
       status: orderData.status || 'pending',
       notes: orderData.notes || ''
-    });    // Save order to database
+    });// Save order to database
     const savedOrder = await newOrder.save();
 
     // console.log('=== END DATABASE LOG ===');
