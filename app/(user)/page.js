@@ -189,7 +189,7 @@ function ProductCard({ product, index, onCartSuccess }) {
             Add to Cart
           </button>
           <button
-            onClick={() => window.location.href = `/product/${product.slug || product._id}`}
+            onClick={() => window.location.href = `/user/product/${product._id}`}
             className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200"
           >
             View Details
