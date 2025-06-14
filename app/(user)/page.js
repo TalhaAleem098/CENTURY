@@ -272,12 +272,58 @@ function ProductsGridContainer({ products, onCartSuccess }) {
   );
 }
 
+// Animated Text Ticker Component
+function AnimatedTextTicker() {
+  const text = "At CENTURY, we blend bold design with unmatched quality to create streetwear that stands apart. Every piece is crafted using premium fabrics, offering comfort without compromising on style. Our oversized fits and original graphics are rooted in street culture, built for those who move different and think louder. With limited drops and intentional detailing, CENTURY isn't just about fashion—it's about making a statement. Designed to be worn, lived in, and remembered.";
+  
+  return (
+    <>
+      <style jsx global>{`
+        @keyframes scroll-infinite {
+          0% {
+            transform: translateX(100%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        
+        .ticker-animate {
+          animation: scroll-infinite 80s linear infinite;
+        }
+        
+        .ticker-animate:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      
+      <div className="w-full overflow-hidden bg-black text-white py-3 mb-8 relative border-t-2 border-b-2 border-yellow-400">
+        <div className="flex items-center h-8">
+          <div className="flex-shrink-0 px-6 border-r border-yellow-400 h-full flex items-center">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-bold text-yellow-400 tracking-wider">CENTURY LIVE</span>
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden relative">
+            <div className="ticker-animate whitespace-nowrap">
+              <span className="text-sm font-medium tracking-wide">
+                {text} ••• {text} ••• {text} •••
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // Main Products Section Component
 function ProductsSection({ products, onCartSuccess }) {
   return (
     <section className="py-16 bg-gray-50 products-section">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        <AnimatedTextTicker />
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             VOLUME <span className="text-gray-700">I-C100</span>
@@ -287,8 +333,6 @@ function ProductsSection({ products, onCartSuccess }) {
           </p>
           <div className="w-24 h-1 bg-gray-900 mx-auto mt-6 rounded-full"></div>
         </div>
-
-        {/* Products Display */}
         {products && products.length > 0 ? (
           <ProductsGridContainer
             products={products}
