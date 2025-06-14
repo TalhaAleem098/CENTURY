@@ -7,18 +7,20 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const BrandBar = ({ onToggleSidebar }) => {
-  const [showSearch, setShowSearch] = useState(false);
+  // SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE)
+  // const [showSearch, setShowSearch] = useState(false);
+  // const [searchValue, setSearchValue] = useState('');
+  // const searchRef = useRef(null);
+  // const searchContainerRef = useRef(null);
+  // const closeSearch = () => setShowSearch(false);
+  
   const [showProfile, setShowProfile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
   const [cartCount, setCartCount] = useState(0);
   const { data: session } = useSession();
   const router = useRouter();
 
-  const searchRef = useRef(null);
   const profileRef = useRef(null);
-  const searchContainerRef = useRef(null);
-  const closeSearch = () => setShowSearch(false);
   
   // Handle profile click - redirect to login if not authenticated
   const handleProfileClick = () => {
@@ -62,25 +64,25 @@ const BrandBar = ({ onToggleSidebar }) => {
       window.removeEventListener('storage', handleCartUpdate);
     };
   }, []);
-
+  // SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE)
   // Handle click outside search to close it (only if no text)
-  useEffect(() => {
-    if (!showSearch) return;
-    
-    const handleClickOutside = (e) => {
-      // Don't close if there's text in the search input
-      if (searchValue.trim()) return;
-      
-      // Don't close if clicking inside search container
-      if (searchContainerRef.current?.contains(e.target) || 
-          searchRef.current?.contains(e.target)) return;
-      
-      setShowSearch(false);
-    };
+  // useEffect(() => {
+  //   if (!showSearch) return;
+  //   
+  //   const handleClickOutside = (e) => {
+  //     // Don't close if there's text in the search input
+  //     if (searchValue.trim()) return;
+  //     
+  //     // Don't close if clicking inside search container
+  //     if (searchContainerRef.current?.contains(e.target) || 
+  //         searchRef.current?.contains(e.target)) return;
+  //     
+  //     setShowSearch(false);
+  //   };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showSearch, searchValue]);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, [showSearch, searchValue]);
 
   // Handle profile dropdown close
   useEffect(() => {
@@ -91,11 +93,11 @@ const BrandBar = ({ onToggleSidebar }) => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [showProfile]);
-
   return (
     <div className="w-full z-20 sticky top-0 bg-white border-b border-gray-100">
+      {/* SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE) */}
       {/* Mobile Search Overlay */}
-      {showSearch && isMobile && (
+      {/* {showSearch && isMobile && (
         <div
           ref={searchContainerRef}
           className="fixed top-0 left-0 w-full py-3 px-4 bg-white shadow-md z-50"
@@ -120,13 +122,13 @@ const BrandBar = ({ onToggleSidebar }) => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
-      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">
-        {/* Desktop Layout */}
+      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">        {/* Desktop Layout */}
         <div className="hidden lg:flex lg:items-center w-full relative">
           <div className="flex justify-start flex-1 min-w-0">
-            <div className="flex items-center relative">
+            {/* SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE) */}
+            {/* <div className="flex items-center relative">
               {showSearch && (
                 <input
                   ref={searchRef}
@@ -145,8 +147,8 @@ const BrandBar = ({ onToggleSidebar }) => {
               >
                 <FaSearch size={20} className="text-gray-700" />
               </button>
-            </div>
-          </div>          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            </div> */}
+          </div><div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
             <Link href="/" className="cursor-pointer">
               <Image
                 src="/CENTURY.png"
@@ -233,16 +235,15 @@ const BrandBar = ({ onToggleSidebar }) => {
                 priority
               />
             </Link>
-          </div>
-
-          <div className="flex items-center gap-1 ml-auto">
-            <button
+          </div>          <div className="flex items-center gap-1 ml-auto">
+            {/* SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE) */}
+            {/* <button
               className="p-2 rounded-full hover:bg-gray-100"
               onClick={() => setShowSearch((v) => !v)}
               aria-label="Search products"
             >
               <FaSearch size={16} className="text-gray-700" />
-            </button>
+            </button> */}
             <button
               className="p-2 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"

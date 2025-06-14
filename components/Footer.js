@@ -7,31 +7,25 @@ import {
   FaInstagram,
   FaLinkedinIn,
   FaYoutube,
+  FaWhatsapp,
 } from "react-icons/fa";
-import { FiMail, FiPhone, FiMapPin, FiArrowUp } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const currentYear = new Date().getFullYear();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  const openWhatsApp = () => {
+    const phoneNumber =
+      process.env.NEXT_PUBLIC_CONTACT_NUMBER || "923227154205";
+    const message = "Hello! I'm interested in your products. Can you help me?";
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappURL, "_blank");
   };
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
@@ -83,21 +77,21 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           <div className="sm:col-span-2 lg:col-span-1 space-y-6">
             <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Century</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">
+                Century
+              </h2>
               <p className="text-gray-700 leading-relaxed text-sm lg:text-base">
                 Your trusted premium fashion marketplace. Delivering quality,
                 comfort, and style since our founding. Experience fashion that
                 defines excellence.
               </p>
-            </div>{/* Newsletter Subscription Box */}
+            </div>
+            {/* Newsletter Subscription Box */}
             <div className="mt-8">
               <h4 className="text-lg font-semibold mb-4">
                 Subscribe to Newsletter
               </h4>
-              <form
-                onSubmit={handleNewsletterSubmit}
-                className="space-y-3"
-              >
+              <form onSubmit={handleNewsletterSubmit} className="space-y-3">
                 <div className="w-full">
                   <input
                     type="email"
@@ -108,7 +102,8 @@ const Footer = () => {
                     required
                     disabled={subscriptionStatus === "loading"}
                   />
-                </div>                <div className="w-full sm:w-auto">
+                </div>{" "}
+                <div className="w-full sm:w-auto">
                   <button
                     type="submit"
                     className="w-full sm:w-auto px-6 py-3 bg-black text-white rounded-md font-semibold hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
@@ -121,9 +116,11 @@ const Footer = () => {
                 </div>
               </form>
               <p className="text-xs text-gray-500 mt-3 leading-relaxed">
-                Stay updated with our latest news, exclusive offers, and new arrivals. Unsubscribe anytime.
+                Stay updated with our latest news, exclusive offers, and new
+                arrivals. Unsubscribe anytime.
               </p>
-            </div>            {/* End Newsletter Subscription Box */}
+            </div>{" "}
+            {/* End Newsletter Subscription Box */}
             <div className="mt-6">
               <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-3">
@@ -271,9 +268,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <FiMapPin className="text-black mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-700">
-                   Lahore, Punjab | Pakistan
-                  </p>
+                  <p className="text-gray-700">Lahore, Punjab | Pakistan</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -413,20 +408,16 @@ const Footer = () => {
               >
                 Contact
               </Link>
-            </div>
-          </div>
+            </div>          </div>
         </div>
-      </div>
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-12 h-12 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-50"
-          aria-label="Scroll to top"
-        >
-          <FiArrowUp className="text-lg" />
-        </button>
-      )}
+      </div>      
+      <button
+        onClick={openWhatsApp}
+        className="fixed bottom-6 right-6 p-2 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-105 z-50 border-2 border-white"
+        aria-label="Contact us on WhatsApp"
+      >
+        <FaWhatsapp className="text-4xl" />
+      </button>
     </footer>
   );
 };
