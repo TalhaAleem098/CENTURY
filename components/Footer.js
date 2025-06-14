@@ -77,67 +77,71 @@ const Footer = () => {
       setTimeout(() => setSubscriptionStatus(""), 2000);
     }
   };
-
   return (
     <footer className="bg-gradient-to-br from-white to-gray-100 text-black border-t border-gray-200">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-1">
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold text-black mb-4">Century</h2>
-              <p className="text-gray-700 leading-relaxed">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="sm:col-span-2 lg:col-span-1 space-y-6">
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">Century</h2>
+              <p className="text-gray-700 leading-relaxed text-sm lg:text-base">
                 Your trusted premium fashion marketplace. Delivering quality,
                 comfort, and style since our founding. Experience fashion that
                 defines excellence.
               </p>
-            </div>
-            {/* Newsletter Subscription Box */}
+            </div>{/* Newsletter Subscription Box */}
             <div className="mt-8">
-              <h4 className="text-lg font-semibold mb-2">
+              <h4 className="text-lg font-semibold mb-4">
                 Subscribe to Newsletter
               </h4>
               <form
                 onSubmit={handleNewsletterSubmit}
-                className="flex flex-col sm:flex-row items-center gap-2"
+                className="space-y-3"
               >
-                <input
-                  type="email"
-                  className="w-full sm:w-auto flex-1 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={subscriptionStatus === "loading"}
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition disabled:opacity-60"
-                  disabled={subscriptionStatus === "loading"}
-                >
-                  {subscriptionStatus === "loading"
-                    ? "Subscribing..."
-                    : "Subscribe"}
-                </button>
+                <div className="w-full">
+                  <input
+                    type="email"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 text-sm"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={subscriptionStatus === "loading"}
+                  />
+                </div>                <div className="w-full sm:w-auto">
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-6 py-3 bg-black text-white rounded-md font-semibold hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                    disabled={subscriptionStatus === "loading"}
+                  >
+                    {subscriptionStatus === "loading"
+                      ? "Subscribing..."
+                      : "Subscribe"}
+                  </button>
+                </div>
               </form>
-              <p className="text-xs text-gray-500 mt-2">
-                Stay updated with our latest news and offers.
+              <p className="text-xs text-gray-500 mt-3 leading-relaxed">
+                Stay updated with our latest news, exclusive offers, and new arrivals. Unsubscribe anytime.
               </p>
-            </div>
-            {/* End Newsletter Subscription Box */}
-            <div className="mt-8">
+            </div>            {/* End Newsletter Subscription Box */}
+            <div className="mt-6">
               <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 <a
                   href="https://www.facebook.com/profile.php?id=61576551254002"
-                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label="Facebook"
+                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  aria-label="Follow us on Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <FaFacebookF className="text-sm" />
                 </a>
                 <a
                   href="https://www.instagram.com/century.pk?igsh=aHJvemhjbHdncXhk&utm_source=qr"
-                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label="Instagram"
+                  className="w-10 h-10 bg-gray-200 hover:bg-black hover:text-white text-black rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  aria-label="Follow us on Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <FaInstagram className="text-sm" />
                 </a>

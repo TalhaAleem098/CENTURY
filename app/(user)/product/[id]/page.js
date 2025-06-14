@@ -237,10 +237,6 @@ export default function ProductDetailPage() {
                 <p className="text-gray-600">{product.gender || "N/A"}</p>
               </div>
               <div>
-                <span className="font-semibold text-gray-700">Stock:</span>
-                <p className="text-gray-600">{product.stock} available</p>
-              </div>
-              <div>
                 <span className="font-semibold text-gray-700">Category:</span>
                 <p className="text-gray-600">{product.category}</p>
               </div>

@@ -317,7 +317,7 @@ function AnimatedTextTicker() {
         }
       `}</style>
       
-      <div className="w-full overflow-hidden py-4 mt-8 mx-4 sm:mx-6 lg:mx-8 bg-white rounded-lg">
+      <div className="w-full overflow-hidden py-4 mt-8 bg-white rounded-lg">
         <div className="flex">
           <div className="ticker-seamless whitespace-nowrap flex">
             <span className="text-lg font-medium tracking-wide text-gray-800 px-8">
