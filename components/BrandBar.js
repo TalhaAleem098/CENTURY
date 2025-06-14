@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaUserCircle, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
@@ -59,7 +60,8 @@ const BrandBar = ({ onToggleSidebar }) => {
     return () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
       window.removeEventListener('storage', handleCartUpdate);
-    };  }, []);
+    };
+  }, []);
 
   // Handle click outside search to close it (only if no text)
   useEffect(() => {
@@ -89,6 +91,7 @@ const BrandBar = ({ onToggleSidebar }) => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [showProfile]);
+
   return (
     <div className="w-full z-20 sticky top-0 bg-white border-b border-gray-100">
       {/* Mobile Search Overlay */}
@@ -119,8 +122,10 @@ const BrandBar = ({ onToggleSidebar }) => {
         </div>
       )}
 
-      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">        <div className="hidden lg:grid lg:grid-cols-3 lg:items-center w-full">
-          <div className="flex justify-start">
+      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex lg:items-center w-full relative">
+          <div className="flex justify-start flex-1 min-w-0">
             <div className="flex items-center relative">
               {showSearch && (
                 <input
@@ -141,21 +146,22 @@ const BrandBar = ({ onToggleSidebar }) => {
                 <FaSearch size={20} className="text-gray-700" />
               </button>
             </div>
+          </div>          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            <Link href="/" className="cursor-pointer">
+              <Image
+                src="/CENTURY.png"
+                alt="Centuary Logo"
+                width={180}
+                height={60}
+                className="select-none"
+                draggable="false"
+                priority
+              />
+            </Link>
           </div>
 
-          <div className="flex justify-center">
-            <Image
-              src="/CENTURY.png"
-              alt="Centuary Logo"
-              width={180}
-              height={60}
-              className="select-none"
-              draggable="false"
-              priority
-            />
-          </div>
-
-          <div className="flex justify-end items-center gap-2">            <button
+          <div className="flex justify-end items-center gap-2 flex-1 min-w-0">
+            <button
               className="p-3 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"
               onClick={() => router.push('/cart')}
@@ -167,7 +173,9 @@ const BrandBar = ({ onToggleSidebar }) => {
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
-            </button>            <div className="relative profile-dropdown-parent">
+            </button>
+
+            <div className="relative profile-dropdown-parent">
               <button
                 className="p-3 rounded-full hover:bg-gray-100"
                 onClick={handleProfileClick}
@@ -203,33 +211,37 @@ const BrandBar = ({ onToggleSidebar }) => {
           </div>
         </div>
 
-        <div className="flex lg:hidden items-center justify-between w-full">          <div className="flex items-center">
+        {/* Mobile Layout */}
+        <div className="flex lg:hidden items-center w-full relative">
+          <div className="flex items-center">
             <button
               onClick={onToggleSidebar}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
               aria-label="Toggle navigation menu"
             >
-              <FaBars size={20} className="text-gray-700" />
+              <FaBars size={16} className="text-gray-700" />
             </button>
+          </div>          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            <Link href="/" className="cursor-pointer">
+              <Image
+                src="/CENTURY.png"
+                alt="Centuary Logo"
+                width={110}
+                height={36}
+                className="select-none"
+                draggable="false"
+                priority
+              />
+            </Link>
           </div>
 
-          <div className="flex-1 flex justify-center">
-            <Image
-              src="/CENTURY.png"
-              alt="Centuary Logo"
-              width={120}
-              height={40}
-              className="select-none"
-              draggable="false"
-              priority
-            />
-          </div>          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 ml-auto">
             <button
               className="p-2 rounded-full hover:bg-gray-100"
               onClick={() => setShowSearch((v) => !v)}
               aria-label="Search products"
             >
-              <FaSearch size={18} className="text-gray-700" />
+              <FaSearch size={16} className="text-gray-700" />
             </button>
             <button
               className="p-2 rounded-full hover:bg-gray-100 relative"
@@ -237,7 +249,7 @@ const BrandBar = ({ onToggleSidebar }) => {
               onClick={() => router.push('/cart')}
               type="button"
             >
-              <FaShoppingCart size={20} className="text-gray-700" />
+              <FaShoppingCart size={18} className="text-gray-700" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {cartCount > 99 ? '99+' : cartCount}
@@ -249,7 +261,7 @@ const BrandBar = ({ onToggleSidebar }) => {
               onClick={handleProfileClick}
               aria-label="Profile menu"
             >
-              <FaUserCircle size={20} className="text-gray-700" />
+              <FaUserCircle size={18} className="text-gray-700" />
             </button>
           </div>
         </div>

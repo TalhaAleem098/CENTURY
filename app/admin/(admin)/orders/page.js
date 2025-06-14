@@ -2,8 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { downloadOrderPDF } from '@/utils/pdfGenerator';
-import { createMailtoLink } from '@/utils/emailTemplate';
+import { generateSimpleQRCode } from '@/utils/qrGenerator';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -17,9 +16,17 @@ export default function OrdersPage() {
     search: '',
     sortBy: 'createdAt',
     sortOrder: 'desc'
-  });  const [pagination, setPagination] = useState({});
+  });
+  const [pagination, setPagination] = useState({});
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  
+  // Invoice modal states
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [generatingQR, setGeneratingQR] = useState(false);
+
   // Fetch orders from API
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -74,29 +81,33 @@ export default function OrdersPage() {
       toast.error('Error updating order status');
     }
   };
-  // Handle Place Order (Generate PDF and Open Mailto)
-  const handlePlaceOrder = (order) => {
+
+  // Handle Place Order (Show Invoice with QR Code)
+  const handlePlaceOrder = async (order) => {
     try {
-      // Generate and download PDF
-      downloadOrderPDF(order);
-      toast.success('Order PDF downloaded successfully!');
+      setSelectedInvoiceOrder(order);
+      setShowInvoiceModal(true);
+      setGeneratingQR(true);
       
-      // Create mailto link with email template
-      const mailtoLink = createMailtoLink(order);
-      
-      // Open mailto link
-      window.location.href = mailtoLink;
+      // Generate QR code
+      const qrCode = await generateSimpleQRCode(order);
+      setQrCodeUrl(qrCode);
       
       // Update order status to confirmed if it was pending
       if (order.status === 'pending') {
-        updateOrderStatus(order._id, 'confirmed');
+        await updateOrderStatus(order._id, 'confirmed');
       }
       
+      toast.success('Invoice generated successfully!');
+      
     } catch (error) {
-      console.error('Error processing order:', error);
-      toast.error('Failed to process order');
+      console.error('Error generating invoice:', error);
+      toast.error('Failed to generate invoice');
+    } finally {
+      setGeneratingQR(false);
     }
   };
+
   useEffect(() => {
     fetchOrders();
   }, [filters, fetchOrders]);
@@ -376,7 +387,9 @@ export default function OrdersPage() {
                     {/* Date */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(order.createdAt)}
-                    </td>                    {/* Actions */}
+                    </td>
+
+                    {/* Actions */}
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex flex-col space-y-2">
                         <button
@@ -548,7 +561,211 @@ export default function OrdersPage() {
                 </div>
               </div>
             </div>
-          </div>        )}
+          </div>
+        )}
+
+        {/* Invoice Modal */}
+        {showInvoiceModal && selectedInvoiceOrder && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 print:static print:bg-transparent print:p-0">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[95vh] overflow-y-auto print:max-w-full print:rounded-none print:shadow-none print:border-0 print:overflow-visible print:max-h-full print:h-auto print:w-full print:relative">
+              {/* Modal Header */}
+              <div className="flex justify-between items-center p-4 border-b print:border-0 print:p-2">
+                <h2 className="text-xl font-bold text-gray-900 print:text-lg print:font-semibold">Order Invoice</h2>
+                <button
+                  onClick={() => setShowInvoiceModal(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl print:hidden"
+                >
+                  ×
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="ml-4 bg-black text-white px-4 py-2 rounded print:hidden"
+                >
+                  Print Invoice
+                </button>
+              </div>
+
+              {/* Invoice Content */}
+              <div className="p-6 bg-white text-sm print:p-2 print:text-xs print:bg-white print:shadow-none print:rounded-none print:border-0 print:max-w-full print:w-full print:overflow-visible">
+                
+                {/* Header */}
+                <div className="text-center mb-6 border-b-2 border-black pb-4 print:mb-2 print:pb-2 print:border-b print:text-base">
+                  <h1 className="text-3xl font-bold text-black mb-2 print:text-xl print:mb-1">CENTURY.PK</h1>
+                  <p className="text-gray-600 text-sm print:text-xs">Premium Fashion • Exclusive Collections • Worldwide Delivery</p>
+                  <div className="bg-black text-white py-2 px-4 inline-block mt-3 rounded print:py-1 print:px-2 print:mt-1 print:rounded-none">
+                    <span className="text-lg font-bold print:text-base">ORDER INVOICE</span>
+                  </div>
+                </div>
+                
+                {/* Order & Customer Info Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  
+                  {/* Order Information */}
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <h3 className="font-bold text-lg mb-3 border-b border-gray-300 pb-2">ORDER INFORMATION</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="font-medium">Order #:</span>
+                        <span>#{selectedInvoiceOrder._id.toString().slice(-8).toUpperCase()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Date:</span>
+                        <span>{new Date(selectedInvoiceOrder.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Status:</span>
+                        <span className="capitalize">{selectedInvoiceOrder.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Delivery Address */}
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <h3 className="font-bold text-lg mb-3 border-b border-gray-300 pb-2">DELIVERY ADDRESS</h3>
+                    <div className="space-y-1">
+                      <p className="font-medium">{selectedInvoiceOrder.customer.name}</p>
+                      <p>{selectedInvoiceOrder.customer.phone}</p>
+                      <p>{selectedInvoiceOrder.customer.email}</p>
+                      <p>{selectedInvoiceOrder.customer.address.street}</p>
+                      <p>{selectedInvoiceOrder.customer.address.city}, {selectedInvoiceOrder.customer.address.zipCode}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Items Table */}
+                <div className="mb-6">
+                  <h3 className="font-bold text-lg mb-3">ORDER ITEMS</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border-2 border-black">
+                      <thead>
+                        <tr className="bg-black text-white">
+                          <th className="border border-gray-300 p-3 text-left">Product</th>
+                          <th className="border border-gray-300 p-3 text-center">Size</th>
+                          <th className="border border-gray-300 p-3 text-center">Color</th>
+                          <th className="border border-gray-300 p-3 text-center">Qty</th>
+                          <th className="border border-gray-300 p-3 text-right">Unit Price</th>
+                          <th className="border border-gray-300 p-3 text-right">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedInvoiceOrder.items.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                            <td className="border border-gray-300 p-3">
+                              <div className="font-medium">{item.productName}</div>
+                              {item.salePercentage > 0 && (
+                                <div className="text-xs text-red-600">🏷️ {item.salePercentage}% OFF</div>
+                              )}
+                            </td>
+                            <td className="border border-gray-300 p-3 text-center">{item.selectedSize}</td>
+                            <td className="border border-gray-300 p-3 text-center">{item.selectedColor}</td>
+                            <td className="border border-gray-300 p-3 text-center">{item.quantity}</td>
+                            <td className="border border-gray-300 p-3 text-right">₨{item.finalPrice.toLocaleString()}</td>
+                            <td className="border border-gray-300 p-3 text-right font-medium">₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                {/* Summary */}
+                <div className="flex justify-end mb-6">
+                  <div className="w-80 bg-gray-50 border-2 border-black p-4 rounded-lg">
+                    <h3 className="font-bold text-lg mb-3 text-center border-b border-gray-300 pb-2">ORDER SUMMARY</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span>₨{selectedInvoiceOrder.subtotalAmount.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Shipping:</span>
+                        <span>{selectedInvoiceOrder.shippingCost === 0 ? 'FREE' : `₨${selectedInvoiceOrder.shippingCost.toLocaleString()}`}</span>
+                      </div>
+                      {selectedInvoiceOrder.shippingCost === 0 && (
+                        <div className="text-xs text-green-600">🎉 Free shipping applied!</div>
+                      )}
+                      <div className="border-t-2 border-black pt-2 mt-2">
+                        <div className="flex justify-between font-bold text-lg">
+                          <span>TOTAL:</span>
+                          <span>₨{selectedInvoiceOrder.totalAmount.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* QR Code Section */}
+                <div className="text-center border-t-2 border-black pt-4">
+                  <h3 className="font-bold text-lg mb-3">SCAN FOR ORDER DETAILS</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Scan this QR code to view your order details on centurypk.com<br />
+                    Order tracking and customer support available 24/7
+                  </p>
+                  {generatingQR ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                      <span className="ml-2">Generating QR code...</span>
+                    </div>
+                  ) : qrCodeUrl ? (
+                    <div className="inline-block">
+                      <Image 
+                        src={qrCodeUrl} 
+                        alt="Order QR Code" 
+                        width={120} 
+                        height={120} 
+                        className="border-2 border-black rounded mx-auto"
+                      />
+                      <p className="text-xs text-gray-500 mt-2">
+                        QR Code contains: Order #{selectedInvoiceOrder._id.toString().slice(-8).toUpperCase()} | centurypk.com
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-gray-500">QR Code not available</div>
+                  )}
+                </div>
+                {/* Footer */}
+                <div className="text-center mt-6 pt-4 border-t border-gray-300 text-xs text-gray-600">
+                  <div className="font-bold mb-2">Thank you for choosing CENTURY.PK</div>
+                  <div>For support: support@centurypk.com | +92 123 456 7890 | www.centurypk.com</div>
+                  <div className="mt-2 italic">This is a computer-generated invoice. No signature required.</div>
+                </div>
+              </div>
+            </div>
+            <style jsx global>{`
+              @media print {
+                body { background: #fff !important; }
+                .print\\:hidden { display: none !important; }
+                .print\\:static { position: static !important; }
+                .print\\:bg-transparent { background: transparent !important; }
+                .print\\:p-0 { padding: 0 !important; }
+                .print\\:max-w-full { max-width: 100vw !important; }
+                .print\\:rounded-none { border-radius: 0 !important; }
+                .print\\:shadow-none { box-shadow: none !important; }
+                .print\\:border-0 { border: 0 !important; }
+                .print\\:overflow-visible { overflow: visible !important; }
+                .print\\:max-h-full { max-height: 100vh !important; }
+                .print\\:h-auto { height: auto !important; }
+                .print\\:w-full { width: 100vw !important; }
+                .print\\:relative { position: relative !important; }
+                .print\\:text-xs { font-size: 12px !important; }
+                .print\\:text-base { font-size: 16px !important; }
+                .print\\:text-lg { font-size: 18px !important; }
+                .print\\:font-semibold { font-weight: 600 !important; }
+                .print\\:mb-1 { margin-bottom: 0.25rem !important; }
+                .print\\:mb-2 { margin-bottom: 0.5rem !important; }
+                .print\\:pb-2 { padding-bottom: 0.5rem !important; }
+                .print\\:py-1 { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
+                .print\\:px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+                .print\\:mt-1 { margin-top: 0.25rem !important; }
+                .print\\:rounded-none { border-radius: 0 !important; }
+              }
+            `}</style>
+          </div>
+        )}
       </div>
     </div>
   );

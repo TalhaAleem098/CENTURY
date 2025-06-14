@@ -4,7 +4,7 @@ import TShirt from '@/models/TShirt';
 
 export async function GET(request, { params }) {
   await connectDB();
-  const { id } = params;
+  const { id } = await params;
   try {
     const tshirt = await TShirt.findById(id).lean();
     if (!tshirt) {
