@@ -1,27 +1,30 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import HeroSection from '../../components/HeroSection';
-import Image from 'next/image';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import HeroSection from "../../components/HeroSection";
+import Image from "next/image";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Fetch featured products from API
 async function fetchFeaturedProducts() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?featured=true&limit=12`, {
-      cache: 'no-store'
-    });
-    
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const response = await fetch(
+      `${baseUrl}/api/products?featured=true&limit=12`,
+      {
+        cache: "no-store",
+      }
+    );
+
     if (!response.ok) {
-      throw new Error('Failed to fetch products');
+      throw new Error("Failed to fetch products");
     }
-    
+
     const data = await response.json();
     return data.products || [];
   } catch (error) {
-    console.error('Error fetching featured products:', error);
+    console.error("Error fetching featured products:", error);
     return [];
   }
 }
@@ -31,16 +34,21 @@ function ProductCard({ product, index, onCartSuccess }) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedSize, setSelectedSize] = useState("");
 
   const images = product.images || [];
   const hasMultipleImages = images.length > 1;
-  const currentImage = images[currentImageIndex]?.url || images[0]?.url || '/assets/carousel-1.webp';
-  
+  const currentImage =
+    images[currentImageIndex]?.url ||
+    images[0]?.url ||
+    "/assets/carousel-1.webp";
+
   // Calculate discounted price
   const hasDiscount = product.sale?.percentage > 0;
   const originalPrice = product.price;
-  const discountedPrice = hasDiscount ? originalPrice * (1 - product.sale.percentage / 100) : originalPrice;
+  const discountedPrice = hasDiscount
+    ? originalPrice * (1 - product.sale.percentage / 100)
+    : originalPrice;
 
   // Handle image hover animation - quick transition, no delay
   useEffect(() => {
@@ -62,7 +70,7 @@ function ProductCard({ product, index, onCartSuccess }) {
       image: currentImage,
       category: product.category,
       quantity: 1,
-      addedAt: new Date().toISOString()
+      addedAt: new Date().toISOString(),
     };
 
     // Only add size if one is selected
@@ -71,26 +79,27 @@ function ProductCard({ product, index, onCartSuccess }) {
     }
 
     // Get existing cart from localStorage
-    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
     // Check if item already exists (with same size if size is selected)
     const existingItemIndex = existingCart.findIndex(
-      item => item.id === product._id && (selectedSize ? item.size === selectedSize : !item.size)
+      (item) =>
+        item.id === product._id &&
+        (selectedSize ? item.size === selectedSize : !item.size)
     );
 
     if (existingItemIndex > -1) {
       existingCart[existingItemIndex].quantity += 1;
-      toast('Quantity updated in cart! 🛒', {
-      });
+      toast("Quantity updated in cart! 🛒", {});
       // Show modal for quantity update
       onCartSuccess({
         ...cartItem,
         quantity: existingCart[existingItemIndex].quantity,
-        isUpdate: true
+        isUpdate: true,
       });
     } else {
       existingCart.push(cartItem);
-      toast('Product added to cart successfully! 🎉', {
+      toast("Product added to cart successfully! 🎉", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -101,14 +110,14 @@ function ProductCard({ product, index, onCartSuccess }) {
       // Show modal for new item
       onCartSuccess({
         ...cartItem,
-        isUpdate: false
+        isUpdate: false,
       });
     }
 
-    localStorage.setItem('cart', JSON.stringify(existingCart));
-    
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+
     // Show success message
-    const event = new CustomEvent('cartUpdated', { detail: existingCart });
+    const event = new CustomEvent("cartUpdated", { detail: existingCart });
     window.dispatchEvent(event);
   };
 
@@ -118,7 +127,7 @@ function ProductCard({ product, index, onCartSuccess }) {
   };
 
   return (
-    <div 
+    <div
       className="w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -133,9 +142,13 @@ function ProductCard({ product, index, onCartSuccess }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           priority={index < 6}
         />
-        
+
         {/* Category Overlay */}
-        <div className={`absolute top-3 left-3 bg-black/90 text-white px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
+        <div
+          className={`absolute top-3 left-3 bg-black/90 text-white px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${
+            isHovered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+          }`}
+        >
           {product.category}
         </div>
 
@@ -176,8 +189,8 @@ function ProductCard({ product, index, onCartSuccess }) {
                   onClick={() => setSelectedSize(size)}
                   className={`px-2 py-1 border rounded text-xs font-medium transition-all duration-200 whitespace-nowrap ${
                     selectedSize === size
-                      ? 'border-gray-900 bg-gray-900 text-white'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-500'
+                      ? "border-gray-900 bg-gray-900 text-white"
+                      : "border-gray-300 text-gray-700 hover:border-gray-500"
                   }`}
                 >
                   {size.toUpperCase()}
@@ -217,9 +230,9 @@ function ProductsGridContainer({ products, onCartSuccess }) {
       {/* Products Grid - 3 products per row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-2">
         {productsToShow.map((product, index) => (
-          <ProductCard 
-            key={product._id || index} 
-            product={product} 
+          <ProductCard
+            key={product._id || index}
+            product={product}
             index={index}
             onCartSuccess={onCartSuccess}
           />
@@ -245,7 +258,9 @@ function ProductsGridContainer({ products, onCartSuccess }) {
             onClick={() => {
               setShowAll(false);
               // Scroll to products section
-              document.querySelector('.products-section')?.scrollIntoView({ behavior: 'smooth' });
+              document
+                .querySelector(".products-section")
+                ?.scrollIntoView({ behavior: "smooth" });
             }}
             className="px-8 py-3 border border-gray-900 text-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition-all duration-200 font-medium"
           >
@@ -265,22 +280,26 @@ function ProductsSection({ products, onCartSuccess }) {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Featured <span className="text-gray-700">Products</span>
+            VOLUME <span className="text-gray-700">I-C100</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Discover our handpicked collection of premium fashion items. Each product is carefully selected 
-            for quality, style, and comfort to elevate your wardrobe.
+            The First Chapter Of Your Century
           </p>
           <div className="w-24 h-1 bg-gray-900 mx-auto mt-6 rounded-full"></div>
         </div>
 
         {/* Products Display */}
         {products && products.length > 0 ? (
-          <ProductsGridContainer products={products} onCartSuccess={onCartSuccess} />
+          <ProductsGridContainer
+            products={products}
+            onCartSuccess={onCartSuccess}
+          />
         ) : (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🛍️</div>
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">No Products Available</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-2">
+              No Products Available
+            </h3>
             <p className="text-gray-500">Check back soon for amazing deals!</p>
           </div>
         )}
@@ -293,8 +312,7 @@ function VideoSection() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-      });
+      videoRef.current.play().catch((error) => {});
     }
   }, []);
 
@@ -308,8 +326,14 @@ function VideoSection() {
         loop
         playsInline
       >
-        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
-        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.webm" type="video/webm" />
+        <source
+          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          type="video/mp4"
+        />
+        <source
+          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.webm"
+          type="video/webm"
+        />
         Your browser does not support the video tag.
       </video>
 
@@ -321,13 +345,17 @@ function VideoSection() {
         <div className="text-center max-w-4xl mx-auto">
           {/* Main Heading */}
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Experience Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Story</span>
+            Experience Our{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+              Story
+            </span>
           </h2>
-          
+
           {/* Subtitle */}
           <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Dive into the world of premium fashion. Watch how we craft excellence, 
-            one product at a time, bringing you the finest collection curated with passion.
+            Dive into the world of premium fashion. Watch how we craft
+            excellence, one product at a time, bringing you the finest
+            collection curated with passion.
           </p>
         </div>
       </div>
@@ -343,7 +371,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
   useEffect(() => {
     if (isOpen) {
       // Calculate total cart items
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       setCartCount(totalItems);
     }
@@ -359,16 +387,28 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-green-800">
-                  {cartItem.isUpdate ? 'Cart Updated!' : 'Added to Cart!'}
+                  {cartItem.isUpdate ? "Cart Updated!" : "Added to Cart!"}
                 </h3>
                 <p className="text-sm text-green-600">
-                  {cartItem.isUpdate ? 'Quantity increased' : 'Product successfully added'}
+                  {cartItem.isUpdate
+                    ? "Quantity increased"
+                    : "Product successfully added"}
                 </p>
               </div>
             </div>
@@ -376,8 +416,18 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 p-1"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -411,9 +461,13 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {cartItem.size && (
-                  <span>Size: <span className="font-medium">{cartItem.size}</span></span>
+                  <span>
+                    Size: <span className="font-medium">{cartItem.size}</span>
+                  </span>
                 )}
-                <span>Qty: <span className="font-medium">{cartItem.quantity}</span></span>
+                <span>
+                  Qty: <span className="font-medium">{cartItem.quantity}</span>
+                </span>
               </div>
             </div>
           </div>
@@ -437,7 +491,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
             <button
               onClick={() => {
                 onClose();
-                router.push('/cart');
+                router.push("/cart");
               }}
               className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
             >
@@ -472,7 +526,7 @@ export default function Home() {
         const featuredProducts = await fetchFeaturedProducts();
         setProducts(featuredProducts);
       } catch (error) {
-        console.error('Error loading products:', error);
+        console.error("Error loading products:", error);
       } finally {
         setLoading(false);
       }
@@ -502,10 +556,10 @@ export default function Home() {
       <HeroSection />
       <ProductsSection products={products} onCartSuccess={handleCartSuccess} />
       <VideoSection />
-      <CartSuccessModal 
-        isOpen={showCartModal} 
-        onClose={closeCartModal} 
-        cartItem={cartModalData} 
+      <CartSuccessModal
+        isOpen={showCartModal}
+        onClose={closeCartModal}
+        cartItem={cartModalData}
       />
       x
     </div>
