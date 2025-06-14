@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import HeroSection from "../../components/HeroSection";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
@@ -60,7 +61,11 @@ function ProductCard({ product, index, onCartSuccess }) {
   }, [isHovered, hasMultipleImages]);
 
   // Add to cart function
-  const addToCart = () => {
+  const addToCart = (e) => {
+    // Prevent event bubbling to the link
+    e.preventDefault();
+    e.stopPropagation();
+    
     // Create cart item object
     const cartItem = {
       id: product._id,
@@ -121,102 +126,117 @@ function ProductCard({ product, index, onCartSuccess }) {
     window.dispatchEvent(event);
   };
 
-  // Navigate to product details
-  const handleViewDetails = () => {
+  // Handle view details button click
+  const handleViewDetails = (e) => {
+    // Prevent event bubbling to the link
+    e.preventDefault();
+    e.stopPropagation();
     router.push(`/product/${product._id}`);
   };
 
+  // Handle size selection
+  const handleSizeSelect = (e, size) => {
+    // Prevent event bubbling to the link
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedSize(size);
+  };
+
   return (
-    <div
-      className="w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <Link 
+      href={`/product/${product._id}`}
+      className="block w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
     >
-      {/* Image Container - 1.5:1 aspect ratio */}
-      <div className="relative h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden rounded-t-lg">
-        <Image
-          src={currentImage}
-          alt={product.name}
-          fill
-          className="object-cover transition-opacity duration-500"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          priority={index < 6}
-        />
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Image Container - 1.5:1 aspect ratio */}
+        <div className="relative h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden rounded-t-lg">
+          <Image
+            src={currentImage}
+            alt={product.name}
+            fill
+            className="object-cover transition-opacity duration-500"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={index < 6}
+          />
 
-        {/* Category Overlay */}
-        <div
-          className={`absolute top-3 left-3 bg-black/90 text-white px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${
-            isHovered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
-          }`}
-        >
-          {product.category}
-        </div>
-
-        {/* Discount Badge */}
-        {hasDiscount && (
-          <div className="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-xs font-bold">
-            -{product.sale.percentage}%
+          {/* Category Overlay */}
+          <div
+            className={`absolute top-3 left-3 bg-black/90 text-white px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${
+              isHovered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+            }`}
+          >
+            {product.category}
           </div>
-        )}
-      </div>
 
-      {/* Product Info - Smaller */}
-      <div className="p-4 bg-white/90 backdrop-blur-sm rounded-b-lg">
-        {/* Title */}
-        <h3 className="font-semibold text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
-          {product.name}
-        </h3>
-
-        {/* Price */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg font-bold text-gray-900">
-            ₨{discountedPrice.toLocaleString()}
-          </span>
+          {/* Discount Badge */}
           {hasDiscount && (
-            <span className="text-sm text-gray-500 line-through">
-              ₨{originalPrice.toLocaleString()}
-            </span>
+            <div className="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-xs font-bold">
+              -{product.sale.percentage}%
+            </div>
           )}
         </div>
 
-        {/* Sizes - Single Row */}
-        {product.sizes && product.sizes.length > 0 && (
-          <div className="mb-3">
-            <div className="flex gap-1 overflow-x-auto scrollbar-hide">
-              {product.sizes.map((size, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedSize(size)}
-                  className={`px-2 py-1 border rounded text-xs font-medium transition-all duration-200 whitespace-nowrap ${
-                    selectedSize === size
-                      ? "border-gray-900 bg-gray-900 text-white"
-                      : "border-gray-300 text-gray-700 hover:border-gray-500"
-                  }`}
-                >
-                  {size.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Product Info - Smaller */}
+        <div className="p-4 bg-white/90 backdrop-blur-sm rounded-b-lg">
+          {/* Title */}
+          <h3 className="font-semibold text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
+            {product.name}
+          </h3>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={addToCart}
-            className="flex-1 bg-gray-900 text-white py-2 px-3 rounded text-xs font-medium hover:bg-gray-800 transition-colors duration-200"
-          >
-            Add to Cart
-          </button>
-          <button
-            onClick={handleViewDetails}
-            className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200"
-          >
-            View Details
-          </button>
+          {/* Price */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg font-bold text-gray-900">
+              ₨{discountedPrice.toLocaleString()}
+            </span>
+            {hasDiscount && (
+              <span className="text-sm text-gray-500 line-through">
+                ₨{originalPrice.toLocaleString()}
+              </span>
+            )}
+          </div>
+
+          {/* Sizes - Single Row */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div className="mb-3">
+              <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+                {product.sizes.map((size, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => handleSizeSelect(e, size)}
+                    className={`px-2 py-1 border rounded text-xs font-medium transition-all duration-200 whitespace-nowrap ${
+                      selectedSize === size
+                        ? "border-gray-900 bg-gray-900 text-white"
+                        : "border-gray-300 text-gray-700 hover:border-gray-500"
+                    }`}
+                  >
+                    {size.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={addToCart}
+              className="flex-1 bg-gray-900 text-white py-2 px-3 rounded text-xs font-medium hover:bg-gray-800 transition-colors duration-200"
+            >
+              Add to Cart
+            </button>
+            <button
+              onClick={handleViewDetails}
+              className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200"
+            >
+              View Details
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -279,38 +299,33 @@ function AnimatedTextTicker() {
   return (
     <>
       <style jsx global>{`
-        @keyframes scroll-infinite {
+        @keyframes seamless-scroll {
           0% {
-            transform: translateX(100%);
+            transform: translateX(0%);
           }
           100% {
-            transform: translateX(-100%);
+            transform: translateX(-50%);
           }
         }
         
-        .ticker-animate {
-          animation: scroll-infinite 80s linear infinite;
+        .ticker-seamless {
+          animation: seamless-scroll 120s linear infinite;
         }
         
-        .ticker-animate:hover {
+        .ticker-seamless:hover {
           animation-play-state: paused;
         }
       `}</style>
       
-      <div className="w-full overflow-hidden bg-black text-white py-3 mb-8 relative border-t-2 border-b-2 border-yellow-400">
-        <div className="flex items-center h-8">
-          <div className="flex-shrink-0 px-6 border-r border-yellow-400 h-full flex items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-bold text-yellow-400 tracking-wider">CENTURY LIVE</span>
-            </div>
-          </div>
-          <div className="flex-1 overflow-hidden relative">
-            <div className="ticker-animate whitespace-nowrap">
-              <span className="text-sm font-medium tracking-wide">
-                {text} ••• {text} ••• {text} •••
-              </span>
-            </div>
+      <div className="w-full overflow-hidden py-4 mt-8 mx-4 sm:mx-6 lg:mx-8 bg-white rounded-lg">
+        <div className="flex">
+          <div className="ticker-seamless whitespace-nowrap flex">
+            <span className="text-lg font-medium tracking-wide text-gray-800 px-8">
+              {text}
+            </span>
+            <span className="text-lg font-medium tracking-wide text-gray-800 px-8">
+              {text}
+            </span>
           </div>
         </div>
       </div>
@@ -323,7 +338,6 @@ function ProductsSection({ products, onCartSuccess }) {
   return (
     <section className="py-16 bg-gray-50 products-section">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <AnimatedTextTicker />
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             VOLUME <span className="text-gray-700">I-C100</span>
@@ -598,6 +612,7 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
+      <AnimatedTextTicker />
       <ProductsSection products={products} onCartSuccess={handleCartSuccess} />
       <VideoSection />
       <CartSuccessModal
@@ -605,7 +620,6 @@ export default function Home() {
         onClose={closeCartModal}
         cartItem={cartModalData}
       />
-      x
     </div>
   );
 }
