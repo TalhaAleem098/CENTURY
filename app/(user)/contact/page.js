@@ -215,11 +215,8 @@ const ContactPage = () => {
                 </div>
               </div>
             </motion.div>
-            
           </div>
         </div>
-        
-        {/* Scroll Indicator */}
         <motion.div 
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           initial={{ opacity: 0, y: 20 }}
@@ -233,11 +230,9 @@ const ContactPage = () => {
             </svg>
           </div>
         </motion.div>
-      </section>      {/* Main Content Grid */}
+      </section>
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-6">
-          
-          {/* Section Header */}
           <motion.div 
             className="text-center mb-20"
             initial={{ opacity: 0, y: 30 }}

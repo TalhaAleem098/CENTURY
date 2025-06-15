@@ -383,7 +383,8 @@ export default function FAQPage() {
                 Contact Support
               </a>
               <a
-                href="https://wa.me/your-number"
+                href="https://wa.me/923227154205"
+                target="_blank"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-xl text-gray-900 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200"
               >
                 WhatsApp Us

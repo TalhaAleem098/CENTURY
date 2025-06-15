@@ -74,7 +74,7 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-br from-white to-gray-100 text-black border-t border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="sm:col-span-2 lg:col-span-1 space-y-6">
             <div>
               <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4">
@@ -203,60 +203,6 @@ const Footer = () => {
                   className="text-gray-700 hover:text-black transition-colors duration-200"
                 >
                   Privacy & Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Categories</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/category?type=hoodies"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  Hoodies
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category?type=t-shirts"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  T-Shirts
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category?type=sweatshirts"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  Sweatshirts
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category?type=oversized"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  Oversized Tees
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/shop?sale=true"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  Sale Items
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/shop?new=true"
-                  className="text-gray-700 hover:text-black transition-colors duration-200"
-                >
-                  New Arrivals
                 </Link>
               </li>
             </ul>
