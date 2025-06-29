@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import HeroSection from "../../components/HeroSection";
 import ProductsClient from "./ProductsClient";
 import AnimatedTextTicker from "../../components/AnimatedTextTicker";

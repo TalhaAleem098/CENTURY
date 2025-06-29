@@ -519,6 +519,8 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
 
 // Main Client Component that handles all interactive parts
 export default function ProductsClient({ products }) {
+  // console.log('Products from database:', products);
+
   const [showCartModal, setShowCartModal] = useState(false);
   const [cartModalData, setCartModalData] = useState(null);
 
