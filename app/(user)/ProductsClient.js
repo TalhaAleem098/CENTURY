@@ -12,6 +12,7 @@ function ProductCard({ product, index, onCartSuccess }) {
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
+  const [show, setShow] = useState(false);
 
   const images = product.images || [];
   const hasMultipleImages = images.length > 1;
@@ -35,6 +36,12 @@ function ProductCard({ product, index, onCartSuccess }) {
       setCurrentImageIndex(0);
     }
   }, [isHovered, hasMultipleImages]);
+
+  // Show animation on mount
+  useEffect(() => {
+    const timeout = setTimeout(() => setShow(true), 60 * index);
+    return () => clearTimeout(timeout);
+  }, [index]);
 
   // Add to cart function
   const addToCart = (e) => {
@@ -119,9 +126,10 @@ function ProductCard({ product, index, onCartSuccess }) {
   };
 
   return (
-    <Link 
+    <Link
       href={`/product/${product._id}`}
-      className="block w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
+      className={`block w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-700 group cursor-pointer ${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      style={{ transitionDelay: `${index * 60}ms` }}
     >
       <div
         onMouseEnter={() => setIsHovered(true)}
