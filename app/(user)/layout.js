@@ -44,7 +44,7 @@ export const metadata = {
   },
 };
 
-export default function userLayout({ children }) {
+export default function UserLayout({ children }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -69,10 +69,8 @@ export default function userLayout({ children }) {
     <>
       <SessionProviderWrapper>
         <Ribon />
-        <LayoutClient>
-          {children}
-        </LayoutClient>
-        <Footer/>
+        <LayoutClient>{children}</LayoutClient>
+        <Footer />
       </SessionProviderWrapper>
     </>
   );

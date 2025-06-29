@@ -73,7 +73,7 @@ export default function AdminSidebar() {
       subLinks: [
         { name: 'Add Product', href: '/admin/products/add' },
         { name: 'Edit/Delete Product', href: '/admin/products/edit' },
-        { name: 'Product Returnings', href: '/admin/products/returns' },
+        // { name: 'Product Returnings', href: '/admin/products/returns' },
         { name: 'Inventory Check', href: '/admin/products/inventory' },
       ],
     },
@@ -90,7 +90,7 @@ export default function AdminSidebar() {
     { name: 'Orders Viewing', href: '/admin/orders', icon: <FaClipboardList /> },
     { name: 'Subscribers Mail', href: '/admin/mail-subscribers', icon: <FaEnvelopeOpenText /> },
     { name: 'Notes/Reminders', href: '/admin/reminders', icon: <FaRegBell /> },
-    { name: 'Login Logs', href: '/admin/login-logs', icon: <FaUserCheck /> },
+    // { name: 'Login Logs', href: '/admin/login-logs', icon: <FaUserCheck /> },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);

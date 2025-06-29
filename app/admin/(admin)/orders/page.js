@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { generateSimpleQRCode } from '@/utils/qrGenerator';
+import bwipjs from 'bwip-js';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -25,6 +26,7 @@ export default function OrdersPage() {
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [barcodeUrl, setBarcodeUrl] = useState(null);
   const [generatingQR, setGeneratingQR] = useState(false);
 
   // Fetch orders from API
@@ -107,6 +109,16 @@ export default function OrdersPage() {
       setGeneratingQR(false);
     }
   };
+
+  // Generate barcode for invoice (client fetches from API route)
+  useEffect(() => {
+    if (showInvoiceModal && selectedInvoiceOrder) {
+      const url = `/api/barcode?text=${encodeURIComponent(selectedInvoiceOrder._id)}`;
+      setBarcodeUrl(url);
+    } else {
+      setBarcodeUrl(null);
+    }
+  }, [showInvoiceModal, selectedInvoiceOrder]);
 
   useEffect(() => {
     fetchOrders();
@@ -566,204 +578,110 @@ export default function OrdersPage() {
 
         {/* Invoice Modal */}
         {showInvoiceModal && selectedInvoiceOrder && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 print:static print:bg-transparent print:p-0">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[95vh] overflow-y-auto print:max-w-full print:rounded-none print:shadow-none print:border-0 print:overflow-visible print:max-h-full print:h-auto print:w-full print:relative">
+          <div 
+            className="fixed inset-0 bg-white flex items-center justify-center z-50 p-0"
+            onClick={() => setShowInvoiceModal(false)}
+          >
+            <div 
+              className="bg-white w-screen h-screen flex flex-col border border-black"
+              onClick={(e) => e.stopPropagation()}
+              style={{ fontFamily: 'monospace', color: '#111' }}
+            >
               {/* Modal Header */}
-              <div className="flex justify-between items-center p-4 border-b print:border-0 print:p-2">
-                <h2 className="text-xl font-bold text-gray-900 print:text-lg print:font-semibold">Order Invoice</h2>
+              <div className="flex justify-center items-center p-4 border-b border-black relative">
+                <h2 className="text-xl font-bold text-black text-center w-full tracking-wider">INVOICE</h2>
                 <button
                   onClick={() => setShowInvoiceModal(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl print:hidden"
+                  className="absolute right-4 top-1 text-black text-2xl font-light bg-transparent border-none"
+                  aria-label="Close"
+                  style={{ fontWeight: 700, fontSize: '2rem', lineHeight: 1 }}
                 >
                   ×
                 </button>
-                <button
-                  onClick={() => window.print()}
-                  className="ml-4 bg-black text-white px-4 py-2 rounded print:hidden"
-                >
-                  Print Invoice
-                </button>
               </div>
-
-              {/* Invoice Content */}
-              <div className="p-6 bg-white text-sm print:p-2 print:text-xs print:bg-white print:shadow-none print:rounded-none print:border-0 print:max-w-full print:w-full print:overflow-visible">
-                
-                {/* Header */}
-                <div className="text-center mb-6 border-b-2 border-black pb-4 print:mb-2 print:pb-2 print:border-b print:text-base">
-                  <h1 className="text-3xl font-bold text-black mb-2 print:text-xl print:mb-1">CENTURY.PK</h1>
-                  <p className="text-gray-600 text-sm print:text-xs">Premium Fashion • Exclusive Collections • Worldwide Delivery</p>
-                  <div className="bg-black text-white py-2 px-4 inline-block mt-3 rounded print:py-1 print:px-2 print:mt-1 print:rounded-none">
-                    <span className="text-lg font-bold print:text-base">ORDER INVOICE</span>
-                  </div>
+              {/* Invoice Content - Black & White, Classic Invoice Style */}
+              <div className="flex-1 p-8 flex flex-col gap-2 overflow-hidden">
+                {/* Website Name */}
+                <div className="text-center mb-2">
+                  <h1 className="text-2xl font-extrabold text-black tracking-widest">CENTURY.PK</h1>
+                  <p className="text-xs text-black">Premium Fashion | Exclusive Collections | Worldwide Delivery</p>
                 </div>
-                
-                {/* Order & Customer Info Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  
-                  {/* Order Information */}
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <h3 className="font-bold text-lg mb-3 border-b border-gray-300 pb-2">ORDER INFORMATION</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="font-medium">Order #:</span>
-                        <span>#{selectedInvoiceOrder._id.toString().slice(-8).toUpperCase()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium">Date:</span>
-                        <span>{new Date(selectedInvoiceOrder.createdAt).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium">Status:</span>
-                        <span className="capitalize">{selectedInvoiceOrder.status}</span>
-                      </div>
-                    </div>
+                {/* Order & Delivery Info - Classic Invoice Row */}
+                <div className="flex flex-row gap-0 mb-4 text-xs border-b border-black pb-2">
+                  <div className="flex-1 pr-4 border-r border-black">
+                    <div className="font-bold mb-1 text-black uppercase">Order Info</div>
+                    <div><span className="font-semibold">Order ID:</span> <span className="font-mono">#{selectedInvoiceOrder._id.slice(-8).toUpperCase()}</span></div>
+                    <div><span className="font-semibold">Date:</span> {new Date(selectedInvoiceOrder.createdAt).toLocaleDateString('en-GB')}</div>
+                    <div><span className="font-semibold">Status:</span> {selectedInvoiceOrder.status.charAt(0).toUpperCase() + selectedInvoiceOrder.status.slice(1)}</div>
+                    <div><span className="font-semibold">Items:</span> {selectedInvoiceOrder.totalItems}</div>
                   </div>
-                  
-                  {/* Delivery Address */}
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <h3 className="font-bold text-lg mb-3 border-b border-gray-300 pb-2">DELIVERY ADDRESS</h3>
-                    <div className="space-y-1">
-                      <p className="font-medium">{selectedInvoiceOrder.customer.name}</p>
-                      <p>{selectedInvoiceOrder.customer.phone}</p>
-                      <p>{selectedInvoiceOrder.customer.email}</p>
-                      <p>{selectedInvoiceOrder.customer.address.street}</p>
-                      <p>{selectedInvoiceOrder.customer.address.city}, {selectedInvoiceOrder.customer.address.zipCode}</p>
+                  <div className="flex-1 pl-4">
+                    <div className="font-bold mb-1 text-black uppercase">Delivery Details</div>
+                    <div className="flex flex-row flex-wrap gap-x-6 gap-y-1 items-center">
+                      <div><span className="font-semibold">Name:</span> {selectedInvoiceOrder.customer.name}</div>
+                      <div><span className="font-semibold">Phone:</span> {selectedInvoiceOrder.customer.phone}</div>
+                      <div><span className="font-semibold">Email:</span> {selectedInvoiceOrder.customer.email}</div>
+                      <div><span className="font-semibold">Address:</span> {selectedInvoiceOrder.customer.address.street}</div>
+                      <div><span className="font-semibold">City:</span> {selectedInvoiceOrder.customer.address.city}</div>
+                      <div><span className="font-semibold">Zip:</span> {selectedInvoiceOrder.customer.address.zipCode}</div>
                     </div>
                   </div>
                 </div>
-                
                 {/* Items Table */}
-                <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-3">ORDER ITEMS</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse border-2 border-black">
-                      <thead>
-                        <tr className="bg-black text-white">
-                          <th className="border border-gray-300 p-3 text-left">Product</th>
-                          <th className="border border-gray-300 p-3 text-center">Size</th>
-                          <th className="border border-gray-300 p-3 text-center">Color</th>
-                          <th className="border border-gray-300 p-3 text-center">Qty</th>
-                          <th className="border border-gray-300 p-3 text-right">Unit Price</th>
-                          <th className="border border-gray-300 p-3 text-right">Total</th>
+                <div className="flex-1 overflow-auto">
+                  <table className="w-full text-xs border border-black">
+                    <thead>
+                      <tr className="bg-white">
+                        <th className="p-2 text-left border-b border-black">Product</th>
+                        <th className="p-2 text-center border-b border-black">Size</th>
+                        <th className="p-2 text-center border-b border-black">Color</th>
+                        <th className="p-2 text-center border-b border-black">Qty</th>
+                        <th className="p-2 text-right border-b border-black">Unit</th>
+                        <th className="p-2 text-right border-b border-black">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedInvoiceOrder.items.map((item, idx) => (
+                        <tr key={idx} className="bg-white border-b border-black">
+                          <td className="p-2 font-medium border-r border-black">{item.productName}{item.salePercentage > 0 && <span className="ml-1 text-black text-[10px]">({item.salePercentage}% OFF)</span>}</td>
+                          <td className="p-2 text-center border-r border-black">{item.selectedSize}</td>
+                          <td className="p-2 text-center border-r border-black">{item.selectedColor}</td>
+                          <td className="p-2 text-center border-r border-black">{item.quantity}</td>
+                          <td className="p-2 text-right border-r border-black">₨{item.finalPrice.toLocaleString()}</td>
+                          <td className="p-2 text-right font-semibold">₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {selectedInvoiceOrder.items.map((item, index) => (
-                          <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                            <td className="border border-gray-300 p-3">
-                              <div className="font-medium">{item.productName}</div>
-                              {item.salePercentage > 0 && (
-                                <div className="text-xs text-red-600">🏷️ {item.salePercentage}% OFF</div>
-                              )}
-                            </td>
-                            <td className="border border-gray-300 p-3 text-center">{item.selectedSize}</td>
-                            <td className="border border-gray-300 p-3 text-center">{item.selectedColor}</td>
-                            <td className="border border-gray-300 p-3 text-center">{item.quantity}</td>
-                            <td className="border border-gray-300 p-3 text-right">₨{item.finalPrice.toLocaleString()}</td>
-                            <td className="border border-gray-300 p-3 text-right font-medium">₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                
-                {/* Summary */}
-                <div className="flex justify-end mb-6">
-                  <div className="w-80 bg-gray-50 border-2 border-black p-4 rounded-lg">
-                    <h3 className="font-bold text-lg mb-3 text-center border-b border-gray-300 pb-2">ORDER SUMMARY</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Subtotal:</span>
-                        <span>₨{selectedInvoiceOrder.subtotalAmount.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Shipping:</span>
-                        <span>{selectedInvoiceOrder.shippingCost === 0 ? 'FREE' : `₨${selectedInvoiceOrder.shippingCost.toLocaleString()}`}</span>
-                      </div>
-                      {selectedInvoiceOrder.shippingCost === 0 && (
-                        <div className="text-xs text-green-600">🎉 Free shipping applied!</div>
+                {/* Summary & Barcode */}
+                <div className="flex flex-row gap-4 mt-4 items-end border-t border-black pt-4">
+                  <div className="flex-1 text-xs">
+                    <div className="font-bold mb-1 text-black uppercase">Summary</div>
+                    <div className="flex justify-between"><span>Subtotal:</span><span>₨{selectedInvoiceOrder.subtotalAmount.toLocaleString()}</span></div>
+                    <div className="flex justify-between"><span>Shipping:</span><span>{selectedInvoiceOrder.shippingCost === 0 ? <span className="font-bold">FREE</span> : `₨${selectedInvoiceOrder.shippingCost.toLocaleString()}`}</span></div>
+                    <div className="flex justify-between border-t border-black mt-1 pt-1 font-bold text-base"><span>Total:</span><span>₨{selectedInvoiceOrder.totalAmount.toLocaleString()}</span></div>
+                  </div>
+                  <div className="flex flex-col items-center justify-end w-64">
+                    <div className="bg-white p-4 border-2 border-black mb-2 flex flex-col items-center" style={{ minWidth: 220 }}>
+                      {barcodeUrl ? (
+                        <img src={barcodeUrl} alt="Order Barcode" style={{ width: '200px', height: '60px', objectFit: 'contain' }} />
+                      ) : (
+                        <div className="w-52 h-14 bg-white border border-black flex items-center justify-center text-xs text-black">BARCODE</div>
                       )}
-                      <div className="border-t-2 border-black pt-2 mt-2">
-                        <div className="flex justify-between font-bold text-lg">
-                          <span>TOTAL:</span>
-                          <span>₨{selectedInvoiceOrder.totalAmount.toLocaleString()}</span>
-                        </div>
-                      </div>
                     </div>
+                    <div className="text-xs text-black text-center font-semibold mb-1">Order Barcode</div>
+                    <div className="text-[10px] text-black text-center leading-tight">Scan for order details<br/>centurypk.com</div>
                   </div>
-                </div>
-                
-                {/* QR Code Section */}
-                <div className="text-center border-t-2 border-black pt-4">
-                  <h3 className="font-bold text-lg mb-3">SCAN FOR ORDER DETAILS</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Scan this QR code to view your order details on centurypk.com<br />
-                    Order tracking and customer support available 24/7
-                  </p>
-                  {generatingQR ? (
-                    <div className="flex items-center justify-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
-                      <span className="ml-2">Generating QR code...</span>
-                    </div>
-                  ) : qrCodeUrl ? (
-                    <div className="inline-block">
-                      <Image 
-                        src={qrCodeUrl} 
-                        alt="Order QR Code" 
-                        width={120} 
-                        height={120} 
-                        className="border-2 border-black rounded mx-auto"
-                      />
-                      <p className="text-xs text-gray-500 mt-2">
-                        QR Code contains: Order #{selectedInvoiceOrder._id.toString().slice(-8).toUpperCase()} | centurypk.com
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-gray-500">QR Code not available</div>
-                  )}
                 </div>
                 {/* Footer */}
-                <div className="text-center mt-6 pt-4 border-t border-gray-300 text-xs text-gray-600">
-                  <div className="font-bold mb-2">Thank you for choosing CENTURY.PK</div>
-                  <div>For support: support@centurypk.com | +92 123 456 7890 | www.centurypk.com</div>
-                  <div className="mt-2 italic">This is a computer-generated invoice. No signature required.</div>
+                <div className="text-center mt-2 pt-2 border-t border-black text-xs text-black">
+                  <div className="font-bold mb-1">Thank you for choosing CENTURY.PK</div>
+                  <div>support@centurypk.com | +92 123 456 7890 | www.centurypk.com</div>
+                  <div className="mt-1 italic">This is a computer-generated invoice. No signature required.</div>
                 </div>
               </div>
             </div>
-            <style jsx global>{`
-              @media print {
-                body { background: #fff !important; }
-                .print\\:hidden { display: none !important; }
-                .print\\:static { position: static !important; }
-                .print\\:bg-transparent { background: transparent !important; }
-                .print\\:p-0 { padding: 0 !important; }
-                .print\\:max-w-full { max-width: 100vw !important; }
-                .print\\:rounded-none { border-radius: 0 !important; }
-                .print\\:shadow-none { box-shadow: none !important; }
-                .print\\:border-0 { border: 0 !important; }
-                .print\\:overflow-visible { overflow: visible !important; }
-                .print\\:max-h-full { max-height: 100vh !important; }
-                .print\\:h-auto { height: auto !important; }
-                .print\\:w-full { width: 100vw !important; }
-                .print\\:relative { position: relative !important; }
-                .print\\:text-xs { font-size: 12px !important; }
-                .print\\:text-base { font-size: 16px !important; }
-                .print\\:text-lg { font-size: 18px !important; }
-                .print\\:font-semibold { font-weight: 600 !important; }
-                .print\\:mb-1 { margin-bottom: 0.25rem !important; }
-                .print\\:mb-2 { margin-bottom: 0.5rem !important; }
-                .print\\:pb-2 { padding-bottom: 0.5rem !important; }
-                .print\\:py-1 { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
-                .print\\:px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
-                .print\\:mt-1 { margin-top: 0.25rem !important; }
-                .print\\:rounded-none { border-radius: 0 !important; }
-              }
-            `}</style>
           </div>
         )}
       </div>
