@@ -112,7 +112,7 @@ const BrandBar = ({ onToggleSidebar }) => {
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && searchValue.trim()) {
-                  router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
+                  router.push(`/search/q=\"${encodeURIComponent(searchValue.trim())}\"`);
                   setShowSearch(false);
                   setSearchValue('');
                 }
@@ -147,7 +147,7 @@ const BrandBar = ({ onToggleSidebar }) => {
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && searchValue.trim()) {
-                      router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
+                      router.push(`/search/q=\"${encodeURIComponent(searchValue.trim())}\"`);
                       setShowSearch(false);
                       setSearchValue('');
                     }
