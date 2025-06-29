@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ShoppingCart, Eye, Check, X, Star, Clock, Package, Truck } from "lucide-react";
 
 function ProductCard({ product, index, onCartSuccess }) {
   const router = useRouter();
@@ -148,8 +149,9 @@ function ProductCard({ product, index, onCartSuccess }) {
 
           {/* Discount Badge */}
           {hasDiscount && (
-            <div className="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-xs font-bold">
-              -{product.sale.percentage}%
+            <div className="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-bold shadow-md border border-gray-200 rotate-3 flex items-center gap-1 select-none">
+              <span className="text-red-500">-{product.sale.percentage}%</span>
+              <span className="hidden sm:inline text-[10px] font-normal text-gray-500 ml-1">OFF</span>
             </div>
           )}
         </div>
@@ -198,14 +200,16 @@ function ProductCard({ product, index, onCartSuccess }) {
           <div className="flex gap-2">
             <button
               onClick={addToCart}
-              className="flex-1 bg-gray-900 text-white py-2 px-3 rounded text-xs font-medium hover:bg-gray-800 transition-colors duration-200"
+              className="flex-1 bg-gray-900 text-white py-2 px-3 rounded text-xs font-medium hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-1"
             >
+              <ShoppingCart size={12} />
               Add to Cart
             </button>
             <button
               onClick={handleViewDetails}
-              className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200"
+              className="flex-1 border border-gray-900 text-gray-900 py-2 px-3 rounded text-xs font-medium hover:bg-gray-900 hover:text-white transition-all duration-200 flex items-center justify-center gap-1"
             >
+              <Eye size={12} />
               View Details
             </button>
           </div>
@@ -267,6 +271,51 @@ function ProductsGridContainer({ products, onCartSuccess }) {
   );
 }
 
+// Sold Out State Component
+function SoldOutState() {
+  return (
+    <div className="text-center py-20 px-4">
+      <div className="max-w-md mx-auto">
+        {/* Icon */}
+        <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center">
+          <Package size={48} className="text-gray-400" />
+        </div>
+        
+        {/* Main Message */}
+        <h3 className="text-3xl font-bold text-gray-900 mb-4">
+          All Items Sold Out!
+        </h3>
+        
+        {/* Description */}
+        <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+          Thank you for the overwhelming response! All our current collection items are sold out. 
+          We&apos;re working hard to bring you exciting new arrivals.
+        </p>
+        
+        {/* Features */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+          <div className="flex flex-col items-center p-4  rounded-lg">
+            <Clock size={24} className="text-gray-600 mb-2" />
+            <span className="text-sm font-medium text-gray-900">New Arrivals</span>
+            <span className="text-xs text-gray-600">Coming Soon</span>
+          </div>
+          <div className="flex flex-col items-center p-4 rounded-lg">
+            <Star size={24} className="text-gray-600 mb-2" />
+            <span className="text-sm font-medium text-gray-900">Premium Quality</span>
+            <span className="text-xs text-gray-600">Always Guaranteed</span>
+          </div>
+          <div className="flex flex-col items-center p-4 rounded-lg">
+            <Truck size={24} className="text-gray-600 mb-2" />
+            <span className="text-sm font-medium text-gray-900">Fast Delivery</span>
+            <span className="text-xs text-gray-600">Nationwide</span>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  );
+}
+
 // Main Products Section Component
 function ProductsSection({ products, onCartSuccess }) {
   return (
@@ -287,13 +336,7 @@ function ProductsSection({ products, onCartSuccess }) {
             onCartSuccess={onCartSuccess}
           />
         ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🛍️</div>
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">
-              No Products Available
-            </h3>
-            <p className="text-gray-500">Check back soon for amazing deals!</p>
-          </div>
+          <SoldOutState />
         )}
       </div>
     </section>
@@ -381,19 +424,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <Check size={24} className="text-green-600" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-green-800">
@@ -410,19 +441,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 p-1"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <X size={20} />
             </button>
           </div>
         </div>
