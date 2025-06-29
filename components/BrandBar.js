@@ -110,6 +110,13 @@ const BrandBar = ({ onToggleSidebar }) => {
               onChange={(e) => setSearchValue(e.target.value)}
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && searchValue.trim()) {
+                  router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
+                  setShowSearch(false);
+                  setSearchValue('');
+                }
+              }}
             />
             <button
               onClick={() => {
@@ -138,6 +145,13 @@ const BrandBar = ({ onToggleSidebar }) => {
                   onChange={(e) => setSearchValue(e.target.value)}
                   className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-4 py-2 border border-gray-200 rounded-lg bg-white text-gray-700 z-50 shadow-lg"
                   autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && searchValue.trim()) {
+                      router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
+                      setShowSearch(false);
+                      setSearchValue('');
+                    }
+                  }}
                 />
               )}
               <button
