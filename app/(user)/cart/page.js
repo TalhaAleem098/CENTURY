@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckoutModal from "./components/CheckoutModal";
+import { FaShoppingCart } from "react-icons/fa";
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
@@ -22,72 +23,74 @@ const CartPage = () => {
     }
   }, []);
   useEffect(() => {
-    if (cart.length > 0) {
-      setLoading(true);
-      const ids = cart.map((item) => item.id).join(",");
-      fetch(`/api/cart-products?ids=${ids}`)
-        .then(async (res) => {
-          const data = await res.json();
-          if (!res.ok) {
-            toast(`Error: ${data.error || res.status}`);
-            setProducts([]);
-          } else {
-            setProducts(data.products || []);
-            const entries = [];
-            JSON.parse(localStorage.getItem("cart") || "[]").forEach((item) => {
-              const product = data.products.find((p) => p._id === item.id);
-              if (product && product.category === "TShirt") {
-                // Set default color and size with better fallbacks
-                const availableColors = product.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
-                const availableSizes = product.sizes?.filter(Boolean) || [];
-                const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
-                const defaultSize = availableSizes.length > 0 ? availableSizes[0] : "";
-                
-                if (item.sizes) {
-                  Object.entries(item.sizes).forEach(([size, qty]) => {
-                    // Ensure the size exists in product sizes, otherwise use default
-                    const validSize = availableSizes.includes(size) ? size : defaultSize;
-                    entries.push({
-                      id: item.id,
-                      size: validSize,
-                      quantity: qty,
-                      color: defaultColor,
-                    });
-                  });
-                } else {
+    if (cart.length === 0) {
+      setProducts([]);
+      setCartEntries([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const ids = cart.map((item) => item.id).join(",");
+    fetch(`/api/cart-products?ids=${ids}`)
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          toast(`Error: ${data.error || res.status}`);
+          setProducts([]);
+        } else {
+          setProducts(data.products || []);
+          const entries = [];
+          JSON.parse(localStorage.getItem("cart") || "[]").forEach((item) => {
+            const product = data.products.find((p) => p._id === item.id);
+            if (product && product.category === "TShirt") {
+              // Set default color and size with better fallbacks
+              const availableColors = product.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
+              const availableSizes = product.sizes?.filter(Boolean) || [];
+              const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
+              const defaultSize = availableSizes.length > 0 ? availableSizes[0] : "";
+              
+              if (item.sizes) {
+                Object.entries(item.sizes).forEach(([size, qty]) => {
+                  // Ensure the size exists in product sizes, otherwise use default
+                  const validSize = availableSizes.includes(size) ? size : defaultSize;
                   entries.push({
                     id: item.id,
-                    size: defaultSize,
-                    quantity: 1,
+                    size: validSize,
+                    quantity: qty,
                     color: defaultColor,
                   });
-                }
+                });
+              } else {
+                entries.push({
+                  id: item.id,
+                  size: defaultSize,
+                  quantity: 1,
+                  color: defaultColor,
+                });
               }
-            });
-            // Remove duplicates based on id, size, and color
-            const uniqueEntries = entries.filter(
-              (entry, index, self) =>
-                index ===
-                self.findIndex(
-                  (e) =>
-                    e.id === entry.id &&
-                    e.size === entry.size &&
-                    e.color === entry.color
-                )
-            );
-            setCartEntries(uniqueEntries);
-          }
-        })
-        .catch((err) => {
-          toast("Failed to fetch cart products");
-          setProducts([]);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+            }
+          });
+          // Remove duplicates based on id, size, and color
+          const uniqueEntries = entries.filter(
+            (entry, index, self) =>
+              index ===
+              self.findIndex(
+                (e) =>
+                  e.id === entry.id &&
+                  e.size === entry.size &&
+                  e.color === entry.color
+              )
+          );
+          setCartEntries(uniqueEntries);
+        }
+      })
+      .catch((err) => {
+        toast("Failed to fetch cart products");
+        setProducts([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [cart]);
 
   const handleAddEntry = (id, currentIndex) => {
@@ -245,7 +248,7 @@ const CartPage = () => {
           </div>
         ) : cartEntries.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-gray-400 text-6xl mb-4">🛒</div>
+            <FaShoppingCart className="text-gray-400 text-6xl mb-4 mx-auto" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">
               Your cart is empty
             </h3>

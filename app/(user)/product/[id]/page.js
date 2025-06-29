@@ -1,31 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { OrbitProgress } from "react-loading-indicators";
-
+import CheckoutModal from "../../cart/components/CheckoutModal";
 export default function ProductDetailPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [showOrderModal, setShowOrderModal] = useState(false);
-  const [orderLoading, setOrderLoading] = useState(false);
-
-  // Customer form state
-  const [customerData, setCustomerData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    zipCode: "",
-  });
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -33,9 +21,10 @@ export default function ProductDetailPage() {
     fetch(`/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) throw new Error(data.error);
-        setProduct(data);
-        setSelectedColor(data.color || "");
+        if (data.error) throw new Error(data.error);        setProduct(data);
+        // Set default color to first available color
+        const colors = data.color ? data.color.split(",").map(c => c.trim()).filter(Boolean) : [];
+        setSelectedColor(colors.length > 0 ? colors[0] : "");
         setError(null);
       })
       .catch((err) => setError(err.message))
@@ -48,91 +37,52 @@ export default function ProductDetailPage() {
       ? product.price * (1 - product.sale.percentage / 100)
       : product?.price || 0;
 
-  const totalPrice = finalPrice * quantity;
+  const totalPrice = finalPrice * quantity;  // Available colors (handling multiple colors separated by commas)
+  const availableColors = product?.color ? product.color.split(",").map(c => c.trim()).filter(Boolean) : [];
 
-  // Available colors (for now using single color from product)
-  const availableColors = product?.color ? [product.color] : [];
-
-  const handlePlaceOrder = async () => {
+  const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
       toast.error("Please select size and color");
       return;
     }
 
-    if (
-      !customerData.name ||
-      !customerData.email ||
-      !customerData.phone ||
-      !customerData.address
-    ) {
-      toast.error("Please fill all required fields");
+    // Get existing cart from localStorage
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    
+    // Check if product already exists in cart
+    const existingProductIndex = existingCart.findIndex(item => item.id === product._id);
+    
+    if (existingProductIndex !== -1) {
+      // Product exists, update the sizes
+      if (existingCart[existingProductIndex].sizes[selectedSize]) {
+        existingCart[existingProductIndex].sizes[selectedSize] += quantity;
+      } else {
+        existingCart[existingProductIndex].sizes[selectedSize] = quantity;
+      }
+    } else {
+      // Product doesn't exist, add new entry
+      existingCart.push({
+        id: product._id,
+        sizes: {
+          [selectedSize]: quantity
+        }
+      });
+    }
+    
+    // Save back to localStorage
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+    
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handlePlaceOrder = () => {
+    if (!selectedSize || !selectedColor) {
+      toast.error("Please select size and color");
       return;
     }
 
-    setOrderLoading(true);
-
-    const orderData = {
-      customerName: customerData.name,
-      customerEmail: customerData.email,
-      customerPhone: customerData.phone,
-      address: customerData.address,
-      city: customerData.city,
-      zipCode: customerData.zipCode,
-      items: [
-        {
-          productId: product._id,
-          productName: product.name,
-          selectedSize: selectedSize,
-          selectedColor: selectedColor,
-          quantity: quantity,
-          originalPrice: product.price,
-          salePercentage: product.sale?.percentage || 0,
-          finalPrice: finalPrice,
-          totalPrice: totalPrice,
-          category: product.category,
-          brand: product.brand,
-          material: product.material,
-          productImage: product.images?.[0]?.url || "",
-        },
-      ],
-      totalItems: 1,
-      totalQuantity: quantity,
-      subtotalAmount: totalPrice,
-      shippingCost: 0,
-      totalAmount: totalPrice,
-    };
-
-    try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("Order placed successfully!");
-        setShowOrderModal(false);
-        // Reset form
-        setCustomerData({
-          name: "",
-          email: "",
-          phone: "",
-          address: "",
-          city: "",
-          zipCode: "",
-        });
-      } else {
-        toast.error(result.error || "Failed to place order");
-      }
-    } catch (error) {
-      toast.error("Failed to place order");
-    } finally {
-      setOrderLoading(false);
-    }
+    // Open checkout modal
+    setShowCheckoutModal(true);
   };
   if (loading)
     return (
@@ -315,18 +265,22 @@ export default function ProductDetailPage() {
                 </span>
               </div>
             </div>
-            {/* Action Buttons */}{" "}
-            <div className="space-y-4">
+            {/* Action Buttons */}{" "}            <div className="space-y-4">
               <button
-                onClick={() => setShowOrderModal(true)}
+                onClick={handlePlaceOrder}
                 disabled={
                   !selectedSize || !selectedColor || product.stock === 0
                 }
                 className="w-full py-4 bg-black text-white rounded-lg font-semibold text-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 Place Order Now
-              </button>
-              <button className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+              </button>              <button
+                onClick={handleAddToCart}
+                disabled={
+                  !selectedSize || !selectedColor || product.stock === 0
+                }
+                className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+              >
                 Add to Cart
               </button>
             </div>
@@ -400,190 +354,40 @@ export default function ProductDetailPage() {
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </div>      </div>
 
-      {/* Order Modal */}
-      {showOrderModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Complete Your Order
-                </h2>
-                <button
-                  onClick={() => setShowOrderModal(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6">
-              {/* Order Summary */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-3">
-                  Order Summary
-                </h3>
-                <div className="flex justify-between items-center mb-2">
-                  <span>{product.name}</span>
-                  <span>₨{finalPrice.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center mb-2 text-sm text-gray-600">
-                  <span>
-                    Size: {selectedSize} | Color: {selectedColor}
-                  </span>
-                  <span>Qty: {quantity}</span>
-                </div>
-                <div className="border-t pt-2 mt-2">
-                  <div className="flex justify-between items-center font-semibold">
-                    <span>Total:</span>
-                    <span>₨{totalPrice.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Customer Details Form */}
-              <div className="space-y-4">
-                <h3 className="font-semibold text-gray-900">
-                  Shipping Information
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name <span className="text-red-500">*</span>
-                    </label>{" "}
-                    <input
-                      type="text"
-                      value={customerData.name}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          name: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={customerData.email}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          email: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number <span className="text-red-500">*</span>
-                  </label>{" "}
-                  <input
-                    type="tel"
-                    value={customerData.phone}
-                    onChange={(e) =>
-                      setCustomerData({
-                        ...customerData,
-                        phone: e.target.value,
-                      })
-                    }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address <span className="text-red-500">*</span>
-                  </label>{" "}
-                  <textarea
-                    value={customerData.address}
-                    onChange={(e) =>
-                      setCustomerData({
-                        ...customerData,
-                        address: e.target.value,
-                      })
-                    }
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                    rows="3"
-                    placeholder="Enter your complete address"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      City
-                    </label>{" "}
-                    <input
-                      type="text"
-                      value={customerData.city}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          city: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                      placeholder="Enter your city"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Zip Code
-                    </label>{" "}
-                    <input
-                      type="text"
-                      value={customerData.zipCode}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          zipCode: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                      placeholder="Enter zip code"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-4 mt-8">
-                <button
-                  onClick={() => setShowOrderModal(false)}
-                  className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>{" "}
-                <button
-                  onClick={handlePlaceOrder}
-                  disabled={orderLoading}
-                  className="flex-1 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
-                >
-                  {orderLoading ? "Placing Order..." : "Place Order"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Checkout Modal */}
+      <CheckoutModal
+        isOpen={showCheckoutModal}
+        onClose={() => setShowCheckoutModal(false)}
+        orderData={{
+          items: [{
+            productId: product._id,
+            productName: product.name,
+            selectedSize: selectedSize,
+            selectedColor: selectedColor,
+            quantity: quantity,
+            originalPrice: product.price,
+            salePercentage: product.sale?.percentage || 0,
+            finalPrice: finalPrice,
+            totalPrice: totalPrice,
+            category: product.category,
+            brand: product.brand,
+            material: product.material
+          }],
+          totalItems: 1,
+          totalQuantity: quantity,
+          totalAmount: totalPrice,
+          orderDate: new Date().toISOString()
+        }}
+        cartEntries={[{
+          id: product._id,
+          size: selectedSize,
+          quantity: quantity,
+          color: selectedColor
+        }]}
+        products={[product]}
+      />
     </div>
   );
 }

@@ -85,12 +85,12 @@ export async function POST(req) {
     // Validate images array
     if (!Array.isArray(images) || images.length === 0) {
       console.error('At least one image is required.');
-      return NextResponse.json({ error: 'At least one image is required.' }, { status: 400 });
+      return NextResponse.json({ error: 'At least one image is required.', message: 'Please provide at least one image for the product.' }, { status: 400 });
     }
     for (const img of images) {
       if (!img.public_id || !img.url) {
         console.error('Each image must have public_id and url:', img);
-        return NextResponse.json({ error: 'Each image must have public_id and url.' }, { status: 400 });
+        return NextResponse.json({ error: 'Each image must have public_id and url.', message: 'Each image must include both public_id and url.' }, { status: 400 });
       }
     }
     // Check if product with this slug already exists

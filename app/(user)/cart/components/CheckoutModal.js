@@ -8,7 +8,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     customerName: '',
     customerEmail: '',
     customerPhone: '',
-    address: '',
+      address: '',
     city: '',
     zipCode: '',
     notes: ''

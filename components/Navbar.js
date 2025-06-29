@@ -10,6 +10,7 @@ const navItems = [
   { name: "FAQ", href: "/faq" },
   { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms & Conditions", href: "/terms" },
+  { name: "Return Policy", href: "/return-policy" },
 ];
 
 const Navbar = () => {
