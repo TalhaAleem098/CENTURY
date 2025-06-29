@@ -113,9 +113,6 @@ export default function SearchResultsPage({ params }) {
   return (
     <div className="min-h-screen bg-white py-12">
       <div className="max-w-6xl mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-          Results for <span className="text-blue-700">&quot;{query}&quot;</span>
-        </h1>
         {loading ? (
           <div className="text-center py-20 text-gray-500 text-lg">Loading products...</div>
         ) : products.length === 0 ? (
