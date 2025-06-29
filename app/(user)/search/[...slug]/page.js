@@ -82,12 +82,20 @@ function ProductCard({ product }) {
 
 export default function SearchResultsPage({ params }) {
   const pathname = usePathname();
-  // Extract query from /search/q="..."
   let query = "";
   if (pathname) {
-    const match = pathname.match(/\/search\/q=\"(.+)\"/);
-    if (match) query = decodeURIComponent(match[1]);
+    const match = pathname.match(/\/search\/q=\"(.+?)\"$/);
+    if (match) {
+      query = decodeURIComponent(match[1]);
+    } else {
+      const altMatch = pathname.match(/q=\"(.+)\"/);
+      if (altMatch) query = decodeURIComponent(altMatch[1]);
+    }
   }
+  // Prevent query from being set as document.title or meta
+  useEffect(() => {
+    // Do nothing: don't set document.title or meta for query
+  }, []);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
