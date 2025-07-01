@@ -99,9 +99,9 @@ const HeroSection = () => {
 
   return (
     <div className="w-full mx-auto md:px-4 md:py-4">
-      <div className="relative rounded-2xl overflow-hidden bg-[#e5e7eb] p-2 md:p-4">
+      <div className="relative overflow-hidden bg-[#e5e7eb]">
         <div
-          className="relative aspect-[16/9] w-full h-auto rounded-2xl overflow-hidden select-none"
+          className="relative aspect-[16/9] w-full h-auto overflow-hidden select-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -114,7 +114,7 @@ const HeroSection = () => {
                 src={images[idx]}
                 alt={`Hero Image ${idx + 1}`}
                 fill
-                className="object-cover w-full h-full rounded-2xl"
+                className="object-cover w-full h-full"
                 priority={idx === current}
                 quality={90}
                 style={{ backgroundColor: '#e5e7eb' }}

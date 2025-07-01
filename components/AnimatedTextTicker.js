@@ -27,10 +27,10 @@ export default function AnimatedTextTicker() {
       <div className="w-full overflow-hidden py-4 bg-white rounded-lg">
         <div className="flex">
           <div className="ticker-seamless whitespace-nowrap flex">
-            <span className="text-base sm:text-xl md:text-2xl font-semibold tracking-wide text-gray-800 px-8" style={{ letterSpacing: '0.08em' }}>
+            <span className="text-xs sm:text-base md:text-lg font-semibold tracking-wide text-gray-800 px-6" style={{ letterSpacing: '0.08em' }}>
               {capitalizedText}
             </span>
-            <span className="text-base sm:text-xl md:text-2xl font-semibold tracking-wide text-gray-800 px-8" style={{ letterSpacing: '0.08em' }}>
+            <span className="text-xs sm:text-base md:text-lg font-semibold tracking-wide text-gray-800 px-6" style={{ letterSpacing: '0.08em' }}>
               {capitalizedText}
             </span>
           </div>
