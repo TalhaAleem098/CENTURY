@@ -1,24 +1,48 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
+const heroImages = [
+  "/assets/1.png",
+  "/assets/2.png",
+  "/assets/3.png",
+  "/assets/4.png",
+  "/assets/5.png",
+  "/assets/6.png"
+];
+
 const HeroSection = () => {
+  const [current, setCurrent] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    let timeout;
+    const nextImage = () => {
+      setFade(false);
+      timeout = setTimeout(() => {
+        setCurrent((prev) => (prev + 1) % heroImages.length);
+        setFade(true);
+        timeout = setTimeout(nextImage, 5000);
+      }, 400); // fade out duration
+    };
+    timeout = setTimeout(nextImage, 5000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="w-full  mx-auto md:px-4 md:py-4">
-      <div className="relative rounded-2xl overflow-hidden bg-[#e5e7eb] p-2 md:p-4">
-        {/* Hero Image with real aspect ratio and background fill */}
-        <div className="relative aspect-[16/9] w-full h-auto rounded-2xl overflow-hidden">
+    <div className="w-full mx-auto">
+      <div className="relative overflow-hidden bg-[#e5e7eb]">
+        <div className="relative w-full h-auto overflow-hidden min-h-[100vh]" style={{ maxHeight: '100vh' }}>
           <Image
-            src="/carousel-1.jpg"
+            key={current}
+            src={heroImages[current]}
             alt="Hero Image"
             fill
-            className="object-cover w-full h-full rounded-2xl"
+            className={`object-cover w-full h-full transition-opacity duration-400 ${fade ? 'opacity-100' : 'opacity-0'}`}
             priority
             quality={90}
-            style={{ backgroundColor: '#e5e7eb' }}
+            style={{ backgroundColor: '#e5e7eb', maxHeight: '100vh' }}
           />
-          {/* Optional subtle overlay for better image contrast if needed */}
-          <div className="absolute inset-0 bg-black/10 pointer-events-none rounded-2xl" />
         </div>
       </div>
     </div>
