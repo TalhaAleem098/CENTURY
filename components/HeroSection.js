@@ -3,24 +3,25 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Mobile images (1-6.png)
+
+// Mobile images (1-6.png) with width and height for aspect ratio
 const mobileImages = [
-  "/assets/1.png",
-  "/assets/2.png",
-  "/assets/3.png",
-  "/assets/4.png",
-  "/assets/5.png",
-  "/assets/6.png",
+  { src: "/assets/1.png", width: 800, height: 600 },
+  { src: "/assets/2.png", width: 900, height: 700 },
+  { src: "/assets/3.png", width: 1000, height: 800 },
+  { src: "/assets/4.png", width: 1200, height: 900 },
+  { src: "/assets/5.png", width: 700, height: 900 },
+  { src: "/assets/6.png", width: 1000, height: 500 },
 ];
 
-// Desktop images (7-12.png)
+// Desktop images (7-12.png) with width and height for aspect ratio
 const desktopImages = [
-  "/assets/7.png",
-  "/assets/8.png",
-  "/assets/9.png",
-  "/assets/10.png",
-  "/assets/11.png",
-  "/assets/12.png",
+  { src: "/assets/7.png", width: 1920, height: 800 },
+  { src: "/assets/8.png", width: 1600, height: 900 },
+  { src: "/assets/9.png", width: 1400, height: 700 },
+  { src: "/assets/10.png", width: 1200, height: 1000 },
+  { src: "/assets/11.png", width: 1000, height: 1200 },
+  { src: "/assets/12.png", width: 1800, height: 600 },
 ];
 
 const HeroSection = () => {
@@ -141,6 +142,7 @@ const HeroSection = () => {
     };
   }, []);
 
+
   // Calculate transform for smooth sliding
   const getTransform = () => {
     const baseTransform = -current * 100;
@@ -148,21 +150,30 @@ const HeroSection = () => {
     return `translateX(${baseTransform + dragOffset}%)`;
   };
 
+  // Get current image aspect ratio
+  const currentImage = images[current];
+  const aspectRatio = currentImage.height / currentImage.width;
+
+
   return (
     <div className="w-full mx-auto">
       {/* Mobile Layout */}
       {isMobile && (
         <div className="relative">
           <div
-            className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-gray-200"
+            className="relative overflow-hidden bg-gray-200"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleMouseDown}
-            style={{ 
+            style={{
               touchAction: 'pan-y',
               cursor: isDragging ? 'grabbing' : 'grab',
-              userSelect: 'none'
+              userSelect: 'none',
+              width: '100%',
+              height: `calc(100vw * ${aspectRatio})`,
+              maxHeight: '80vh',
+              transition: 'height 0.4s cubic-bezier(0.4,0,0.2,1)'
             }}
           >
             <div
@@ -172,18 +183,19 @@ const HeroSection = () => {
                 transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              {images.map((src, index) => (
-                <div key={index} className="min-w-full h-full relative">
+              {images.map((img, index) => (
+                <div key={index} className="min-w-full h-full relative flex items-center justify-center">
                   <Image
-                    src={src}
+                    src={img.src}
                     alt={`Mobile Hero ${index + 1}`}
-                    fill
-                    className="object-cover"
+                    width={img.width}
+                    height={img.height}
+                    style={{ width: '100%', height: 'auto', maxHeight: '100%' }}
                     priority={index === current}
                     quality={95}
                     draggable={false}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
               ))}
             </div>
@@ -196,8 +208,8 @@ const HeroSection = () => {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  index === current 
-                    ? 'bg-blue-600 w-8' 
+                  index === current
+                    ? 'bg-gray-700 w-8'
                     : 'bg-gray-300 hover:bg-gray-400'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
@@ -210,25 +222,34 @@ const HeroSection = () => {
       {/* Desktop Layout */}
       {!isMobile && (
         <div className="relative group">
-          <div className="relative aspect-[21/9] overflow-hidden bg-gray-200 shadow-2xl">
+          <div
+            className="relative overflow-hidden bg-gray-200 shadow-2xl"
+            style={{
+              width: '100%',
+              height: `calc(100vw * ${aspectRatio})`,
+              maxHeight: '70vh',
+              transition: 'height 0.4s cubic-bezier(0.4,0,0.2,1)'
+            }}
+          >
             <div
               className="flex h-full transition-transform duration-700 ease-in-out"
               style={{
                 transform: `translateX(-${current * 100}%)`
               }}
             >
-              {images.map((src, index) => (
-                <div key={index} className="min-w-full h-full relative">
+              {images.map((img, index) => (
+                <div key={index} className="min-w-full h-full relative flex items-center justify-center">
                   <Image
-                    src={src}
+                    src={img.src}
                     alt={`Desktop Hero ${index + 1}`}
-                    fill
-                    className="object-cover"
+                    width={img.width}
+                    height={img.height}
+                    style={{ width: '100%', height: 'auto', maxHeight: '100%' }}
                     priority={index === current}
                     quality={95}
                     draggable={false}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none" />
                 </div>
               ))}
             </div>
@@ -236,7 +257,7 @@ const HeroSection = () => {
             {/* Navigation Buttons */}
             <button
               onClick={goToPrev}
-              className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="absolute left-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
               aria-label="Previous image"
             >
               <ChevronLeft size={24} />
@@ -244,7 +265,7 @@ const HeroSection = () => {
 
             <button
               onClick={goToNext}
-              className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="absolute right-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
               aria-label="Next image"
             >
               <ChevronRight size={24} />
@@ -259,7 +280,7 @@ const HeroSection = () => {
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-300 rounded-full ${
                   index === current
-                    ? 'w-12 h-3 bg-blue-600'
+                    ? 'w-12 h-3 bg-gray-700'
                     : 'w-3 h-3 bg-gray-400 hover:bg-gray-600'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
@@ -270,7 +291,7 @@ const HeroSection = () => {
           {/* Progress Bar */}
           <div className="mt-4 w-full bg-gray-200 rounded-full h-1">
             <div
-              className="bg-blue-600 h-1 rounded-full transition-all duration-300"
+              className="bg-gray-700 h-1 rounded-full transition-all duration-300"
               style={{ width: `${((current + 1) / images.length) * 100}%` }}
             />
           </div>
