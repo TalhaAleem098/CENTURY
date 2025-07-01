@@ -148,12 +148,14 @@ const HeroSection = () => {
 
     if (shouldChangeSlide) {
       if (deltaX > 0) {
-        // Dragged right - go to previous
-        animateToPrev();
+        // Dragged right - go to previous (immediate update)
+        setCurrentIndex((prevIndex) => prevIndex === 0 ? images.length - 1 : prevIndex - 1);
       } else {
-        // Dragged left - go to next
-        animateToNext();
+        // Dragged left - go to next (immediate update)
+        setCurrentIndex((prevIndex) => prevIndex === images.length - 1 ? 0 : prevIndex + 1);
       }
+      // Restart auto-slide after drag
+      startAutoSlide();
     } else {
       // Snap back to current slide
       startAutoSlide();
