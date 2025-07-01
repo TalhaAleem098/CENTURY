@@ -327,7 +327,7 @@ function SoldOutState() {
 // Main Products Section Component
 function ProductsSection({ products, onCartSuccess }) {
   return (
-    <section className="py-16 bg-gray-50 products-section">
+    <section className="py-8 bg-gray-50 products-section">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
