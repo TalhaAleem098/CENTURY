@@ -34,6 +34,14 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    const email = orderData.customerEmail;
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { message : 'Invalid email address. Please enter a valid email.' },
+        { status: 400 }
+      );
+    }
 
     // Validate items array
     if (!Array.isArray(orderData.items) || orderData.items.length === 0) {

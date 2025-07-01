@@ -581,14 +581,15 @@ export default function OrdersPage() {
           <div 
             className="fixed inset-0 bg-white flex items-center justify-center z-50 p-0"
             onClick={() => setShowInvoiceModal(false)}
+            style={{ minHeight: '100vh', height: '100vh' }}
           >
             <div 
-              className="bg-white w-screen h-screen flex flex-col border border-black"
+              className="bg-white w-full max-w-5xl h-full flex flex-col border border-black shadow-2xl"
               onClick={(e) => e.stopPropagation()}
-              style={{ fontFamily: 'monospace', color: '#111' }}
+              style={{ fontFamily: 'monospace', color: '#111', minHeight: '100vh', height: '100vh', maxHeight: '100vh', minWidth: 0, padding: 0 }}
             >
               {/* Modal Header */}
-              <div className="flex justify-center items-center p-4 border-b border-black relative">
+              <div className="flex justify-center items-center p-4 border-b border-black relative" style={{padding: '1rem 1rem 0.5rem 1rem'}}>
                 <h2 className="text-xl font-bold text-black text-center w-full tracking-wider">INVOICE</h2>
                 <button
                   onClick={() => setShowInvoiceModal(false)}
@@ -600,7 +601,7 @@ export default function OrdersPage() {
                 </button>
               </div>
               {/* Invoice Content - Black & White, Classic Invoice Style */}
-              <div className="flex-1 p-8 flex flex-col gap-2 overflow-hidden">
+              <div className="flex-1 flex flex-col gap-2" style={{padding: '2vw 2vw 1vw 2vw', minHeight: 0}}>
                 {/* Website Name */}
                 <div className="text-center mb-2">
                   <h1 className="text-2xl font-extrabold text-black tracking-widest">CENTURY.PK</h1>
@@ -628,7 +629,7 @@ export default function OrdersPage() {
                   </div>
                 </div>
                 {/* Items Table */}
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1" style={{overflow: 'visible', minHeight: 0, marginBottom: 0}}>
                   <table className="w-full text-xs border border-black">
                     <thead>
                       <tr className="bg-white">

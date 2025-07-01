@@ -24,7 +24,7 @@ export default function AnimatedTextTicker() {
         }
       `}</style>
       
-      <div className="w-full overflow-hidden py-4 mt-8 bg-white rounded-lg">
+      <div className="w-full overflow-hidden py-4 bg-white rounded-lg">
         <div className="flex">
           <div className="ticker-seamless whitespace-nowrap flex">
             <span className="text-2xl font-semibold tracking-wide text-gray-800 px-8" style={{ letterSpacing: '0.08em' }}>

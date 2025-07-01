@@ -14,7 +14,6 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-
   useEffect(() => {
     if (!id) return;
     setLoading(true);
@@ -22,7 +21,6 @@ export default function ProductDetailPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);        setProduct(data);
-        // Set default color to first available color
         const colors = data.color ? data.color.split(",").map(c => c.trim()).filter(Boolean) : [];
         setSelectedColor(colors.length > 0 ? colors[0] : "");
         setError(null);
@@ -30,37 +28,26 @@ export default function ProductDetailPage() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [id]);
-
-  // Calculate final price
   const finalPrice =
     product?.sale?.percentage > 0
       ? product.price * (1 - product.sale.percentage / 100)
       : product?.price || 0;
-
   const totalPrice = finalPrice * quantity;  // Available colors (handling multiple colors separated by commas)
   const availableColors = product?.color ? product.color.split(",").map(c => c.trim()).filter(Boolean) : [];
-
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
       toast.error("Please select size and color");
       return;
     }
-
-    // Get existing cart from localStorage
     const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    
-    // Check if product already exists in cart
     const existingProductIndex = existingCart.findIndex(item => item.id === product._id);
-    
     if (existingProductIndex !== -1) {
-      // Product exists, update the sizes
       if (existingCart[existingProductIndex].sizes[selectedSize]) {
         existingCart[existingProductIndex].sizes[selectedSize] += quantity;
       } else {
         existingCart[existingProductIndex].sizes[selectedSize] = quantity;
       }
     } else {
-      // Product doesn't exist, add new entry
       existingCart.push({
         id: product._id,
         sizes: {
@@ -68,20 +55,21 @@ export default function ProductDetailPage() {
         }
       });
     }
-    
-    // Save back to localStorage
     localStorage.setItem("cart", JSON.stringify(existingCart));
-    
     toast.success(`${product.name} added to cart!`);
   };
-
   const handlePlaceOrder = () => {
     if (!selectedSize || !selectedColor) {
       toast.error("Please select size and color");
       return;
     }
 
-    // Open checkout modal
+    const email = prompt("Please enter your email address for order confirmation:");
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!email || !emailRegex.test(email)) {
+      toast.info("Please enter a valid email address to proceed with checkout.");
+      return;
+    }
     setShowCheckoutModal(true);
   };
   if (loading)
@@ -387,6 +375,7 @@ export default function ProductDetailPage() {
           color: selectedColor
         }]}
         products={[product]}
+        onServerResponse={(msg) => toast.info(msg)}
       />
     </div>
   );
