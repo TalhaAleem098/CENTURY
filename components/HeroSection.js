@@ -177,20 +177,26 @@ const HeroSection = () => {
             }}
           >
             <div
-              className="flex h-full transition-transform duration-500 ease-out"
+              className="absolute top-0 left-0 w-full h-full"
               style={{
-                transform: getTransform(),
-                transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                width: `${images.length * 100}vw`,
+                height: '100%',
+                display: 'flex',
+                transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: getTransform()
               }}
             >
               {images.map((img, index) => (
-                <div key={index} className="min-w-full h-full relative flex items-center justify-center">
+                <div
+                  key={index}
+                  style={{ width: '100vw', height: '100%', position: 'relative', margin: 0, padding: 0, flex: '0 0 100vw', boxSizing: 'border-box' }}
+                >
                   <Image
                     src={img.src}
                     alt={`Mobile Hero ${index + 1}`}
                     width={img.width}
                     height={img.height}
-                    style={{ width: '100%', height: 'auto', maxHeight: '100%' }}
+                    style={{ width: '100vw', height: '100%', objectFit: 'contain', margin: 0, padding: 0, display: 'block', boxSizing: 'border-box' }}
                     priority={index === current}
                     quality={95}
                     draggable={false}
@@ -201,27 +207,13 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Mobile Dots Indicator */}
-          <div className="flex justify-center mt-4 space-x-2">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  index === current
-                    ? 'bg-gray-700 w-8'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+          {/* Mobile Dots Indicator removed */}
         </div>
       )}
 
       {/* Desktop Layout */}
       {!isMobile && (
-        <div className="relative group">
+        <div className="relative group" tabIndex={0}>
           <div
             className="relative overflow-hidden bg-gray-200 shadow-2xl"
             style={{
@@ -232,19 +224,26 @@ const HeroSection = () => {
             }}
           >
             <div
-              className="flex h-full transition-transform duration-700 ease-in-out"
+              className="absolute top-0 left-0 w-full h-full"
               style={{
-                transform: `translateX(-${current * 100}%)`
+                width: `${images.length * 100}vw`,
+                height: '100%',
+                display: 'flex',
+                transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: `translateX(-${current * 100}vw)`
               }}
             >
               {images.map((img, index) => (
-                <div key={index} className="min-w-full h-full relative flex items-center justify-center">
+                <div
+                  key={index}
+                  style={{ width: '100vw', height: '100%', position: 'relative', margin: 0, padding: 0, flex: '0 0 100vw', boxSizing: 'border-box' }}
+                >
                   <Image
                     src={img.src}
                     alt={`Desktop Hero ${index + 1}`}
                     width={img.width}
                     height={img.height}
-                    style={{ width: '100%', height: 'auto', maxHeight: '100%' }}
+                    style={{ width: '100vw', height: '100%', objectFit: 'contain', margin: 0, padding: 0, display: 'block', boxSizing: 'border-box' }}
                     priority={index === current}
                     quality={95}
                     draggable={false}
@@ -254,46 +253,24 @@ const HeroSection = () => {
               ))}
             </div>
 
-            {/* Navigation Buttons */}
+            {/* Navigation Buttons - hidden by default, shown on hover/focus */}
             <button
               onClick={goToPrev}
-              className="absolute left-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              className="absolute left-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-focus:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
               aria-label="Previous image"
+              style={{ zIndex: 10, pointerEvents: 'auto' }}
             >
               <ChevronLeft size={24} />
             </button>
 
             <button
               onClick={goToNext}
-              className="absolute right-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              className="absolute right-6 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-focus:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
               aria-label="Next image"
+              style={{ zIndex: 10, pointerEvents: 'auto' }}
             >
               <ChevronRight size={24} />
             </button>
-          </div>
-
-          {/* Desktop Dots Indicator */}
-          <div className="flex justify-center mt-6 space-x-3">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === current
-                    ? 'w-12 h-3 bg-gray-700'
-                    : 'w-3 h-3 bg-gray-400 hover:bg-gray-600'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mt-4 w-full bg-gray-200 rounded-full h-1">
-            <div
-              className="bg-gray-700 h-1 rounded-full transition-all duration-300"
-              style={{ width: `${((current + 1) / images.length) * 100}%` }}
-            />
           </div>
         </div>
       )}
