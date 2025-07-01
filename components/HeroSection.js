@@ -156,7 +156,7 @@ const HeroSection = () => {
 
   return (
     <div className="w-full mx-auto">
-      Animation Type Selector (hidden)
+      {/* Animation Type Selector (hidden)
       <div className="bg-gray-100 p-4 flex flex-wrap gap-2 justify-center">
         <button
           onClick={() => setAnimationType('flipCube')}
@@ -190,7 +190,7 @@ const HeroSection = () => {
         >
           Elastic
         </button>
-      </div>
+      </div> */}
      
 
       <div className="relative overflow-hidden bg-[#e5e7eb]" style={{ perspective: '1000px' }}>
@@ -271,9 +271,9 @@ const HeroSection = () => {
         */}
 
         {/* Enhanced image counter */}
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 text-sm backdrop-blur-sm rounded-full">
+        {/* <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 text-sm backdrop-blur-sm rounded-full">
           {currentIndex + 1} / {images.length}
-        </div>
+        </div> */}
       </div>
 
       <style jsx>{`
