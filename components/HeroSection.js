@@ -27,12 +27,58 @@ const HeroSection = () => {
     return () => clearTimeout(timeoutRef.current);
   }, [current]);
 
-  const goTo = (idx) => setCurrent(idx);
+  // Touch/mouse drag logic
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+  const lastX = useRef(0);
+
+  const handleTouchStart = (e) => {
+    isDragging.current = true;
+    startX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    lastX.current = startX.current;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging.current) return;
+    lastX.current = e.touches ? e.touches[0].clientX : e.clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
+    const diff = lastX.current - startX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) {
+        // Next image
+        setCurrent((prev) => (prev + 1) % images.length);
+      } else {
+        // Previous image
+        setCurrent((prev) => (prev - 1 + images.length) % images.length);
+      }
+    }
+    isDragging.current = false;
+  };
+
+  // Mouse events for desktop
+  const handleMouseDown = (e) => handleTouchStart(e);
+  const handleMouseMove = (e) => handleTouchMove(e);
+  const handleMouseUp = () => handleTouchEnd();
+  const handleMouseLeave = () => { if (isDragging.current) handleTouchEnd(); };
 
   return (
     <div className="w-full mx-auto md:px-4 md:py-4">
       <div className="relative rounded-2xl overflow-hidden bg-[#e5e7eb] p-2 md:p-4">
-        <div className="relative aspect-[16/9] w-full h-auto rounded-2xl overflow-hidden">
+        <div
+          className="relative aspect-[16/9] w-full h-auto rounded-2xl overflow-hidden select-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          style={{ touchAction: 'pan-y', cursor: 'grab' }}
+        >
           <Image
             src={images[current]}
             alt={`Hero Image ${current + 1}`}
@@ -41,21 +87,9 @@ const HeroSection = () => {
             priority
             quality={90}
             style={{ backgroundColor: '#e5e7eb' }}
+            draggable={false}
           />
           <div className="absolute inset-0 bg-black/10 pointer-events-none rounded-2xl" />
-          {/* Carousel Dots */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {images.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => goTo(idx)}
-                className={`w-3 h-3 rounded-full border border-white bg-white/70 hover:bg-white transition-all duration-200 ${
-                  current === idx ? "bg-blue-500 border-blue-500 scale-110" : ""
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>
