@@ -7,15 +7,7 @@ const HeroSection = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [animationDirection, setAnimationDirection] = useState('next');
-  const [animationType, setAnimationType] = useState('zoomSlide');
-
-  // Drag/Touch state
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [dragCurrent, setDragCurrent] = useState({ x: 0, y: 0 });
-  const [dragOffset, setDragOffset] = useState(0);
-  const dragThreshold = 25; // Much lower threshold for easier navigation
-  const velocityThreshold = 0.3; // Lower velocity threshold for quick swipes
+  const [animationType, setAnimationType] = useState('zoomSlide'); // flipCube, zoomSlide, rotateScale, elastic
 
   // Mobile images (1-6)
   const mobileImages = [
@@ -53,13 +45,11 @@ const HeroSection = () => {
 
   // Timer ref for auto-slide
   const intervalRef = useRef(null);
-  const dragStartTime = useRef(0);
-  const carouselRef = useRef(null);
 
   // Animate to next must be defined before startAutoSlide to avoid ReferenceError
   const animateToNext = useCallback(() => {
-    if (isAnimating || isDragging) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (isAnimating) return;
+    if (intervalRef.current) clearInterval(intervalRef.current); // Reset timer
     setIsAnimating(true);
     setAnimationDirection('next');
     setTimeout(() => {
@@ -67,23 +57,9 @@ const HeroSection = () => {
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
       setIsAnimating(false);
-      startAutoSlide();
+      startAutoSlide(); // Restart timer after animation
     }, 600);
-  }, [isAnimating, isDragging, images.length]);
-
-  const animateToPrev = useCallback(() => {
-    if (isAnimating || isDragging) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsAnimating(true);
-    setAnimationDirection('prev');
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? images.length - 1 : prevIndex - 1
-      );
-      setIsAnimating(false);
-      startAutoSlide();
-    }, 600);
-  }, [isAnimating, isDragging, images.length]);
+  }, [isAnimating, images.length]);
 
   // Function to start the auto-slide interval
   const startAutoSlide = useCallback(() => {
@@ -93,6 +69,22 @@ const HeroSection = () => {
     }, 3000);
   }, [animateToNext]);
 
+  // ...existing code...
+
+  const animateToPrev = useCallback(() => {
+    if (isAnimating) return;
+    if (intervalRef.current) clearInterval(intervalRef.current); // Reset timer
+    setIsAnimating(true);
+    setAnimationDirection('prev');
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
+      setIsAnimating(false);
+      startAutoSlide(); // Restart timer after animation
+    }, 600);
+  }, [isAnimating, images.length, startAutoSlide]);
+
   // Auto-slide functionality with reset on manual navigation
   useEffect(() => {
     startAutoSlide();
@@ -101,135 +93,15 @@ const HeroSection = () => {
     };
   }, [startAutoSlide]);
 
-  // Drag/Touch handlers
-  const handleDragStart = (clientX, clientY) => {
-    if (isAnimating) return;
-    
-    setIsDragging(true);
-    setDragStart({ x: clientX, y: clientY });
-    setDragCurrent({ x: clientX, y: clientY });
-    setDragOffset(0);
-    dragStartTime.current = Date.now();
-    
-    // Pause auto-slide while dragging
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  };
-
-  const handleDragMove = (clientX, clientY) => {
-    if (!isDragging) return;
-
-    const deltaX = clientX - dragStart.x;
-    const deltaY = Math.abs(clientY - dragStart.y);
-    
-    // Only process horizontal swipes (allow some vertical tolerance)
-    if (deltaY > 30 && Math.abs(deltaX) < 20) return;
-    
-    setDragCurrent({ x: clientX, y: clientY });
-    setDragOffset(deltaX);
-
-    // Prevent default to avoid page scrolling during horizontal drag
-    if (Math.abs(deltaX) > 10) {
-      document.body.style.overflow = 'hidden';
-    }
-  };
-
-  const handleDragEnd = () => {
-    if (!isDragging) return;
-
-    const deltaX = dragCurrent.x - dragStart.x;
-    const deltaTime = Date.now() - dragStartTime.current;
-    const velocity = Math.abs(deltaX) / deltaTime;
-
-    // Re-enable body scroll
-    document.body.style.overflow = '';
-
-    // Much more sensitive slide detection
-    const shouldChangeSlide = Math.abs(deltaX) > dragThreshold || velocity > velocityThreshold;
-
-    if (shouldChangeSlide) {
-      if (deltaX > 0) {
-        // Dragged right - go to previous (immediate update)
-        setCurrentIndex((prevIndex) => prevIndex === 0 ? images.length - 1 : prevIndex - 1);
-      } else {
-        // Dragged left - go to next (immediate update)
-        setCurrentIndex((prevIndex) => prevIndex === images.length - 1 ? 0 : prevIndex + 1);
-      }
-      // Restart auto-slide after drag
-      startAutoSlide();
-    } else {
-      // Snap back to current slide
-      startAutoSlide();
-    }
-
-    setIsDragging(false);
-    setDragOffset(0);
-  };
-
-  // Mouse events
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    handleDragStart(e.clientX, e.clientY);
-  };
-
-  const handleMouseMove = (e) => {
-    e.preventDefault();
-    handleDragMove(e.clientX, e.clientY);
-  };
-
-  const handleMouseUp = () => {
-    handleDragEnd();
-  };
-
-  // Touch events
-  const handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    handleDragStart(touch.clientX, touch.clientY);
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches.length > 1) return; // Ignore multi-touch
-    
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - dragStart.x;
-    
-    // Prevent default scrolling if horizontal movement is detected
-    if (Math.abs(deltaX) > 10) {
-      e.preventDefault();
-    }
-    
-    handleDragMove(touch.clientX, touch.clientY);
-  };
-
-  const handleTouchEnd = (e) => {
-    e.preventDefault();
-    handleDragEnd();
-  };
-
-  // Add global mouse event listeners
-  useEffect(() => {
-    if (isDragging) {
-      const handleGlobalMouseMove = (e) => handleMouseMove(e);
-      const handleGlobalMouseUp = () => handleMouseUp();
-
-      document.addEventListener('mousemove', handleGlobalMouseMove);
-      document.addEventListener('mouseup', handleGlobalMouseUp);
-
-      return () => {
-        document.removeEventListener('mousemove', handleGlobalMouseMove);
-        document.removeEventListener('mouseup', handleGlobalMouseUp);
-      };
-    }
-  }, [isDragging, dragStart, dragCurrent]);
-
   const goToSlide = (index) => {
-    if (index !== currentIndex && !isAnimating && !isDragging) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+    if (index !== currentIndex && !isAnimating) {
+      if (intervalRef.current) clearInterval(intervalRef.current); // Reset timer
       setIsAnimating(true);
       setAnimationDirection(index > currentIndex ? 'next' : 'prev');
       setTimeout(() => {
         setCurrentIndex(index);
         setIsAnimating(false);
-        startAutoSlide();
+        startAutoSlide(); // Restart timer after animation
       }, 600);
     }
   };
@@ -282,45 +154,52 @@ const HeroSection = () => {
 
   const { current: currentAnimation, incoming: incomingAnimation } = getAnimationClasses();
 
-  // Calculate drag transform with enhanced sensitivity
-  const getDragTransform = () => {
-    if (!isDragging || isAnimating) return '';
-    // Increased sensitivity - less resistance, more responsive
-    const sensitivity = 1.2; // Multiply drag distance for more responsive feel
-    const maxOffset = 200; // Increased maximum drag distance
-    const enhancedOffset = dragOffset * sensitivity;
-    const clampedOffset = Math.max(-maxOffset, Math.min(maxOffset, enhancedOffset));
-    return `translateX(${clampedOffset}px)`;
-  };
-
   return (
     <div className="w-full mx-auto">
+      {/* Animation Type Selector (hidden)
+      <div className="bg-gray-100 p-4 flex flex-wrap gap-2 justify-center">
+        <button
+          onClick={() => setAnimationType('flipCube')}
+          className={`px-3 py-1 text-sm rounded transition-colors ${
+            animationType === 'flipCube' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          3D Flip
+        </button>
+        <button
+          onClick={() => setAnimationType('zoomSlide')}
+          className={`px-3 py-1 text-sm rounded transition-colors ${
+            animationType === 'zoomSlide' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Zoom Slide
+        </button>
+        <button
+          onClick={() => setAnimationType('rotateScale')}
+          className={`px-3 py-1 text-sm rounded transition-colors ${
+            animationType === 'rotateScale' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Rotate Scale
+        </button>
+        <button
+          onClick={() => setAnimationType('elastic')}
+          className={`px-3 py-1 text-sm rounded transition-colors ${
+            animationType === 'elastic' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Elastic
+        </button>
+      </div> */}
+     
+
       <div className="relative overflow-hidden bg-[#e5e7eb]" style={{ perspective: '1000px' }}>
         {/* Main carousel container */}
-        <div 
-          ref={carouselRef}
-          className="relative w-full h-auto select-none cursor-grab active:cursor-grabbing"
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{ 
-            touchAction: 'pan-y pinch-zoom',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            WebkitTouchCallout: 'none'
-          }}
-        >
+        <div className="relative w-full h-auto">
           {/* Container for animated images */}
           <div className="relative w-full h-auto overflow-hidden">
             {/* Current Image */}
-            <div 
-              className={`relative w-full transition-transform duration-150 ease-out ${currentAnimation}`}
-              style={{ 
-                transform: isDragging && !isAnimating ? getDragTransform() : '',
-                opacity: isDragging ? Math.max(0.8, 1 - Math.abs(dragOffset) / 300) : 1
-              }}
-            >
+            <div className={`relative w-full ${currentAnimation}`}>
               <Image
                 src={images[currentIndex]}
                 alt={`Carousel Image ${currentIndex + 1}`}
@@ -330,7 +209,6 @@ const HeroSection = () => {
                 priority
                 quality={90}
                 style={{ backgroundColor: '#e5e7eb' }}
-                draggable={false}
               />
             </div>
 
@@ -345,69 +223,17 @@ const HeroSection = () => {
                   className="w-full h-auto object-cover"
                   quality={90}
                   style={{ backgroundColor: '#e5e7eb' }}
-                  draggable={false}
                 />
               </div>
-            )}
-
-            {/* Drag preview images */}
-            {isDragging && !isAnimating && (
-              <>
-                {/* Previous image preview (shown when dragging right) */}
-                {dragOffset > 15 && (
-                  <div 
-                    className="absolute top-0 left-0 w-full transition-all duration-150 ease-out"
-                    style={{ 
-                      transform: `translateX(${-100 + (dragOffset * 1.2 / 2)}%)`,
-                      opacity: Math.min(0.6, dragOffset / 100),
-                      zIndex: -1
-                    }}
-                  >
-                    <Image
-                      src={images[getPrevIndex()]}
-                      alt={`Previous Image ${getPrevIndex() + 1}`}
-                      width={1920}
-                      height={1080}
-                      className="w-full h-auto object-cover"
-                      quality={90}
-                      style={{ backgroundColor: '#e5e7eb' }}
-                      draggable={false}
-                    />
-                  </div>
-                )}
-                
-                {/* Next image preview (shown when dragging left) */}
-                {dragOffset < -15 && (
-                  <div 
-                    className="absolute top-0 left-0 w-full transition-all duration-150 ease-out"
-                    style={{ 
-                      transform: `translateX(${100 + (dragOffset * 1.2 / 2)}%)`,
-                      opacity: Math.min(0.6, Math.abs(dragOffset) / 100),
-                      zIndex: -1
-                    }}
-                  >
-                    <Image
-                      src={images[getNextIndex()]}
-                      alt={`Next Image ${getNextIndex() + 1}`}
-                      width={1920}
-                      height={1080}
-                      className="w-full h-auto object-cover"
-                      quality={90}
-                      style={{ backgroundColor: '#e5e7eb' }}
-                      draggable={false}
-                    />
-                  </div>
-                )}
-              </>
             )}
           </div>
         </div>
 
-        {/* Navigation arrows - Only show on larger screens (md and up) */}
+        {/* Navigation arrows with enhanced design */}
         <button
           onClick={animateToPrev}
-          disabled={isAnimating || isDragging}
-          className="hidden md:flex absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
+          disabled={isAnimating}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 flex items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
           aria-label="Previous image"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,8 +243,8 @@ const HeroSection = () => {
 
         <button
           onClick={animateToNext}
-          disabled={isAnimating || isDragging}
-          className="hidden md:flex absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
+          disabled={isAnimating}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 flex items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
           aria-label="Next image"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -426,17 +252,28 @@ const HeroSection = () => {
           </svg>
         </button>
 
+        {/* Enhanced dots indicator (hidden)
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              disabled={isAnimating}
+              className={`w-3 h-3 rounded-full transition-all duration-300 disabled:cursor-not-allowed ${
+                index === currentIndex 
+                  ? 'bg-white scale-125 shadow-lg' 
+                  : 'bg-white/60 hover:bg-white/80 hover:scale-110'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+        */}
+
         {/* Enhanced image counter */}
         <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 text-sm backdrop-blur-sm rounded-full">
           {currentIndex + 1} / {images.length}
         </div>
-
-        {/* Drag indicator for mobile */}
-        {isMobile && !isDragging && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-3 py-1 text-xs backdrop-blur-sm rounded-full animate-pulse">
-            Swipe to navigate
-          </div>
-        )}
       </div>
 
       <style jsx>{`
