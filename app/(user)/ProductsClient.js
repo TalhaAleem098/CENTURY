@@ -357,12 +357,16 @@ function VideoSection() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch((error) => {});
+      videoRef.current.play().catch(() => {});
     }
   }, []);
 
+  // Only show video on screens smaller than lg
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section
+      className="relative w-full block lg:hidden max-h-screen min-h-[900px] aspect-video overflow-hidden"
+      style={{ height: "auto", maxHeight: "100vh" }}
+    >
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
@@ -370,40 +374,14 @@ function VideoSection() {
         muted
         loop
         playsInline
+        style={{ maxHeight: "100vh" }}
       >
-        <source
-          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-          type="video/mp4"
-        />
-        <source
-          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.webm"
-          type="video/webm"
-        />
-        Your browser does not support the video tag.
+        <source src="/assets/mobile.mp4" type="video/mp4" />
+        <source src="/assets/mobile.mp4" type="video/webm" />
+        {/* Your browser does not support the video tag. */}
       </video>
-
       {/* Dark Overlay for Better Text Readability */}
       <div className="absolute inset-0 bg-black/50"></div>
-
-      {/* Content Overlay */}
-      <div className="relative z-10 flex items-center justify-center h-full px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Main Heading */}
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Experience Our{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-              Story
-            </span>
-          </h2>
-
-          {/* Subtitle */}
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Dive into the world of premium fashion. Watch how we craft
-            excellence, one product at a time, bringing you the finest
-            collection curated with passion.
-          </p>
-        </div>
-      </div>
     </section>
   );
 }

@@ -271,9 +271,9 @@ const HeroSection = () => {
         */}
 
         {/* Enhanced image counter */}
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 text-sm backdrop-blur-sm rounded-full">
+        {/* <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 text-sm backdrop-blur-sm rounded-full">
           {currentIndex + 1} / {images.length}
-        </div>
+        </div> */}
       </div>
 
       <style jsx>{`
