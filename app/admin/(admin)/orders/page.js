@@ -100,7 +100,7 @@ export default function OrdersPage() {
         await updateOrderStatus(order._id, 'confirmed');
       }
       
-      toast.success('Invoice generated successfully!');
+      toast.info('Invoice generated successfully!');
       
     } catch (error) {
       console.error('Error generating invoice:', error);

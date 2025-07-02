@@ -88,8 +88,6 @@ export default function RootLayout({ children }) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            toastClassName="rounded-xl shadow-lg bg-black text-white text-base font-semibold"
-            bodyClassName="text-white bg-black"
           />
           {children}
         </SessionProviderWrapper>

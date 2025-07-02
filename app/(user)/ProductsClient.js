@@ -87,14 +87,7 @@ function ProductCard({ product, index, onCartSuccess }) {
       });
     } else {
       existingCart.push(cartItem);
-      toast("Product added to cart successfully! 🎉", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.info("Product added to cart successfully!");
       // Show modal for new item
       onCartSuccess({
         ...cartItem,
@@ -529,7 +522,19 @@ export default function ProductsClient({ products }) {
         onClose={closeCartModal}
         cartItem={cartModalData}
       />
-      <ToastContainer />
+      <ToastContainer 
+      
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+
+      />
     </>
   );
 }
