@@ -29,6 +29,7 @@ export async function POST(request) {
     }
     
     if (missingFields.length > 0) {
+      console.warn('[Order API] Missing required fields:', missingFields);
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
         { status: 400 }
@@ -37,6 +38,7 @@ export async function POST(request) {
     const email = orderData.customerEmail;
     const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
     if (!emailRegex.test(email)) {
+      console.warn('[Order API] Invalid email address received:', email);
       return NextResponse.json(
         { message : 'Invalid email address. Please enter a valid email.' },
         { status: 400 }
@@ -45,6 +47,7 @@ export async function POST(request) {
 
     // Validate items array
     if (!Array.isArray(orderData.items) || orderData.items.length === 0) {
+      console.warn('[Order API] Order must contain at least one item. Received items:', orderData.items);
       return NextResponse.json(
         { error: 'Order must contain at least one item' },
         { status: 400 }
