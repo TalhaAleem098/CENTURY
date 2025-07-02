@@ -26,7 +26,8 @@ const Navbar = () => {
             ? "bg-gray-200 text-black"
             : "hover:bg-gray-100 hover:text-black";
 
-          return (            <li key={item.name}>
+          return (
+            <li key={item.name}>
               <Link
                 href={item.href}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${activeClass}`}

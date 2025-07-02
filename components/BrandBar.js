@@ -2,18 +2,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import { FaSearch, FaUserCircle, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaSearch,
+  FaUserCircle,
+  FaShoppingCart,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const BrandBar = ({ onToggleSidebar }) => {
   // SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE)
   const [showSearch, setShowSearch] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const searchRef = useRef(null);
   const searchContainerRef = useRef(null);
   const closeSearch = () => setShowSearch(false);
-  
+
   const [showProfile, setShowProfile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -21,11 +27,11 @@ const BrandBar = ({ onToggleSidebar }) => {
   const router = useRouter();
 
   const profileRef = useRef(null);
-  
+
   // Handle profile click - redirect to login if not authenticated
   const handleProfileClick = () => {
     if (!session) {
-      router.push('/login');
+      router.push("/login");
     } else {
       setShowProfile((v) => !v);
     }
@@ -43,7 +49,7 @@ const BrandBar = ({ onToggleSidebar }) => {
   // Update cart count when cart changes
   useEffect(() => {
     const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       setCartCount(totalItems);
     };
@@ -56,27 +62,30 @@ const BrandBar = ({ onToggleSidebar }) => {
       updateCartCount();
     };
 
-    window.addEventListener('cartUpdated', handleCartUpdate);
-    window.addEventListener('storage', handleCartUpdate);
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    window.addEventListener("storage", handleCartUpdate);
 
     return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate);
-      window.removeEventListener('storage', handleCartUpdate);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("storage", handleCartUpdate);
     };
   }, []);
   // SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE)
   // Handle click outside search to close it (only if no text)
   useEffect(() => {
     if (!showSearch) return;
-    
+
     const handleClickOutside = (e) => {
       // Don't close if there's text in the search input
       if (searchValue.trim()) return;
-      
+
       // Don't close if clicking inside search container
-      if (searchContainerRef.current?.contains(e.target) || 
-          searchRef.current?.contains(e.target)) return;
-      
+      if (
+        searchContainerRef.current?.contains(e.target) ||
+        searchRef.current?.contains(e.target)
+      )
+        return;
+
       setShowSearch(false);
     };
 
@@ -111,17 +120,19 @@ const BrandBar = ({ onToggleSidebar }) => {
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && searchValue.trim()) {
-                  router.push(`/search/q=\"${encodeURIComponent(searchValue.trim())}\"`);
+                if (e.key === "Enter" && searchValue.trim()) {
+                  router.push(
+                    `/search/q=\"${encodeURIComponent(searchValue.trim())}\"`
+                  );
                   setShowSearch(false);
-                  setSearchValue('');
+                  setSearchValue("");
                 }
               }}
             />
             <button
               onClick={() => {
                 setShowSearch(false);
-                setSearchValue('');
+                setSearchValue("");
               }}
               className="p-2 text-gray-500 hover:text-gray-700"
             >
@@ -131,7 +142,9 @@ const BrandBar = ({ onToggleSidebar }) => {
         </div>
       )}
 
-      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">        {/* Desktop Layout */}
+      <div className="flex items-center py-3 px-4 sm:px-6 lg:px-12 relative">
+        {" "}
+        {/* Desktop Layout */}
         <div className="hidden lg:flex lg:items-center w-full relative">
           <div className="flex justify-start flex-1 min-w-0">
             {/* SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE) */}
@@ -146,10 +159,14 @@ const BrandBar = ({ onToggleSidebar }) => {
                   className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-4 py-2 border border-gray-200 rounded-lg bg-white text-gray-700 z-50 shadow-lg"
                   autoFocus
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && searchValue.trim()) {
-                      router.push(`/search/q=\"${encodeURIComponent(searchValue.trim())}\"`);
+                    if (e.key === "Enter" && searchValue.trim()) {
+                      router.push(
+                        `/search/q=\"${encodeURIComponent(
+                          searchValue.trim()
+                        )}\"`
+                      );
                       setShowSearch(false);
-                      setSearchValue('');
+                      setSearchValue("");
                     }
                   }}
                 />
@@ -162,7 +179,8 @@ const BrandBar = ({ onToggleSidebar }) => {
                 <FaSearch size={20} className="text-gray-700" />
               </button>
             </div>
-          </div><div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+          </div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
             <Link href="/" className="cursor-pointer">
               <Image
                 src="/CENTURY.png"
@@ -180,13 +198,13 @@ const BrandBar = ({ onToggleSidebar }) => {
             <button
               className="p-3 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"
-              onClick={() => router.push('/cart')}
+              onClick={() => router.push("/cart")}
               type="button"
             >
               <FaShoppingCart size={22} className="text-gray-700" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount > 99 ? '99+' : cartCount}
+                  {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </button>
@@ -226,9 +244,8 @@ const BrandBar = ({ onToggleSidebar }) => {
             </div>
           </div>
         </div>
-
         {/* Mobile Layout */}
-        <div className="flex lg:hidden items-center w-full relative">
+        <div className="flex lg:hidden items-center w-full relative bg-amber-500">
           <div className="flex items-center">
             <button
               onClick={onToggleSidebar}
@@ -237,8 +254,9 @@ const BrandBar = ({ onToggleSidebar }) => {
             >
               <FaBars size={16} className="text-gray-700" />
             </button>
-          </div>          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
-            <Link href="/" className="cursor-pointer">
+          </div>{" "}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            <Link href="/" className="cursor-pointer mr-3">
               <Image
                 src="/CENTURY.png"
                 alt="Centuary Logo"
@@ -249,7 +267,8 @@ const BrandBar = ({ onToggleSidebar }) => {
                 priority
               />
             </Link>
-          </div>          <div className="flex items-center gap-1 ml-auto">
+          </div>{" "}
+          <div className="flex items-center gap-1 ml-auto">
             {/* SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE) */}
             <button
               className="p-2 rounded-full hover:bg-gray-100"
@@ -261,13 +280,13 @@ const BrandBar = ({ onToggleSidebar }) => {
             <button
               className="p-2 rounded-full hover:bg-gray-100 relative"
               aria-label="Shopping cart"
-              onClick={() => router.push('/cart')}
+              onClick={() => router.push("/cart")}
               type="button"
             >
               <FaShoppingCart size={18} className="text-gray-700" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  {cartCount > 99 ? '99+' : cartCount}
+                  {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </button>

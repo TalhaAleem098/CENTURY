@@ -120,6 +120,49 @@ export default function OrdersPage() {
     }
   }, [showInvoiceModal, selectedInvoiceOrder]);
 
+  // Handle PDF Download using html2pdf.js
+  const handleDownloadInvoice = async (order) => {
+    try {
+      toast.info('Generating PDF invoice...');
+      
+      // Set the selected order for the hidden HTML content
+      setSelectedInvoiceOrder(order);
+      
+      // Wait a bit for the DOM to update
+      setTimeout(async () => {
+        try {
+          // Dynamic import to avoid SSR issues
+          const html2pdf = (await import('html2pdf.js')).default;
+          
+          const element = document.getElementById('invoice-content');
+          if (!element) {
+            toast.error('Invoice content not found');
+            return;
+          }
+
+          const opt = {
+            margin: 0.5,
+            filename: `Invoice_${order._id.slice(-8)}_${new Date(order.createdAt).toLocaleDateString('en-GB').replace(/\//g, '-')}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+          };
+
+          await html2pdf().set(opt).from(element).save();
+          toast.success('Invoice downloaded successfully!');
+        } catch (error) {
+          console.error('Error generating PDF:', error);
+          toast.error('Failed to generate PDF');
+        }
+      }, 100);
+      
+    } catch (error) {
+      console.error('Error preparing PDF:', error);
+      toast.error('Failed to prepare PDF');
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
   }, [filters, fetchOrders]);
@@ -419,6 +462,15 @@ export default function OrdersPage() {
                         >
                           Place Order
                         </button>
+                        <button
+                          onClick={() => handleDownloadInvoice(order)}
+                          className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors flex items-center justify-center gap-1"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download PDF
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -468,12 +520,23 @@ export default function OrdersPage() {
                     <h2 className="text-2xl font-bold text-gray-900">Order Details</h2>
                     <p className="text-gray-600">Order #{selectedOrder._id.slice(-6)}</p>
                   </div>
-                  <button
-                    onClick={() => setShowOrderModal(false)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
-                  >
-                    ×
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleDownloadInvoice(selectedOrder)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download PDF
+                    </button>
+                    <button
+                      onClick={() => setShowOrderModal(false)}
+                      className="text-gray-400 hover:text-gray-600 text-2xl"
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -666,7 +729,14 @@ export default function OrdersPage() {
                   <div className="flex flex-col items-center justify-end w-64">
                     <div className="bg-white p-4 border-2 border-black mb-2 flex flex-col items-center" style={{ minWidth: 220 }}>
                       {barcodeUrl ? (
-                        <img src={barcodeUrl} alt="Order Barcode" style={{ width: '200px', height: '60px', objectFit: 'contain' }} />
+                        <Image 
+                          src={barcodeUrl} 
+                          alt="Order Barcode" 
+                          width={200} 
+                          height={60} 
+                          style={{ objectFit: 'contain' }}
+                          unoptimized
+                        />
                       ) : (
                         <div className="w-52 h-14 bg-white border border-black flex items-center justify-center text-xs text-black">BARCODE</div>
                       )}
@@ -685,6 +755,181 @@ export default function OrdersPage() {
             </div>
           </div>
         )}
+
+        {/* Hidden Invoice HTML for PDF Generation */}
+        <div style={{ display: 'none' }}>
+          {(selectedInvoiceOrder || selectedOrder) && (
+            <div id="invoice-content">
+              <div style={{ 
+                width: '680px', 
+                maxWidth: '680px',
+                padding: '15px', 
+                fontFamily: 'Arial, sans-serif', 
+                background: '#fff', 
+                color: '#111', 
+                boxSizing: 'border-box',
+                margin: '0 auto',
+                fontSize: '12px',
+                lineHeight: '1.3'
+              }}>
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '2px solid #111', paddingBottom: '6px' }}>
+                  <h1 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 3px 0', letterSpacing: '1px' }}>CENTURY.PK</h1>
+                  <div style={{ fontSize: '8px', color: '#666', margin: '0' }}>Premium Fashion | Exclusive Collections | Worldwide Delivery</div>
+                  <h2 style={{ fontSize: '14px', fontWeight: '600', margin: '4px 0 0 0', color: '#111' }}>INVOICE</h2>
+                </div>
+                
+                {/* Order & Customer Info */}
+                <div style={{ display: 'flex', marginBottom: '10px', fontSize: '8px', gap: '12px' }}>
+                  <div style={{ flex: '1', minWidth: '0' }}>
+                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111' }}>ORDER DETAILS</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Order ID:</strong> #{(selectedInvoiceOrder || selectedOrder)?._id.slice(-8).toUpperCase()}</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Date:</strong> {new Date((selectedInvoiceOrder || selectedOrder)?.createdAt).toLocaleDateString('en-GB')}</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Status:</strong> {(selectedInvoiceOrder || selectedOrder)?.status.charAt(0).toUpperCase() + (selectedInvoiceOrder || selectedOrder)?.status.slice(1)}</div>
+                    <div><strong>Total Items:</strong> {(selectedInvoiceOrder || selectedOrder)?.totalItems}</div>
+                  </div>
+                  <div style={{ flex: '1', minWidth: '0' }}>
+                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111' }}>CUSTOMER INFO</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Name:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.name}</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Phone:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.phone}</div>
+                    <div style={{ marginBottom: '1px' }}><strong>Email:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.email}</div>
+                    <div style={{ wordWrap: 'break-word', fontSize: '7px' }}><strong>Address:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.address.street}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.city}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.zipCode}</div>
+                  </div>
+                </div>
+                
+                {/* Items Table */}
+                <table style={{ 
+                  width: '100%', 
+                  borderCollapse: 'collapse', 
+                  marginBottom: '10px', 
+                  fontSize: '7px',
+                  border: '1px solid #111',
+                  tableLayout: 'fixed'
+                }}>
+                  <colgroup>
+                    <col style={{ width: '40%' }} />
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '8%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '15%' }} />
+                  </colgroup>
+                  <thead>
+                    <tr style={{ backgroundColor: '#111', color: '#fff' }}>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'left', fontWeight: '600' }}>Product</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Size</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Color</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Qty</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Unit Price</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(selectedInvoiceOrder || selectedOrder)?.items.map((item, idx) => {
+                      const productName = item.productName + (item.salePercentage > 0 ? ` (${item.salePercentage}% OFF)` : '');
+                      const truncatedName = productName.length > 42 ? productName.substring(0, 39) + '...' : productName;
+                      return (
+                        <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? '#fff' : '#f8f8f8' }}>
+                          <td style={{ 
+                            border: '1px solid #ddd', 
+                            padding: '3px 2px', 
+                            fontSize: '6px', 
+                            lineHeight: '1.2', 
+                            wordWrap: 'break-word',
+                            overflow: 'hidden'
+                          }}>
+                            {truncatedName}
+                          </td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedSize}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedColor}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.quantity}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px' }}>₨{item.finalPrice.toLocaleString()}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px', fontWeight: '600' }}>₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                
+                {/* Summary and Barcode Section */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  marginBottom: '8px',
+                  gap: '12px'
+                }}>
+                  {/* Summary */}
+                  <div style={{ flex: '0 0 58%', fontSize: '8px' }}>
+                    <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '9px', color: '#111', borderBottom: '1px solid #111', paddingBottom: '2px' }}>ORDER SUMMARY</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px', padding: '1px 0' }}>
+                      <span>Subtotal:</span>
+                      <span style={{ fontWeight: '600' }}>₨{(selectedInvoiceOrder || selectedOrder)?.subtotalAmount.toLocaleString()}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
+                      <span>Shipping:</span>
+                      <span style={{ fontWeight: '600' }}>
+                        {(selectedInvoiceOrder || selectedOrder)?.shippingCost === 0 ? 'FREE' : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
+                      </span>
+                    </div>
+                    <div style={{ 
+                      borderTop: '2px solid #111', 
+                      marginTop: '4px', 
+                      paddingTop: '4px', 
+                      display: 'flex', 
+                      justifyContent: 'space-between',
+                      fontSize: '10px', 
+                      fontWeight: '700',
+                      backgroundColor: '#111',
+                      color: '#fff',
+                      padding: '6px 8px',
+                      border: '2px solid #111'
+                    }}>
+                      <span>TOTAL AMOUNT:</span>
+                      <span>₨{(selectedInvoiceOrder || selectedOrder)?.totalAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Barcode */}
+                  <div style={{ flex: '0 0 38%', textAlign: 'center', border: '1px solid #111', padding: '6px', backgroundColor: '#fafafa' }}>
+                    {barcodeUrl && (
+                      <img 
+                        src={barcodeUrl} 
+                        alt="Order Barcode" 
+                        style={{ 
+                          width: '110px', 
+                          height: '28px', 
+                          objectFit: 'contain', 
+                          marginBottom: '3px',
+                          display: 'block',
+                          margin: '0 auto 3px auto'
+                        }} 
+                      />
+                    )}
+                    <div style={{ fontSize: '6px', fontWeight: '600', marginBottom: '1px', color: '#111' }}>ORDER BARCODE</div>
+                    <div style={{ fontSize: '5px', lineHeight: '1.2', color: '#666' }}>
+                      Scan for order details<br />
+                      centurypk.com
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Footer */}
+                <div style={{ 
+                  borderTop: '1px solid #111', 
+                  paddingTop: '6px', 
+                  fontSize: '7px', 
+                  textAlign: 'center',
+                  color: '#666'
+                }}>
+                  <div style={{ fontWeight: '700', marginBottom: '2px', color: '#111' }}>Thank you for choosing CENTURY.PK</div>
+                  <div style={{ marginBottom: '1px' }}>support@centurypk.com | +92 123 456 7890 | www.centurypk.com</div>
+                  <div style={{ fontSize: '6px', fontStyle: 'italic' }}>This is a computer-generated invoice. No signature required.</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

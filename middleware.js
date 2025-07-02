@@ -21,26 +21,26 @@ function parseJwt(token) {
 }
 
 export function middleware(request) {
-  const { pathname } = request.nextUrl;
+  // const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes, but allow /admin/login
-  if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
-  }
-  if (pathname.startsWith('/admin')) {
-    const token = request.cookies.get('admin_token')?.value;
-    if (!token) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-    const decoded = parseJwt(token);
-    if (!decoded || decoded.name !== 'admin' || !decoded.email) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-    // Optionally, check for token expiration
-    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-  }
+  // // Only protect /admin routes, but allow /admin/login
+  // if (pathname.startsWith("/admin/login")) {
+  //   return NextResponse.next();
+  // }
+  // if (pathname.startsWith('/admin')) {
+  //   const token = request.cookies.get('admin_token')?.value;
+  //   if (!token) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  //   const decoded = parseJwt(token);
+  //   if (!decoded || decoded.name !== 'admin' || !decoded.email) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  //   // Optionally, check for token expiration
+  //   if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  // }
   return NextResponse.next();
 }
 
