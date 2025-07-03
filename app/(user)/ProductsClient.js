@@ -347,20 +347,43 @@ function ProductsSection({ products, onCartSuccess }) {
 // Video Section Component
 function VideoSection() {
   const videoRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [shouldPlay, setShouldPlay] = useState(false);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (!sectionRef.current) return;
+    let observer;
+    if ('IntersectionObserver' in window) {
+      observer = new window.IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setShouldPlay(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.3 }
+      );
+      observer.observe(sectionRef.current);
+    } else {
+      // Fallback: play immediately
+      setShouldPlay(true);
+    }
+    return () => observer && observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (shouldPlay && videoRef.current) {
       videoRef.current.play().catch(() => {});
     }
-  }, []);
+  }, [shouldPlay]);
 
   // Only show video on small screens (smaller than md breakpoint)
   return (
-    <section className="relative w-full block md:hidden overflow-hidden">
+    <section ref={sectionRef} className="relative w-full block md:hidden overflow-hidden">
       <video
         ref={videoRef}
         className="w-full h-auto object-contain"
-        autoPlay
+        autoPlay={shouldPlay}
         muted
         loop
         playsInline
