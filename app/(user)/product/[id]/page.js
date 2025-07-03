@@ -22,6 +22,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, onServerResponse }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -82,7 +83,8 @@ const CheckoutModal = ({ isOpen, onClose, orderData, onServerResponse }) => {
         totalQuantity: orderData.totalQuantity,
         totalAmount: orderData.totalAmount,
         orderDate: orderData.orderDate,
-        notes: formData.notes
+        notes: formData.notes,
+        paymentMethod,
       };
 
       const response = await fetch('/api/orders', {
@@ -180,6 +182,52 @@ const CheckoutModal = ({ isOpen, onClose, orderData, onServerResponse }) => {
                 </>
               );
             })()}
+          </div>
+
+          {/* Payment Method Selection */}
+          <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+            <h4 className="font-semibold mb-2">Payment Method</h4>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="COD"
+                  checked={paymentMethod === "COD"}
+                  onChange={() => setPaymentMethod("COD")}
+                  disabled={isSubmitting}
+                />
+                Cash on Delivery (COD)
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="Online"
+                  checked={paymentMethod === "Online"}
+                  onChange={() => setPaymentMethod("Online")}
+                  disabled={isSubmitting}
+                />
+                Online Payment
+              </label>
+            </div>
+            {paymentMethod === "Online" && (
+              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-blue-900 text-sm">
+                <strong>Online Payment Instructions:</strong>
+                <div className="mt-2">
+                  <p className="mb-2">To make an online payment, please transfer the total amount to the following bank account:</p>
+                  <div className="mb-2">
+                    <span className="block font-semibold">BANK NAME:</span> Allied Bank<br/>
+                    <span className="block font-semibold">ACCOUNT TITLE:</span> Dawood Ramzan<br/>
+                    <span className="block font-semibold">ACCOUNT NUMBER:</span> 09340010106137280010<br/>
+                    <span className="block font-semibold">IBAN:</span> PK16ABPA0010106137280010
+                  </div>
+                  <p className="mb-2">Afterwards, kindly share the <span className="font-semibold">payment screenshot</span> with us on WhatsApp at <span className="font-semibold">0322-7154205</span>.</p>
+                  <p className="mb-2">You can also use third-party apps like <span className="font-semibold">Easypaisa</span> or <span className="font-semibold">JazzCash</span> for online bank payment.</p>
+                  <p className="mb-1 font-semibold">Thank you!</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Order Form */}

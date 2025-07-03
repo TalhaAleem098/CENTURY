@@ -272,7 +272,6 @@ function ProductsGridContainer({ products, onCartSuccess }) {
   );
 }
 
-// Sold Out State Component
 function SoldOutState() {
   return (
     <div className="text-center py-20 px-4">

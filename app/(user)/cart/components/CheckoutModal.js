@@ -14,6 +14,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   const handleInputChange = (field, value) => {
     setShippingData(prev => ({
@@ -52,7 +53,6 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    
     const finalOrderData = {
       ...shippingData,
       items: orderData.items,
@@ -60,7 +60,8 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       totalQuantity: orderData.totalQuantity,
       totalAmount: orderData.totalAmount,
       orderDate: orderData.orderDate,
-      status: 'pending'
+      status: 'pending',
+      paymentMethod,
     };
 
     try {
@@ -76,21 +77,15 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       const result = await response.json();
 
       if (response.ok) {
-        
         toast(`Order placed successfully! Order Number: ${result.orderNumber}`);
-        
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
         }
-        
         onClose();
-        
         window.location.reload();
-        
       } else {
         throw new Error(result.error || 'Failed to place order');
       }
-      
     } catch (error) {
       console.error('Order submission error:', error);
       toast(`Failed to place order: ${error.message}`);
@@ -276,24 +271,74 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
                     <span>Items ({cartEntries.length})</span>
                     <span>{cartEntries.reduce((sum, entry) => sum + entry.quantity, 0)} pieces</span>
                   </div>
-                  
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal</span>
                     <span>Rs. {totalAmount.toLocaleString()}</span>
                   </div>
-
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Shipping</span>
-                    <span className="text-green-600 font-medium">FREE</span>
-                  </div>
+                  {totalAmount > 0 && totalAmount < 4999 ? (
+                    <div className="flex justify-between text-sm text-gray-600">
+                      <span>Delivery Charges</span>
+                      <span>Rs. 250</span>
+                    </div>
+                  ) : totalAmount >= 4999 && totalAmount > 0 ? (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Delivery</span>
+                      <span>FREE</span>
+                    </div>
+                  ) : null}
                 </div>
-                
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>Total</span>
-                    <span>Rs. {totalAmount.toLocaleString()}</span>
+                    <span>Rs. {(totalAmount + (totalAmount > 0 && totalAmount < 4999 ? 250 : 0)).toLocaleString()}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Payment Method Selection */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 mt-4">
+                <h4 className="font-semibold mb-2">Payment Method</h4>
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="COD"
+                      checked={paymentMethod === "COD"}
+                      onChange={() => setPaymentMethod("COD")}
+                      disabled={isSubmitting}
+                    />
+                    Cash on Delivery (COD)
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="Online"
+                      checked={paymentMethod === "Online"}
+                      onChange={() => setPaymentMethod("Online")}
+                      disabled={isSubmitting}
+                    />
+                    Online Payment
+                  </label>
+                </div>
+                {paymentMethod === "Online" && (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-blue-900 text-sm">
+                    <strong>Online Payment Instructions:</strong>
+                    <div className="mt-2">
+                      <p className="mb-2">To make an online payment, please transfer the total amount to the following bank account:</p>
+                      <div className="mb-2">
+                        <span className="block font-semibold">BANK NAME:</span> Allied Bank<br/>
+                        <span className="block font-semibold">ACCOUNT TITLE:</span> Dawood Ramzan<br/>
+                        <span className="block font-semibold">ACCOUNT NUMBER:</span> 09340010106137280010<br/>
+                        <span className="block font-semibold">IBAN:</span> PK16ABPA0010106137280010
+                      </div>
+                      <p className="mb-2">Afterwards, kindly share the <span className="font-semibold">payment screenshot</span> with us on WhatsApp at <span className="font-semibold">0322-7154205</span>.</p>
+                      <p className="mb-2">You can also use third-party apps like <span className="font-semibold">Easypaisa</span> or <span className="font-semibold">JazzCash</span> for online bank payment.</p>
+                      <p className="mb-1 font-semibold">Thank you!</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}

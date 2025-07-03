@@ -16,6 +16,7 @@ export async function POST(request) {
       'customerPhone', 
       'address', 
       'city', 
+      'paymentMethod',
       'zipCode', 
       'items', 
       'totalAmount'
