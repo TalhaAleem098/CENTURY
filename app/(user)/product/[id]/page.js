@@ -142,20 +142,44 @@ const CheckoutModal = ({ isOpen, onClose, orderData, onServerResponse }) => {
           {/* Order Summary */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="font-semibold text-gray-900 mb-3">Order Summary</h3>
-            {orderData.items.map((item, index) => (
-              <div key={index} className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-600">
-                  {item.productName} ({item.selectedSize}, {item.selectedColor}) × {item.quantity}
-                </span>
-                <span className="font-medium">₨{item.totalPrice.toLocaleString()}</span>
-              </div>
-            ))}
-            <div className="border-t pt-2 mt-2">
-              <div className="flex justify-between items-center font-bold">
-                <span>Total Amount:</span>
-                <span className="text-lg">₨{orderData.totalAmount.toLocaleString()}</span>
-              </div>
-            </div>
+            {(() => {
+              const subtotal = orderData.items.reduce((sum, item) => sum + item.totalPrice, 0);
+              const deliveryCharges = subtotal > 0 && subtotal < 4999 ? 250 : 0;
+              const total = subtotal + deliveryCharges;
+              return (
+                <>
+                  {orderData.items.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-gray-600">
+                        {item.productName} ({item.selectedSize}, {item.selectedColor}) × {item.quantity}
+                      </span>
+                      <span className="font-medium">₨{item.totalPrice.toLocaleString()}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center text-sm text-gray-600 mt-2">
+                    <span>Subtotal</span>
+                    <span>₨{subtotal.toLocaleString()}</span>
+                  </div>
+                  {deliveryCharges > 0 ? (
+                    <div className="flex justify-between items-center text-sm text-gray-600 mt-1">
+                      <span>Delivery Charges</span>
+                      <span>₨{deliveryCharges.toLocaleString()}</span>
+                    </div>
+                  ) : subtotal >= 4999 && subtotal > 0 ? (
+                    <div className="flex justify-between items-center text-sm text-green-600 mt-1">
+                      <span>Delivery</span>
+                      <span>FREE</span>
+                    </div>
+                  ) : null}
+                  <div className="border-t pt-2 mt-2">
+                    <div className="flex justify-between items-center font-bold">
+                      <span>Total Amount:</span>
+                      <span className="text-lg">₨{total.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           {/* Order Form */}

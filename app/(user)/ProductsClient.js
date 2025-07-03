@@ -354,27 +354,23 @@ function VideoSection() {
     }
   }, []);
 
-  // Only show video on screens smaller than lg
+  // Only show video on small screens (smaller than md breakpoint)
   return (
-    <section
-      className="relative w-full block lg:hidden max-h-screen min-h-[900px] aspect-video overflow-hidden"
-      style={{ height: "auto", maxHeight: "100vh" }}
-    >
+    <section className="relative w-full block md:hidden overflow-hidden">
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="w-full h-auto object-contain"
         autoPlay
         muted
         loop
         playsInline
-        style={{ maxHeight: "100vh" }}
       >
         <source src="/assets/mobile.mp4" type="video/mp4" />
         <source src="/assets/mobile.mp4" type="video/webm" />
         {/* Your browser does not support the video tag. */}
       </video>
       {/* Dark Overlay for Better Text Readability */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="absolute inset-0 bg-black/30"></div>
     </section>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragDistance, setDragDistance] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [animationDirection, setAnimationDirection] = useState('next');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const containerRef = useRef(null);
 
   // Mobile images (1-6)
   const mobileImages = [
@@ -43,215 +45,196 @@ const HeroSection = () => {
 
   const images = isMobile ? mobileImages : desktopImages;
 
-  // Timer ref for auto-slide
-  const intervalRef = useRef(null);
-
-  // Calculate next/prev indices
-  const getNextImageIndex = (currentIdx) => currentIdx === images.length - 1 ? 0 : currentIdx + 1;
-  const getPrevImageIndex = (currentIdx) => currentIdx === 0 ? images.length - 1 : currentIdx - 1;
-
-  // Animate to next
-  const animateToNext = useCallback(() => {
-    if (isAnimating) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    
-    const newNextIndex = getNextImageIndex(currentIndex);
-    setNextIndex(newNextIndex);
-    setIsAnimating(true);
-    setAnimationDirection('next');
-    
-    // Complete animation after duration
-    setTimeout(() => {
-      setCurrentIndex(newNextIndex);
-      setIsAnimating(false);
-      startAutoSlide();
-    }, 600);
-  }, [isAnimating, currentIndex, images.length]);
-
-  // Function to start the auto-slide interval
-  const startAutoSlide = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      animateToNext();
-    }, 3000);
-  }, [animateToNext]);
-
-  const animateToPrev = useCallback(() => {
-    if (isAnimating) return;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    
-    const newNextIndex = getPrevImageIndex(currentIndex);
-    setNextIndex(newNextIndex);
-    setIsAnimating(true);
-    setAnimationDirection('prev');
-    
-    setTimeout(() => {
-      setCurrentIndex(newNextIndex);
-      setIsAnimating(false);
-      startAutoSlide();
-    }, 600);
-  }, [isAnimating, currentIndex, images.length, startAutoSlide]);
-
-  // Auto-slide functionality
+  // Auto-slide functionality (every 4 seconds)
   useEffect(() => {
-    startAutoSlide();
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [startAutoSlide]);
+    const interval = setInterval(() => {
+      if (!isDragging && !isTransitioning) {
+        changeSlide((prev) => (prev + 1) % images.length);
+      }
+    }, 4000);
 
-  const goToSlide = (index) => {
-    if (index !== currentIndex && !isAnimating) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      
-      setNextIndex(index);
-      setIsAnimating(true);
-      setAnimationDirection(index > currentIndex ? 'next' : 'prev');
-      
-      setTimeout(() => {
-        setCurrentIndex(index);
-        setIsAnimating(false);
-        startAutoSlide();
-      }, 600);
+    return () => clearInterval(interval);
+  }, [isDragging, isTransitioning, images.length]);
+
+  // Handle slide change with transition
+  const changeSlide = (indexOrCallback) => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    
+    if (typeof indexOrCallback === 'function') {
+      setCurrentIndex(indexOrCallback);
+    } else {
+      setCurrentIndex(indexOrCallback);
+    }
+    
+    // Reset transition state after animation completes
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
+  };
+
+  // Handle touch/mouse start
+  const handleStart = (clientX) => {
+    if (isTransitioning) return;
+    setIsDragging(true);
+    setStartX(clientX);
+    setDragDistance(0);
+  };
+
+  // Handle touch/mouse move
+  const handleMove = (clientX) => {
+    if (!isDragging || isTransitioning) return;
+    
+    const distance = clientX - startX;
+    setDragDistance(distance);
+  };
+
+  // Handle touch/mouse end
+  const handleEnd = () => {
+    if (!isDragging || isTransitioning) return;
+    
+    const threshold = 50; // Minimum drag distance to change slide
+    
+    if (Math.abs(dragDistance) > threshold) {
+      if (dragDistance > 0) {
+        // Dragged right - go to previous image
+        changeSlide((prev) => (prev - 1 + images.length) % images.length);
+      } else {
+        // Dragged left - go to next image
+        changeSlide((prev) => (prev + 1) % images.length);
+      }
+    }
+    
+    setIsDragging(false);
+    setDragDistance(0);
+  };
+
+  // Touch events
+  const handleTouchStart = (e) => {
+    handleStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    handleMove(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    handleEnd();
+  };
+
+  // Mouse events
+  const handleMouseDown = (e) => {
+    handleStart(e.clientX);
+  };
+
+  const handleMouseMove = (e) => {
+    handleMove(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    handleEnd();
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      handleEnd();
+    }
+  };
+
+  // Handle dot click
+  const handleDotClick = (index) => {
+    if (index !== currentIndex) {
+      changeSlide(index);
     }
   };
 
   return (
     <div className="w-full mx-auto">
       <div className="relative overflow-hidden bg-[#e5e7eb]">
-        {/* Main carousel container */}
-        <div className="relative w-full h-auto">
-          {/* Container for animated images */}
-          <div className="relative w-full h-auto">
-            {/* Current Image - always at base level */}
-            <div 
-              className={`relative w-full transition-all duration-600 ease-in-out ${
-                isAnimating 
-                  ? animationDirection === 'next' 
-                    ? 'animate-slide-out-left' 
-                    : 'animate-slide-out-right'
-                  : ''
-              }`}
-              style={{ zIndex: 1 }}
-            >
-              <Image
-                src={images[currentIndex]}
-                alt={`Carousel Image ${currentIndex + 1}`}
-                width={1920}
-                height={1080}
-                className="w-full h-auto object-cover"
-                priority
-                quality={90}
-                style={{ backgroundColor: '#e5e7eb' }}
-              />
-            </div>
-
-            {/* Incoming Image - always on top during animation */}
-            {isAnimating && (
-              <div 
-                className={`absolute top-0 left-0 w-full transition-all duration-600 ease-in-out ${
-                  animationDirection === 'next' 
-                    ? 'animate-slide-in-right' 
-                    : 'animate-slide-in-left'
-                }`}
-                style={{ zIndex: 2 }}
-              >
+        <div 
+          ref={containerRef}
+          className="relative w-full h-auto cursor-grab active:cursor-grabbing select-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={isDragging ? handleMouseMove : undefined}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Image container with sliding animation */}
+          <div 
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{
+              transform: `translateX(${-currentIndex * 100 + (isDragging ? (dragDistance / containerRef.current?.offsetWidth) * 100 : 0)}%)`,
+              width: `${images.length * 100}%`
+            }}
+          >
+            {images.map((src, index) => (
+              <div key={index} className="w-full flex-shrink-0">
                 <Image
-                  src={images[nextIndex]}
-                  alt={`Carousel Image ${nextIndex + 1}`}
+                  src={src}
+                  alt={`Carousel Image ${index + 1}`}
                   width={1920}
                   height={1080}
                   className="w-full h-auto object-cover"
+                  priority={index === 0}
                   quality={90}
                   style={{ backgroundColor: '#e5e7eb' }}
+                  draggable={false}
                 />
               </div>
-            )}
+            ))}
           </div>
+
+          {/* Overlay for drag feedback */}
+          {isDragging && (
+            <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+          )}
         </div>
 
-        {/* Navigation arrows */}
+        {/* Dots indicator */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleDotClick(index)}
+              disabled={isTransitioning}
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                index === currentIndex 
+                  ? 'bg-white shadow-lg' 
+                  : 'bg-white/50 hover:bg-white/75'
+              } ${isTransitioning ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Navigation arrows (optional) */}
         <button
-          onClick={animateToPrev}
-          disabled={isAnimating}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 flex items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
+          onClick={() => changeSlide((prev) => (prev - 1 + images.length) % images.length)}
+          disabled={isTransitioning}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-all duration-200 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Previous image"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-
+        
         <button
-          onClick={animateToNext}
-          disabled={isAnimating}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 w-12 h-12 flex items-center justify-center transition-all duration-300 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg hover:scale-110 active:scale-95"
+          onClick={() => changeSlide((prev) => (prev + 1) % images.length)}
+          disabled={isTransitioning}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-all duration-200 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Next image"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
-
-      <style jsx>{`
-        @keyframes slide-out-left {
-          0% { 
-            transform: translateX(0) scale(1); 
-            opacity: 1; 
-          }
-          100% { 
-            transform: translateX(-100%) scale(0.9); 
-            opacity: 0; 
-          }
-        }
-        
-        @keyframes slide-in-right {
-          0% { 
-            transform: translateX(100%) scale(0.9); 
-            opacity: 0; 
-          }
-          100% { 
-            transform: translateX(0) scale(1); 
-            opacity: 1; 
-          }
-        }
-        
-        @keyframes slide-out-right {
-          0% { 
-            transform: translateX(0) scale(1); 
-            opacity: 1; 
-          }
-          100% { 
-            transform: translateX(100%) scale(0.9); 
-            opacity: 0; 
-          }
-        }
-        
-        @keyframes slide-in-left {
-          0% { 
-            transform: translateX(-100%) scale(0.9); 
-            opacity: 0; 
-          }
-          100% { 
-            transform: translateX(0) scale(1); 
-            opacity: 1; 
-          }
-        }
-
-        .animate-slide-out-left { 
-          animation: slide-out-left 0.6s ease-in-out forwards; 
-        }
-        .animate-slide-in-right { 
-          animation: slide-in-right 0.6s ease-in-out forwards; 
-        }
-        .animate-slide-out-right { 
-          animation: slide-out-right 0.6s ease-in-out forwards; 
-        }
-        .animate-slide-in-left { 
-          animation: slide-in-left 0.6s ease-in-out forwards; 
-        }
-      `}</style>
     </div>
   );
 };

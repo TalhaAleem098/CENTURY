@@ -245,7 +245,7 @@ const BrandBar = ({ onToggleSidebar }) => {
           </div>
         </div>
         {/* Mobile Layout */}
-        <div className="flex lg:hidden items-center w-full relative bg-amber-500">
+        <div className="flex lg:hidden items-center w-full relative">
           <div className="flex items-center">
             <button
               onClick={onToggleSidebar}

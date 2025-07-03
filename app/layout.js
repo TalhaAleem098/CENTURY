@@ -4,6 +4,7 @@ import Ribon from "@/components/Ribon";
 import { ToastContainer } from "react-toastify";
 import { siteConfig } from "./metadata.config";
 
+
 export const metadata = {
   title: "Century – Premium Fashion Store",
   description: siteConfig.description,

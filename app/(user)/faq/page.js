@@ -12,7 +12,7 @@ import { FaChevronDown, FaChevronUp, FaSearch, FaShippingFast, FaUndo, FaTshirt,
       },
       {
         question: "Do you offer free shipping?",
-        answer: "Yes! We provide free standard shipping on orders above ₹4900. For orders below ₹4900, a delivery charge applies. Express shipping is available at an additional cost."
+        answer: "Yes! We provide free standard shipping on orders above ₹4900. For orders below Rs. 4900, a delivery charge applies. Express shipping is available at an additional cost."
       },
       {
         question: "Can I track my order?",
