@@ -128,8 +128,7 @@ function ProductCard({ product, index, onCartSuccess }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Image Container - 1.5:1 aspect ratio */}
-        <div className="relative h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden rounded-t-lg">
+        <div className="relative h-[380px] sm:h-[400px] lg:h-[480px] overflow-hidden rounded-t-lg">
           <Image
             src={currentImage}
             alt={product.name}
