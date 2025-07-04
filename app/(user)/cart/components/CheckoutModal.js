@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) => {
   const [shippingData, setShippingData] = useState({
@@ -77,18 +77,18 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       const result = await response.json();
 
       if (response.ok) {
-        toast(`Order placed successfully! Order Number: ${result.orderNumber}`);
+        toast.info(`Order placed successfully! Order Number: ${result.orderNumber}`);
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
         }
         onClose();
-        window.location.reload();
       } else {
+        toast.info(result.message || 'Order placed successfully!');
         throw new Error(result.error || 'Failed to place order');
       }
     } catch (error) {
       console.error('Order submission error:', error);
-      toast(`Failed to place order: ${error.message}`);
+      toast.info(`Failed to place order: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -365,6 +365,17 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
                 >
                   Cancel Order
                 </button>
+                < ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                />
               </div>
             </div>
           </div>
