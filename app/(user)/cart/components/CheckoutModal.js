@@ -15,6 +15,8 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [orderResult, setOrderResult] = useState(null);
 
   const handleInputChange = (field, value) => {
     setShippingData(prev => ({
@@ -78,12 +80,11 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       console.log('Order submission result:', result);
 
       if (response.ok) {
-        toast(`Order placed successfully! Order Number.`);
+        setOrderResult(result);
+        setShowConfirmation(true);
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
         }
-        onClose();
-        // window.location.reload();
       } else {
         throw new Error(result.error || 'Failed to place order');
       }
@@ -96,6 +97,151 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
   };
 
   if (!isOpen) return null;
+
+  // Show confirmation modal if order was successful
+  if (showConfirmation && orderResult) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto">
+          {/* Header */}
+          <div className="bg-green-50 border-b border-green-200 px-6 py-4 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-green-800">Order Confirmed!</h2>
+                  <p className="text-green-600">Your order has been placed successfully</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            {/* Order ID */}
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Order ID</h3>
+                <p className="text-2xl font-bold text-gray-900 font-mono">#{orderResult.orderId}</p>
+                <p className="text-sm text-gray-600 mt-1">Save this ID for tracking your order</p>
+              </div>
+            </div>
+
+            {/* Customer Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Delivery Information</h4>
+                <div className="space-y-2 text-sm">
+                  <p><span className="font-medium">Name:</span> {orderResult.order.customer.name}</p>
+                  <p><span className="font-medium">Phone:</span> {orderResult.order.customer.phone}</p>
+                  <p><span className="font-medium">Email:</span> {orderResult.order.customer.email}</p>
+                  <p><span className="font-medium">Address:</span> {orderResult.order.customer.address.street}, {orderResult.order.customer.address.city}, {orderResult.order.customer.address.zipCode}</p>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Order Summary</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Items:</span>
+                    <span>{orderResult.order.totalItems}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>Rs. {orderResult.order.subtotalAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping:</span>
+                    <span className={orderResult.order.shippingCost === 0 ? "text-green-600 font-semibold" : ""}>
+                      {orderResult.order.shippingCost === 0 ? "FREE" : `Rs. ${orderResult.order.shippingCost.toLocaleString()}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Payment Method:</span>
+                    <span className="font-semibold">{orderResult.order.customer.paymentMethod}</span>
+                  </div>
+                  <div className="border-t pt-2">
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total:</span>
+                      <span>Rs. {orderResult.order.totalAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Items */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-gray-900 mb-3">Order Items</h4>
+              <div className="space-y-3">
+                {orderResult.order.items.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                      <Image
+                        src={item.productImage}
+                        alt={item.productName}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-gray-900 truncate">{item.productName}</h5>
+                      <p className="text-sm text-gray-600">
+                        {item.selectedColor} • {item.selectedSize.toUpperCase()} • Qty: {item.quantity}
+                      </p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Rs. {item.finalPrice.toLocaleString()} × {item.quantity}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-gray-900">
+                        Rs. {item.totalPrice.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Payment Instructions for Online Payment */}
+            {orderResult.order.customer.paymentMethod === "Online" && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Payment Instructions</h4>
+                <div className="text-blue-800 text-sm">
+                  <p className="mb-2">Please transfer Rs. {orderResult.order.totalAmount.toLocaleString()} to:</p>
+                  <div className="mb-2">
+                    <span className="block font-semibold">BANK NAME:</span> Allied Bank<br/>
+                    <span className="block font-semibold">ACCOUNT TITLE:</span> Dawood Ramzan<br/>
+                    <span className="block font-semibold">ACCOUNT NUMBER:</span> 09340010106137280010<br/>
+                    <span className="block font-semibold">IBAN:</span> PK16ABPA0010106137280010
+                  </div>
+                  <p className="mb-2">Share payment screenshot on WhatsApp: <span className="font-semibold">0322-7154205</span></p>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowConfirmation(false);
+                  setOrderResult(null);
+                  onClose();
+                  window.location.reload();
+                }}
+                className="flex-1 bg-gray-900 text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const totalAmount = cartEntries.reduce((sum, entry) => {
     const product = products.find(p => p._id === entry.id);
