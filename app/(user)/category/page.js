@@ -10,7 +10,7 @@ export const metadata = {
 async function fetchProductsByCategory(type, page = 1) {
   try {
     // This would fetch from your API in a real implementation
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/products?category=${type}&page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://centurypk.com'}/api/products?category=${type}&page=${page}`, {
       cache: 'no-store'
     });
     

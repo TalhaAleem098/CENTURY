@@ -9,7 +9,7 @@ export const metadata = {
 
 async function fetchAllProducts(page = 1, limit = 12) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/products?page=${page}&limit=${limit}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://centurypk.com'}/api/products?page=${page}&limit=${limit}`, {
       cache: 'no-store'
     });
     

@@ -724,6 +724,8 @@ export default function OrdersPage() {
                     <div className="font-bold mb-1 text-black uppercase">Summary</div>
                     <div className="flex justify-between"><span>Subtotal:</span><span>₨{selectedInvoiceOrder.subtotalAmount.toLocaleString()}</span></div>
                     <div className="flex justify-between"><span>Shipping:</span><span>{selectedInvoiceOrder.shippingCost === 0 ? <span className="font-bold">FREE</span> : `₨${selectedInvoiceOrder.shippingCost.toLocaleString()}`}</span></div>
+                    <div className="flex justify-between"><span>Payment Method:</span><span className="font-semibold">{selectedInvoiceOrder.customer?.paymentMethod || 'COD'}</span></div>
+                    <div className="flex justify-between"><span>Payment Status:</span><span className={`font-semibold ${selectedInvoiceOrder.customer?.paymentMethod === 'Online' ? 'text-green-600' : 'text-orange-600'}`}>{selectedInvoiceOrder.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}</span></div>
                     <div className="flex justify-between border-t border-black mt-1 pt-1 font-bold text-base"><span>Total:</span><span>₨{selectedInvoiceOrder.totalAmount.toLocaleString()}</span></div>
                   </div>
                   <div className="flex flex-col items-center justify-end w-64">
@@ -870,6 +872,16 @@ export default function OrdersPage() {
                       <span>Shipping:</span>
                       <span style={{ fontWeight: '600' }}>
                         {(selectedInvoiceOrder || selectedOrder)?.shippingCost === 0 ? 'FREE' : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px', padding: '1px 0' }}>
+                      <span>Payment Method:</span>
+                      <span style={{ fontWeight: '600' }}>{(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod || 'COD'}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
+                      <span>Payment Status:</span>
+                      <span style={{ fontWeight: '700', color: (selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? '#059669' : '#d97706' }}>
+                        {(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
                       </span>
                     </div>
                     <div style={{ 
