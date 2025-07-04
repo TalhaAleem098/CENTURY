@@ -125,7 +125,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
             <div className="text-center mb-6">
               <div className="bg-gray-50 rounded-lg p-4 mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Order ID</h3>
-                <p className="text-2xl font-bold text-gray-900 font-mono">#{orderResult.orderId}</p>
+                <p className="text-md font-bold text-gray-900 font-mono">#{orderResult.orderId}</p>
               </div>
               
               <div className="bg-blue-50 rounded-lg p-4 mb-4">
