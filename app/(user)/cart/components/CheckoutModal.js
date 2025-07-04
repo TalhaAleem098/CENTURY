@@ -75,9 +75,10 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       });
 
       const result = await response.json();
+      console.log('Order submission result:', result);
 
       if (response.ok) {
-        toast(`Order placed successfully! Order Number: ${result.orderNumber}`);
+        toast(`Order placed successfully! Order Number.`);
         if (typeof window !== "undefined") {
           localStorage.removeItem("cart");
         }
