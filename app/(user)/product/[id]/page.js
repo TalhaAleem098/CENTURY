@@ -4,377 +4,10 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { OrbitProgress } from "react-loading-indicators";
+import dynamic from "next/dynamic";
+const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
 
-// Responsive text utility
-const responsiveText = "text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl";
 
-// Enhanced Checkout Modal Component
-const CheckoutModal = ({ isOpen, onClose, orderData, onServerResponse }) => {
-  // Use backend-required field names
-  const [formData, setFormData] = useState({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    notes: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [paymentMethod, setPaymentMethod] = useState("COD");
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.customerName.trim()) newErrors.customerName = 'Name is required';
-    if (!formData.customerEmail.trim()) {
-      newErrors.customerEmail = 'Email is required';
-    } else if (!validateEmail(formData.customerEmail)) {
-      newErrors.customerEmail = 'Please enter a valid email address';
-    }
-    if (!formData.customerPhone.trim()) newErrors.customerPhone = 'Phone is required';
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.city.trim()) newErrors.city = 'City is required';
-    if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      toast.error('Please fill in all required fields correctly');
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      const orderPayload = {
-        customerName: formData.customerName,
-        customerEmail: formData.customerEmail,
-        customerPhone: formData.customerPhone,
-        address: formData.address,
-        city: formData.city,
-        zipCode: formData.zipCode,
-        items: orderData.items.map(item => ({
-          ...item,
-          productImage: orderData.items[0]?.productImage || ''
-        })),
-        totalItems: orderData.totalItems,
-        totalQuantity: orderData.totalQuantity,
-        totalAmount: orderData.totalAmount,
-        orderDate: orderData.orderDate,
-        notes: formData.notes,
-        paymentMethod,
-      };
-
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderPayload),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success('Order placed successfully!');
-        onServerResponse('Order placed successfully!');
-        onClose();
-        // Reset form
-        setFormData({
-          customerName: '',
-          customerEmail: '',
-          customerPhone: '',
-          address: '',
-          city: '',
-          zipCode: '',
-          notes: ''
-        });
-      } else {
-        throw new Error(result.error || 'Failed to place order');
-      }
-    } catch (error) {
-      console.error('Order submission error:', error);
-      toast.error(error.message || 'Failed to place order');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">Complete Your Order</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
-              disabled={isSubmitting}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-
-        <div className="p-6">
-          {/* Order Summary */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-3">Order Summary</h3>
-            {(() => {
-              const subtotal = orderData.items.reduce((sum, item) => sum + item.totalPrice, 0);
-              const deliveryCharges = subtotal > 0 && subtotal < 4999 ? 250 : 0;
-              const total = subtotal + deliveryCharges;
-              return (
-                <>
-                  {orderData.items.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600">
-                        {item.productName} ({item.selectedSize}, {item.selectedColor}) × {item.quantity}
-                      </span>
-                      <span className="font-medium">₨{item.totalPrice.toLocaleString()}</span>
-                    </div>
-                  ))}
-                  <div className="flex justify-between items-center text-sm text-gray-600 mt-2">
-                    <span>Subtotal</span>
-                    <span>₨{subtotal.toLocaleString()}</span>
-                  </div>
-                  {deliveryCharges > 0 ? (
-                    <div className="flex justify-between items-center text-sm text-gray-600 mt-1">
-                      <span>Delivery Charges</span>
-                      <span>₨{deliveryCharges.toLocaleString()}</span>
-                    </div>
-                  ) : subtotal >= 4999 && subtotal > 0 ? (
-                    <div className="flex justify-between items-center text-sm text-green-600 mt-1">
-                      <span>Delivery</span>
-                      <span>FREE</span>
-                    </div>
-                  ) : null}
-                  <div className="border-t pt-2 mt-2">
-                    <div className="flex justify-between items-center font-bold">
-                      <span>Total Amount:</span>
-                      <span className="text-lg">₨{total.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </>
-              );
-            })()}
-          </div>
-
-          {/* Payment Method Selection */}
-          <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
-            <h4 className="font-semibold mb-2">Payment Method</h4>
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="COD"
-                  checked={paymentMethod === "COD"}
-                  onChange={() => setPaymentMethod("COD")}
-                  disabled={isSubmitting}
-                />
-                Cash on Delivery (COD)
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="Online"
-                  checked={paymentMethod === "Online"}
-                  onChange={() => setPaymentMethod("Online")}
-                  disabled={isSubmitting}
-                />
-                Online Payment
-              </label>
-            </div>
-            {paymentMethod === "Online" && (
-              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-blue-900 text-sm">
-                <strong>Online Payment Instructions:</strong>
-                <div className="mt-2">
-                  <p className="mb-2">To make an online payment, please transfer the total amount to the following bank account:</p>
-                  <div className="mb-2">
-                    <span className="block font-semibold">BANK NAME:</span> Allied Bank<br/>
-                    <span className="block font-semibold">ACCOUNT TITLE:</span> Dawood Ramzan<br/>
-                    <span className="block font-semibold">ACCOUNT NUMBER:</span> 09340010106137280010<br/>
-                    <span className="block font-semibold">IBAN:</span> PK16ABPA0010106137280010
-                  </div>
-                  <p className="mb-2">Afterwards, kindly share the <span className="font-semibold">payment screenshot</span> with us on WhatsApp at <span className="font-semibold">0322-7154205</span>.</p>
-                  <p className="mb-2">You can also use third-party apps like <span className="font-semibold">Easypaisa</span> or <span className="font-semibold">JazzCash</span> for online bank payment.</p>
-                  <p className="mb-1 font-semibold">Thank you!</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Order Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={formData.customerName}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                    errors.customerName ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your full name"
-                />
-                {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="customerEmail"
-                  value={formData.customerEmail}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                    errors.customerEmail ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your email"
-                />
-                {errors.customerEmail && <p className="text-red-500 text-xs mt-1">{errors.customerEmail}</p>}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="customerPhone"
-                value={formData.customerPhone}
-                onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                  errors.customerPhone ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Enter your phone number"
-              />
-              {errors.customerPhone && <p className="text-red-500 text-xs mt-1">{errors.customerPhone}</p>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                  errors.address ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Enter your address"
-              />
-              {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  City <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your city"
-                />
-                {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  ZIP Code <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black ${
-                    errors.zipCode ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter ZIP code"
-                />
-                {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Order Notes (Optional)
-              </label>
-              <textarea
-                name="notes"
-                value={formData.notes}
-                onChange={handleInputChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Any special instructions for your order..."
-              />
-            </div>
-
-            <div className="flex gap-4 pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={isSubmitting}
-                className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Placing Order...' : 'Place Order'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -382,6 +15,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [mainImageLoading, setMainImageLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [descriptionState, setDescriptionState] = useState('short'); // 'short', 'medium', 'full'
@@ -539,19 +173,29 @@ export default function ProductDetailPage() {
           <div className="p-4 sm:p-6 lg:p-8">
             {/* Main Image */}
             <div className="mb-4 sm:mb-6">
-              <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+              <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative">
                 {product.images && product.images.length > 0 ? (
-                  <Image
-                    src={
-                      product.images[selectedImage]?.url ||
-                      product.images[0]?.url
-                    }
-                    alt={product.name}
-                    width={600}
-                    height={600}
-                    className="w-full h-full object-cover"
-                    priority
-                  />
+                  <>
+                    {mainImageLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse z-10">
+                        <div className="w-2/3 h-2/3 bg-gray-300 rounded-xl animate-pulse" />
+                      </div>
+                    )}
+                    <Image
+                      src={
+                        product.images[selectedImage]?.url ||
+                        product.images[0]?.url
+                      }
+                      alt={product.name}
+                      width={600}
+                      height={600}
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${mainImageLoading ? 'opacity-0' : 'opacity-100'}`}
+                      priority
+                      onLoadingComplete={() => setMainImageLoading(false)}
+                      onLoad={() => setMainImageLoading(false)}
+                      onError={() => setMainImageLoading(false)}
+                    />
+                  </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400">
                     No Image Available
@@ -566,7 +210,10 @@ export default function ProductDetailPage() {
                 {product.images.map((image, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedImage(index)}
+                    onClick={() => {
+                      setMainImageLoading(true);
+                      setSelectedImage(index);
+                    }}
                     className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === index
                         ? "border-black ring-2 ring-gray-300 opacity-60"
@@ -840,7 +487,6 @@ export default function ProductDetailPage() {
           totalAmount: totalPrice,
           orderDate: new Date().toISOString()
         }}
-        onServerResponse={(msg) => toast.info(msg)}
       />
     </div>
   );

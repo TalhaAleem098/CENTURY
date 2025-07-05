@@ -79,7 +79,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SessionProviderWrapper>
-          <ToastContainer
+         <div className='z-[9999]'>
+           <ToastContainer
             position="top-right"
             autoClose={2500}
             hideProgressBar={false}
@@ -90,6 +91,7 @@ export default function RootLayout({ children }) {
             draggable
             pauseOnHover
           />
+         </div>
           {children}
         </SessionProviderWrapper>
       </body>
