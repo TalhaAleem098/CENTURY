@@ -130,7 +130,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4">
+    <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] p-0 sm:p-4">
       <div
         className="bg-white shadow-2xl w-full h-full sm:h-auto sm:max-w-2xl sm:rounded-sm max-h-none sm:max-h-[90vh] flex flex-col"
         style={{ borderRadius: '0.125rem' }}
