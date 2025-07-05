@@ -15,7 +15,6 @@ const OrderConfirmationModal = ({ isOpen, onClose, email }) => {
         <p className="text-gray-700 text-center mb-2">Thank you for your order!</p>
         <p className="text-gray-600 text-center mb-4 text-sm sm:text-base">You will receive a confirmation call very soon.</p>
         <div className="w-full bg-gray-50 rounded p-3 mb-4 text-center">
-          <div className="text-xs text-gray-500 mb-1">Order confirmation sent to:</div>
           <div className="text-base font-semibold text-gray-900 break-all">{email}</div>
         </div>
         <button

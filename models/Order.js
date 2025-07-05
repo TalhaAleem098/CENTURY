@@ -39,7 +39,7 @@ const OrderSchema = new mongoose.Schema(
         },
         zipCode: {
           type: String,
-          required: true,
+          // required: true,
           trim: true,
         },
       },

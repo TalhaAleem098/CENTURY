@@ -25,6 +25,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
     return emailRegex.test(email);
   };
 
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.customerName.trim()) newErrors.customerName = 'Name is required';
@@ -40,7 +41,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
     }
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
-    if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
+    // Zip code is now optional, so no validation here
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
