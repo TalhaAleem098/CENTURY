@@ -801,57 +801,57 @@ export default function OrdersPage() {
                 
                 {/* Items Table */}
                 <table style={{ 
-                  width: '100%', 
-                  borderCollapse: 'collapse', 
-                  marginBottom: '10px', 
-                  fontSize: '7px',
-                  border: '1px solid #111',
-                  tableLayout: 'fixed'
+        width: '100%',
+        borderCollapse: 'collapse',
+        marginBottom: '10px',
+        fontSize: '7px',
+        border: '1px solid #111',
+        tableLayout: 'fixed'
+      }}>
+        <colgroup>
+          <col style={{ width: '40%' }} />
+          <col style={{ width: '10%' }} />
+          <col style={{ width: '12%' }} />
+          <col style={{ width: '8%' }} />
+          <col style={{ width: '15%' }} />
+          <col style={{ width: '15%' }} />
+        </colgroup>
+        <thead>
+          <tr style={{ backgroundColor: '#111', color: '#fff' }}>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'left', fontWeight: '600' }}>Product</th>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Size</th>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Color</th>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Qty</th>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Unit Price</th>
+            <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {(selectedInvoiceOrder || selectedOrder)?.items.map((item, idx) => {
+            const productName = item.productName + (item.salePercentage > 0 ? ` (${item.salePercentage}% OFF)` : '');
+            const truncatedName = productName.length > 42 ? productName.substring(0, 39) + '...' : productName;
+            return (
+              <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? '#fff' : '#f8f8f8' }}>
+                <td style={{ 
+                  border: '1px solid #ddd', 
+                  padding: '3px 2px', 
+                  fontSize: '6px', 
+                  lineHeight: '1.2', 
+                  wordWrap: 'break-word',
+                  overflow: 'hidden'
                 }}>
-                  <colgroup>
-                    <col style={{ width: '40%' }} />
-                    <col style={{ width: '10%' }} />
-                    <col style={{ width: '12%' }} />
-                    <col style={{ width: '8%' }} />
-                    <col style={{ width: '15%' }} />
-                    <col style={{ width: '15%' }} />
-                  </colgroup>
-                  <thead>
-                    <tr style={{ backgroundColor: '#111', color: '#fff' }}>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'left', fontWeight: '600' }}>Product</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Size</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Color</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Qty</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Unit Price</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'right', fontWeight: '600' }}>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(selectedInvoiceOrder || selectedOrder)?.items.map((item, idx) => {
-                      const productName = item.productName + (item.salePercentage > 0 ? ` (${item.salePercentage}% OFF)` : '');
-                      const truncatedName = productName.length > 42 ? productName.substring(0, 39) + '...' : productName;
-                      return (
-                        <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? '#fff' : '#f8f8f8' }}>
-                          <td style={{ 
-                            border: '1px solid #ddd', 
-                            padding: '3px 2px', 
-                            fontSize: '6px', 
-                            lineHeight: '1.2', 
-                            wordWrap: 'break-word',
-                            overflow: 'hidden'
-                          }}>
-                            {truncatedName}
-                          </td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedSize}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedColor}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.quantity}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px' }}>₨{item.finalPrice.toLocaleString()}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px', fontWeight: '600' }}>₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                  {truncatedName}
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedSize}</td>
+                <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedColor}</td>
+                <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.quantity}</td>
+                <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px' }}>₨{item.finalPrice.toLocaleString()}</td>
+                <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'right', fontSize: '6px', fontWeight: '600' }}>₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
                 
                 {/* Summary and Barcode Section */}
                 <div style={{ 
@@ -864,26 +864,37 @@ export default function OrdersPage() {
                   {/* Summary */}
                   <div style={{ flex: '0 0 58%', fontSize: '8px' }}>
                     <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '9px', color: '#111', borderBottom: '1px solid #111', paddingBottom: '2px' }}>ORDER SUMMARY</div>
+                    {/* Subtotal */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px', padding: '1px 0' }}>
                       <span>Subtotal:</span>
                       <span style={{ fontWeight: '600' }}>₨{(selectedInvoiceOrder || selectedOrder)?.subtotalAmount.toLocaleString()}</span>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
-                      <span>Shipping:</span>
-                      <span style={{ fontWeight: '600' }}>
-                        {(selectedInvoiceOrder || selectedOrder)?.shippingCost === 0 ? 'FREE' : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
-                      </span>
-                    </div>
+                    {/* Delivery Charges - Only show 250 if applicable, never 150 */}
+                    {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 250) && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
+                        <span>Delivery Charges:</span>
+                        <span style={{ fontWeight: '600' }}>₨250</span>
+                      </div>
+                    )}
+                    {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0) && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
+                        <span>Delivery Charges:</span>
+                        <span style={{ fontWeight: '600' }}>FREE</span>
+                      </div>
+                    )}
+                    {/* Payment Method */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px', padding: '1px 0' }}>
                       <span>Payment Method:</span>
                       <span style={{ fontWeight: '600' }}>{(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod || 'COD'}</span>
                     </div>
+                    {/* Payment Status */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
                       <span>Payment Status:</span>
                       <span style={{ fontWeight: '700', color: (selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? '#059669' : '#d97706' }}>
                         {(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
                       </span>
                     </div>
+                    {/* Total Amount */}
                     <div style={{ 
                       borderTop: '2px solid #111', 
                       marginTop: '4px', 

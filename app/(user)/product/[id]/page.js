@@ -446,23 +446,24 @@ export default function ProductDetailPage() {
     setShowCheckoutModal(true);
   };
 
+  // Render product description with real line breaks
   const getDescriptionDisplay = () => {
     if (!product?.description) return "No description available for this product.";
-    
     const description = product.description;
     const length = description.length;
-    
-    if (length <= 180) return description;
-    
-    switch (descriptionState) {
-      case 'short':
-        return description.slice(0, 180) + '...';
-      case 'medium':
-        return length > 350 ? description.slice(0, 350) + '...' : description;
-      case 'full':
-      default:
-        return description;
+    let displayText = description;
+    if (length > 180 && descriptionState === 'short') {
+      displayText = description.slice(0, 180) + '...';
+    } else if (length > 350 && descriptionState === 'medium') {
+      displayText = description.slice(0, 350) + '...';
     }
+    // Split by line breaks and render each as a <p>
+    return displayText.split(/\r?\n/).map((line, idx) =>
+      <span key={idx}>
+        {line}
+        {idx !== displayText.split(/\r?\n/).length - 1 && <br />}
+      </span>
+    );
   };
 
   const getDescriptionButton = () => {
@@ -749,9 +750,9 @@ export default function ProductDetailPage() {
                 Product Description
               </h2>
               <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+                <div className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg whitespace-pre-line">
                   {getDescriptionDisplay()}
-                </p>
+                </div>
                 {getDescriptionButton()}
               </div>
             </div>
@@ -769,10 +770,10 @@ export default function ProductDetailPage() {
                         Size
                       </th>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Height (cm)
+                        Height (Inches)
                       </th>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Width (cm)
+                        Width (Inches)
                       </th>
                     </tr>
                   </thead>
