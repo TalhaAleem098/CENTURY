@@ -154,7 +154,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
           {/* Responsive two-column fields for mobile, with custom grid for phone/zip */}
           <form id="checkout-form" onSubmit={handleSubmit} className="space-y-4 pb-32 sm:pb-0">
             {/* Name and Email in same row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
                   Full Name <span className="text-red-500">*</span>
