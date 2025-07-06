@@ -9,6 +9,8 @@ export async function POST(request) {
     await connectDB();
 
     const orderData = await request.json();
+    // Log the payment method for debugging
+    console.log('[Order API] Payment Method received:', orderData.paymentMethod);
     
     const requiredFields = [
       'customerName', 

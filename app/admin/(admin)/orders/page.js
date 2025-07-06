@@ -419,7 +419,7 @@ export default function OrdersPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-bold text-gray-900">₨{order.totalAmount.toLocaleString()}</div>
                       {order.shippingCost > 0 && (
-                        <div className="text-xs text-gray-500">+₨{order.shippingCost} shipping</div>
+                        <div className="text-xs text-gray-500">+₨250 shipping</div>
                       )}
                     </td>
 
@@ -581,7 +581,13 @@ export default function OrdersPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Shipping:</span>
-                        <span className="font-medium">₨{selectedOrder.shippingCost.toLocaleString()}</span>
+                        <span className="font-medium">
+                          {selectedOrder.shippingCost === 0 ? <span className="font-bold">FREE</span> : `₨250`}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Payment Method:</span>
+                        <span className="font-medium">{selectedOrder.customer?.paymentMethod || 'COD'}</span>
                       </div>
                       <div className="border-t pt-3">
                         <div className="flex justify-between">
@@ -869,19 +875,15 @@ export default function OrdersPage() {
                       <span>Subtotal:</span>
                       <span style={{ fontWeight: '600' }}>₨{(selectedInvoiceOrder || selectedOrder)?.subtotalAmount.toLocaleString()}</span>
                     </div>
-                    {/* Delivery Charges - Only show 250 if applicable, never 150 */}
-                    {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 250) && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
-                        <span>Delivery Charges:</span>
-                        <span style={{ fontWeight: '600' }}>₨250</span>
-                      </div>
-                    )}
-                    {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0) && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
-                        <span>Delivery Charges:</span>
-                        <span style={{ fontWeight: '600' }}>FREE</span>
-                      </div>
-                    )}
+                    {/* Delivery Charges - Only show correct value */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', padding: '1px 0' }}>
+                      <span>Delivery Charges:</span>
+                      <span style={{ fontWeight: '600' }}>
+                        {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0)
+                          ? 'FREE'
+                          : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
+                      </span>
+                    </div>
                     {/* Payment Method */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px', padding: '1px 0' }}>
                       <span>Payment Method:</span>
