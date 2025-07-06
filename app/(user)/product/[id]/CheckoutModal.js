@@ -2,17 +2,20 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
-const OrderConfirmationModal = dynamic(() => import("./OrderConfirmationModal"), { ssr: false });
+const OrderConfirmationModal = dynamic(
+  () => import("./OrderConfirmationModal"),
+  { ssr: false }
+);
 
 const CheckoutModal = ({ isOpen, onClose, orderData }) => {
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    notes: ''
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    address: "",
+    city: "",
+    zipCode: "",
+    notes: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -25,37 +28,37 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
     return emailRegex.test(email);
   };
 
-
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.customerName.trim()) newErrors.customerName = 'Name is required';
+    if (!formData.customerName.trim())
+      newErrors.customerName = "Name is required";
     if (!formData.customerEmail.trim()) {
-      newErrors.customerEmail = 'Email is required';
+      newErrors.customerEmail = "Email is required";
     } else if (!validateEmail(formData.customerEmail)) {
-      newErrors.customerEmail = 'Please enter a valid email address';
+      newErrors.customerEmail = "Please enter a valid email address";
     }
     if (!formData.customerPhone.trim()) {
-      newErrors.customerPhone = 'Phone is required';
+      newErrors.customerPhone = "Phone is required";
     } else if (!/^([0-9\-\+\(\)\s]){10,}$/.test(formData.customerPhone)) {
-      newErrors.customerPhone = 'Please enter a valid phone number';
+      newErrors.customerPhone = "Please enter a valid phone number";
     }
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.city.trim()) newErrors.city = 'City is required';
-    // Zip code is now optional, so no validation here
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    // Zip code is optional, so no validation here
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -74,9 +77,9 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
         address: formData.address,
         city: formData.city,
         zipCode: formData.zipCode,
-        items: orderData.items.map(item => ({
+        items: orderData.items.map((item) => ({
           ...item,
-          productImage: orderData.items[0]?.productImage || ''
+          productImage: orderData.items[0]?.productImage || "",
         })),
         totalItems: orderData.totalItems,
         totalQuantity: orderData.totalQuantity,
@@ -85,10 +88,10 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
         notes: formData.notes,
         paymentMethod,
       };
-      const response = await fetch('/api/orders', {
-        method: 'POST',
+      const response = await fetch("/api/orders", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(orderPayload),
       });
@@ -97,19 +100,19 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
         setConfirmedEmail(formData.customerEmail);
         setShowConfirmation(true);
         setFormData({
-          customerName: '',
-          customerEmail: '',
-          customerPhone: '',
-          address: '',
-          city: '',
-          zipCode: '',
-          notes: ''
+          customerName: "",
+          customerEmail: "",
+          customerPhone: "",
+          address: "",
+          city: "",
+          zipCode: "",
+          notes: "",
         });
       } else {
-        throw new Error(result.error || 'Failed to place order');
+        throw new Error(result.error || "Failed to place order");
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to place order');
+      toast.error(error.message || "Failed to place order");
     } finally {
       setIsSubmitting(false);
     }
@@ -131,14 +134,16 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
   }
 
   return (
-    <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] p-0 sm:p-4">
+    <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-[99999]">
       <div
         className="bg-white shadow-2xl w-full h-full sm:h-auto sm:max-w-2xl sm:rounded-sm max-h-none sm:max-h-[90vh] flex flex-col"
-        style={{ borderRadius: '0.125rem' }}
+        style={{ borderRadius: "0.125rem" }}
       >
         {/* Header with close button */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 sm:px-6 sm:py-6">
-          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Complete Your Order</h2>
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
+            Complete Your Order
+          </h2>
           <button
             onClick={onClose}
             className="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:text-black hover:bg-gray-100 transition disabled:opacity-50 text-2xl sm:text-2xl"
@@ -146,14 +151,116 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
             disabled={isSubmitting}
             style={{ lineHeight: 1 }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
           {/* Responsive two-column fields for mobile, with custom grid for phone/zip */}
-          <form id="checkout-form" onSubmit={handleSubmit} className="space-y-4 pb-32 sm:pb-0">
+          <form
+            id="checkout-form"
+            onSubmit={handleSubmit}
+            className="space-y-4 pb-32 sm:pb-0"
+          >
+            {/* Payment Method Selection */}
+            <div>
+              <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-800 mb-2">
+                Payment Method <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-2 sm:gap-4 w-full">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("COD")}
+                  disabled={isSubmitting}
+                  className={`w-1/2 flex items-center justify-center gap-2 px-1 sm:px-2 md:px-4 py-2 rounded-lg border transition-all font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400
+                    ${
+                      paymentMethod === "COD"
+                        ? "bg-blue-50 border-blue-500 text-black shadow-sm"
+                        : "bg-white border-gray-300 text-black hover:border-blue-300"
+                    }
+                  `}
+                  style={{
+                    minHeight: "40px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <span className="truncate">Cash on Delivery (COD)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("Online")}
+                  disabled={isSubmitting}
+                  className={`w-1/2 flex items-center justify-center gap-2 px-1 sm:px-2 md:px-4 py-2 rounded-lg border transition-all font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400
+                    ${
+                      paymentMethod === "Online"
+                        ? "bg-blue-50 border-blue-500 text-black shadow-sm"
+                        : "bg-white border-gray-300 text-black hover:border-blue-300"
+                    }
+                  `}
+                  style={{
+                    minHeight: "40px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <span className="truncate">Online Payment</span>
+                </button>
+              </div>
+            </div>
+            {paymentMethod === "Online" && (
+              <div className="bg-white border border-blue-200 rounded-lg p-3 xs:p-4 mt-2 text-xs xs:text-sm sm:text-base text-black shadow-sm">
+                <div className="font-semibold text-sm xs:text-base mb-2 text-black">
+                  To make an online payment, please transfer the money to the
+                  following bank account:
+                </div>
+                <div className="mb-2">
+                  <span className="block font-medium">BANK DETAILS:</span>
+                  <span className="block">
+                    BANK NAME:{" "}
+                    <span className="font-semibold">Allied Bank</span>
+                  </span>
+                  <span className="block">
+                    ACCOUNT TITLE:{" "}
+                    <span className="font-semibold">Dawood Ramzan</span>
+                  </span>
+                  <span className="block">
+                    ACCOUNT NUMBER:{" "}
+                    <span className="font-semibold">09340010106137280010</span>
+                  </span>
+                  <span className="block">
+                    IBAN:{" "}
+                    <span className="font-semibold">
+                      PK16ABPA0010106137280010
+                    </span>
+                  </span>
+                </div>
+                <div className="mb-2">
+                  Afterwards, kindly share{" "}
+                  <span className="font-semibold">SCREENSHOT</span> with us on{" "}
+                  <span className="font-semibold">WHATSAPP at 03227154205</span>
+                  .
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold">NOTE:</span> You can also use
+                  third party apps like{" "}
+                  <span className="font-semibold">EASYPAISA</span> or{" "}
+                  <span className="font-semibold">JAZZCASH</span> for online
+                  bank payment.
+                </div>
+                <div className="font-semibold text-green-700">Thank You!</div>
+              </div>
+            )}
             {/* Name and Email in same row */}
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
               <div>
@@ -165,12 +272,18 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
                   name="customerName"
                   value={formData.customerName}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.customerName ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                    errors.customerName ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="Enter your full name"
                   autoComplete="name"
                   disabled={isSubmitting}
                 />
-                {errors.customerName && <div className="text-red-500 text-xs mt-1">{errors.customerName}</div>}
+                {errors.customerName && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.customerName}
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
@@ -181,48 +294,62 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
                   name="customerEmail"
                   value={formData.customerEmail}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.customerEmail ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                    errors.customerEmail ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="Enter your email"
                   autoComplete="off"
                   disabled={isSubmitting}
                 />
-                {errors.customerEmail && <div className="text-red-500 text-xs mt-1">{errors.customerEmail}</div>}
+                {errors.customerEmail && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.customerEmail}
+                  </div>
+                )}
               </div>
             </div>
             {/* Phone and ZIP in same row, phone wider */}
             <div className="grid grid-cols-12 gap-4">
-  <div className="col-span-8">
-    <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
-      Phone Number <span className="text-red-500">*</span>
-    </label>
-    <input
-      type="tel"
-      name="customerPhone"
-      value={formData.customerPhone}
-      onChange={handleInputChange}
-      className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.customerPhone ? 'border-red-500' : 'border-gray-300'}`}
-      placeholder="Enter your phone number"
-      autoComplete="tel"
-      disabled={isSubmitting}
-    />
-    {errors.customerPhone && <div className="text-red-500 text-xs mt-1">{errors.customerPhone}</div>}
-  </div>
-  <div className="col-span-4">
-    <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
-      ZIP Code <span className="text-red-500">*</span>
-    </label>
-    <input
-      type="text"
-      name="zipCode"
-      value={formData.zipCode}
-      onChange={handleInputChange}
-      className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.zipCode ? 'border-red-500' : 'border-gray-300'}`}
-      placeholder="Enter ZIP code"
-      disabled={isSubmitting}
-    />
-    {errors.zipCode && <div className="text-red-500 text-xs mt-1">{errors.zipCode}</div>}
-  </div>
-</div>
+              <div className="col-span-8">
+                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="customerPhone"
+                  value={formData.customerPhone}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                    errors.customerPhone ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter your phone number"
+                  autoComplete="tel"
+                  disabled={isSubmitting}
+                />
+                {errors.customerPhone && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.customerPhone}
+                  </div>
+                )}
+              </div>
+              <div className="col-span-4">
+                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
+                  ZIP Code
+                </label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={formData.zipCode}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                    errors.zipCode ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter ZIP code"
+                  disabled={isSubmitting}
+                />
+                {/* No error for zip code since it's optional */}
+              </div>
+            </div>
             {/* City and Address remain single row each */}
             <div>
               <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
@@ -233,11 +360,15 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
                 name="city"
                 value={formData.city}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                  errors.city ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="Enter your city"
                 disabled={isSubmitting}
               />
-              {errors.city && <div className="text-red-500 text-xs mt-1">{errors.city}</div>}
+              {errors.city && (
+                <div className="text-red-500 text-xs mt-1">{errors.city}</div>
+              )}
             </div>
             <div>
               <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
@@ -248,11 +379,17 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-black text-xs sm:text-sm md:text-base ${
+                  errors.address ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="Enter your address"
                 disabled={isSubmitting}
               />
-              {errors.address && <div className="text-red-500 text-xs mt-1">{errors.address}</div>}
+              {errors.address && (
+                <div className="text-red-500 text-xs mt-1">
+                  {errors.address}
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">
@@ -271,23 +408,25 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
           </form>
         </div>
         {/* Fixed action buttons at the bottom for mobile */}
-        <div className="fixed left-0 right-0 bottom-0 z-50 bg-white border-t border-gray-200 px-4 py-3 flex gap-4 sm:static sm:border-none sm:p-0 sm:relative sm:bg-transparent">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-sm font-medium hover:bg-gray-50 disabled:opacity-50 text-xs sm:text-sm md:text-base"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="checkout-form"
-            disabled={isSubmitting}
-            className="flex-1 py-3 px-4 bg-black text-white rounded-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
-          >
-            {isSubmitting ? 'Placing Order...' : 'Place Order'}
-          </button>
+        <div className="p-5 w-full">
+          <div className="fixed  left-4 right-4 bottom-4 z-50 bg-white border-t border-gray-200 flex gap-4 sm:border-none sm:p-0 sm:relative sm:bg-transparent">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-sm font-medium hover:bg-gray-50 disabled:opacity-50 text-xs sm:text-sm md:text-base"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="checkout-form"
+              disabled={isSubmitting}
+              className="flex-1 py-3 px-4 bg-black text-white rounded-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm md:text-base"
+            >
+              {isSubmitting ? "Placing Order..." : "Place Order"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

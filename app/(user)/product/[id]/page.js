@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
@@ -21,6 +21,9 @@ export default function ProductDetailPage() {
 
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [imageLoaded, setImageLoaded] = useState([]);
+
+  // Ref for size selection section
+  const sizeSectionRef = useRef(null);
 
   // Carousel drag state
   const [dragStartX, setDragStartX] = useState(null);
@@ -90,8 +93,15 @@ export default function ProductDetailPage() {
     : [];
 
   const handleAddToCart = () => {
-    if (!selectedSize || !selectedColor) {
-      toast.error("Please select size and color");
+    if (!selectedSize) {
+      toast.info("Please select a size first.");
+      if (sizeSectionRef.current) {
+        sizeSectionRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+    if (!selectedColor) {
+      toast.info("Please select a color.");
       return;
     }
     // Note: In a real app, you'd use proper state management instead of localStorage
@@ -118,8 +128,15 @@ export default function ProductDetailPage() {
   };
 
   const handlePlaceOrder = () => {
-    if (!selectedSize || !selectedColor) {
-      toast.error("Please select size and color");
+    if (!selectedSize) {
+      toast.info("Please select a size first.");
+      if (sizeSectionRef.current) {
+        sizeSectionRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+    if (!selectedColor) {
+      toast.info("Please select a color.");
       return;
     }
     setShowCheckoutModal(true);
@@ -229,8 +246,8 @@ export default function ProductDetailPage() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
-      <div className="w-full mx-auto md:px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 bg-white rounded-sm shadow-lg overflow-hidden">
+      <div className="w-full mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 bg-white rounded-sm overflow-hidden">
           {/* Left Side - Images */}
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="mb-4 sm:mb-6">
@@ -269,8 +286,8 @@ export default function ProductDetailPage() {
                             ? "w-44 sm:w-56 md:w-64 lg:w-72"
                             : "w-32 sm:w-40 md:w-48 lg:w-56",
                           height: isMain
-                            ? "h-44 sm:h-56 md:h-64 lg:h-72"
-                            : "h-32 sm:h-40 md:h-48 lg:h-56",
+                            ? "h-54 sm:h-56 md:h-64 lg:h-72"
+                            : "h-42 sm:h-40 md:h-48 lg:h-56",
                         };
                         const scale = getScaleForPosition(offset);
                         const opacity = getOpacityForPosition(offset);
@@ -342,18 +359,10 @@ export default function ProductDetailPage() {
                 </div>
               )}
             </div>
-            <div className='hidden md:block'>
+            <div className="hidden md:block">
               {/* Product Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <div>
-                  <span className="font-semibold text-gray-700 text-sm sm:text-base">
-                    Material:
-                  </span>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    {product.material || "N/A"}
-                  </p>
-                </div>
-                <div>
+                <div className="flex gap-3">
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">
                     Gender:
                   </span>
@@ -361,7 +370,7 @@ export default function ProductDetailPage() {
                     {product.gender || "N/A"}
                   </p>
                 </div>
-                <div className="sm:col-span-2">
+                <div className="flex gap-3">
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">
                     Category:
                   </span>
@@ -371,32 +380,13 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              {/* Size Selection */}
-              <div className="mb-4 sm:mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Select Size <span className="text-red-500">*</span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes && product.sizes.length > 0 ? (
-                    product.sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`px-3 sm:px-4 py-2 border-2 rounded-sm font-medium transition-all text-sm sm:text-base ${
-                          selectedSize === size
-                            ? "border-black bg-black text-white"
-                            : "border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
-                        }`}
-                      >
-                        {size.toUpperCase()}
-                      </button>
-                    ))
-                  ) : (
-                    <span className="text-gray-400 italic text-sm sm:text-base">
-                      No sizes available
-                    </span>
-                  )}
-                </div>
+              <div className="flex gap-3">
+                <span className="font-semibold text-gray-700 text-sm sm:text-base">
+                  Material:
+                </span>
+                <p className="text-gray-600 text-sm sm:text-base">
+                  {product.material || "N/A"}
+                </p>
               </div>
             </div>
           </div>
@@ -408,36 +398,52 @@ export default function ProductDetailPage() {
               <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 mb-2 break-words leading-tight">
                 {product.name}
               </h1>
-              
             </div>
 
             {/* Price */}
-           <div className="flex justify-between items-center">
-             <div className="mb-6 sm:mb-8">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">
-                  ₨{finalPrice.toLocaleString()}
-                </span>
-                {product.sale?.percentage > 0 && (
-                  <>
-                    <span className="text-base sm:text-lg lg:text-xl text-gray-500 line-through">
-                      ₨{product.price.toLocaleString()}
-                    </span>
-                    <span className="bg-gray-100 text-black px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                      {product.sale.percentage}% OFF
-                    </span>
-                  </>
-                )}
+            <div className="flex justify-between items-center">
+              <div className="mb-6 sm:mb-8">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                  <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">
+                    ₨ {finalPrice.toLocaleString()}
+                  </span>
+                  {product.sale?.percentage > 0 && (
+                    <>
+                      <span className="text-base sm:text-lg lg:text-xl text-gray-500 line-through">
+                        ₨ {product.price.toLocaleString()}
+                      </span>
+                      <span className="bg-gray-100 text-black px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                        {product.sale.percentage}% OFF
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 break-words">
+              <p className="text-lg sm:text-base lg:text-lg text-gray-600 break-words">
                 {product.brand}
               </p>
-
-           </div>
-            <div className='md:hidden block'>
+            </div>
+            <div className="md:hidden block">
               {/* Product Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex">
+                    <span className="font-semibold text-gray-700 text-sm sm:text-base">
+                      Gender:
+                    </span>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      {product.gender || "N/A"}
+                    </p>
+                  </div>
+                  <div className="flex">
+                    <span className="font-semibold text-gray-700 text-sm sm:text-base">
+                      Category:
+                    </span>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      {product.category}
+                    </p>
+                  </div>
+                </div>
                 <div>
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">
                     Material:
@@ -446,53 +452,9 @@ export default function ProductDetailPage() {
                     {product.material || "N/A"}
                   </p>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                  <span className="font-semibold text-gray-700 text-sm sm:text-base">
-                    Gender:
-                  </span>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    {product.gender || "N/A"}
-                  </p>
-                </div>
-                <div className="sm:col-span-2">
-                  <span className="font-semibold text-gray-700 text-sm sm:text-base">
-                    Category:
-                  </span>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    {product.category}
-                  </p>
-                </div>
-                </div>
               </div>
 
               {/* Size Selection */}
-              <div className="mb-4 sm:mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Select Size <span className="text-red-500">*</span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes && product.sizes.length > 0 ? (
-                    product.sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`px-3 sm:px-4 py-2 border-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
-                          selectedSize === size
-                            ? "border-black bg-black text-white"
-                            : "border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
-                        }`}
-                      >
-                        {size.toUpperCase()}
-                      </button>
-                    ))
-                  ) : (
-                    <span className="text-gray-400 italic text-sm sm:text-base">
-                      No sizes available
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
 
             {/* Color Selection */}
@@ -522,7 +484,32 @@ export default function ProductDetailPage() {
                 )}
               </div>
             </div>
-
+            <div className="mb-4 sm:mb-6" ref={sizeSectionRef}>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Select Size <span className="text-red-500">*</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes && product.sizes.length > 0 ? (
+                  product.sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`px-3 sm:px-4 py-2 border-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
+                        selectedSize === size
+                          ? "border-black bg-black text-white"
+                          : "border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
+                      }`}
+                    >
+                      {size.toUpperCase()}
+                    </button>
+                  ))
+                ) : (
+                  <span className="text-gray-400 italic text-sm sm:text-base">
+                    No sizes available
+                  </span>
+                )}
+              </div>
+            </div>
             {/* Quantity */}
             <div className="mb-6 sm:mb-8">
               <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -563,9 +550,7 @@ export default function ProductDetailPage() {
             <div className="flex gap-2">
               <button
                 onClick={handlePlaceOrder}
-                disabled={
-                  !selectedSize || !selectedColor || product.stock === 0
-                }
+                disabled={product.stock === 0}
                 className="w-full py-3 bg-black text-white rounded-sm font-semibold text-base sm:text-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 Place Order Now
@@ -583,8 +568,12 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Description and Dimensions Section */}
-        <div className="mt-8 sm:mt-12 bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
+        <div className="pb-16">
+           <h1 className="text-center underline underline-offset-4 pt-6 text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 px-4 sm:px-6 lg:px-8 bg-white">
+            Details
+           </h1>
+           {/* Description and Dimensions Section */}
+        <div className="bg-white rounded-sm p-4 sm:p-6 lg:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Left Side - Description */}
             <div>
@@ -657,6 +646,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
