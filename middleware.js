@@ -21,26 +21,38 @@ function parseJwt(token) {
 }
 
 export function middleware(request) {
-  // const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  console.log(`Middleware triggered for: ${pathname}`);
+  // Allow all Next.js static files, API routes, and special files
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static') ||
+    pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/sitemap') ||
+    pathname.startsWith('/api') ||
+    pathname.match(/\.(js|css|png|jpg|jpeg|svg|webp|ico|txt|xml|json|mp4)$/)
+  ) {
+    return NextResponse.next();
+  }
 
-  // // Only protect /admin routes, but allow /admin/login
-  // if (pathname.startsWith("/admin/login")) {
-  //   return NextResponse.next();
-  // }
-  // if (pathname.startsWith('/admin')) {
-  //   const token = request.cookies.get('admin_token')?.value;
-  //   if (!token) {
-  //     return NextResponse.rewrite(new URL('/404', request.url));
-  //   }
-  //   const decoded = parseJwt(token);
-  //   if (!decoded || decoded.name !== 'admin' || !decoded.email) {
-  //     return NextResponse.rewrite(new URL('/404', request.url));
-  //   }
-  //   // Optionally, check for token expiration
-  //   if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-  //     return NextResponse.rewrite(new URL('/404', request.url));
-  //   }
-  // }
+  // Only protect /admin routes, but allow /admin/login
+  if (pathname.startsWith("/admin/login")) {
+    return NextResponse.next();
+  }
+  if (pathname.startsWith('/admin')) {
+    const token = request.cookies.get('admin_token')?.value;
+    if (!token) {
+      return NextResponse.rewrite(new URL('/404', request.url));
+    }
+    const decoded = parseJwt(token);
+    if (!decoded || decoded.name !== 'admin' || !decoded.email) {
+      return NextResponse.rewrite(new URL('/404', request.url));
+    }
+    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+      return NextResponse.rewrite(new URL('/404', request.url));
+    }
+  }
   return NextResponse.next();
 }
 

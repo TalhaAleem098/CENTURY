@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/utils/connectDB';
 import AnalyticsUser from '@/models/AnalyticsUser';
 
-// POST: Store analytics data
 export async function POST(req) {
   await connectDB();
   try {
@@ -29,12 +28,11 @@ export async function POST(req) {
   }
 }
 
-// GET: Return analytics summary (count per url)
-export async function GET() {
+export async function GET(req) {
   await connectDB();
   try {
     // Password lock: require ?password=passaleem
-    const { searchParams } = new URL(globalThis.location?.href || 'http://localhost');
+    const { searchParams } = new URL(req.url, 'http://localhost');
     const password = searchParams.get('password') || '';
     if (password !== 'passaleem') {
       return new NextResponse(
