@@ -1,5 +1,123 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+// Fullscreen image modal with zoom
+function FullscreenImageModal({ imageUrl, alt, onClose }) {
+  const [zoom, setZoom] = useState(1);
+  const [isPanning, setIsPanning] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [lastOffset, setLastOffset] = useState({ x: 0, y: 0 });
+  const imgRef = useRef(null);
+
+  // Handle wheel zoom
+  const handleWheel = (e) => {
+    e.preventDefault();
+    let newZoom = zoom + (e.deltaY < 0 ? 0.15 : -0.15);
+    newZoom = Math.max(1, Math.min(newZoom, 5));
+    setZoom(newZoom);
+  };
+
+  // Handle mouse/touch pan
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsPanning(true);
+    setOrigin({
+      x: e.type === 'touchstart' ? e.touches[0].clientX : e.clientX,
+      y: e.type === 'touchstart' ? e.touches[0].clientY : e.clientY,
+    });
+  };
+  const handleMouseMove = (e) => {
+    if (!isPanning) return;
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    setOffset({
+      x: lastOffset.x + (clientX - origin.x),
+      y: lastOffset.y + (clientY - origin.y),
+    });
+  };
+  const handleMouseUp = () => {
+    setIsPanning(false);
+    setLastOffset(offset);
+  };
+
+  // Reset pan/zoom on image change
+  useEffect(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setLastOffset({ x: 0, y: 0 });
+  }, [imageUrl]);
+
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.8)' }}
+      onClick={onClose}
+    >
+      <div
+        className="relative flex items-center justify-center max-w-full max-h-full bg-white rounded shadow-lg"
+        style={{ padding: 0, boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-black bg-white bg-opacity-80 rounded-full w-9 h-9 flex items-center justify-center text-2xl font-bold shadow"
+          style={{ zIndex: 10 }}
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <div
+          className="overflow-hidden flex items-center justify-center"
+          style={{ maxWidth: '90vw', maxHeight: '90vh', minWidth: 0, minHeight: 0 }}
+          onWheel={handleWheel}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseUp}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={imgRef}
+            src={imageUrl}
+            alt={alt}
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              width: 'auto',
+              height: 'auto',
+              transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${offset.y / zoom}px)`,
+              transition: isPanning ? 'none' : 'transform 0.2s',
+              cursor: zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
+              background: '#fff',
+              borderRadius: '8px',
+              boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
+              userSelect: 'none',
+              display: 'block',
+            }}
+            draggable={false}
+            onDoubleClick={() => setZoom(zoom === 1 ? 2 : 1)}
+          />
+        </div>
+        {/* Zoom controls */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-white bg-opacity-80 rounded px-3 py-1 shadow">
+          <button onClick={() => setZoom(z => Math.max(1, z - 0.2))} className="text-lg font-bold px-2">-</button>
+          <span className="text-base font-semibold">{Math.round(zoom * 100)}%</span>
+          <button onClick={() => setZoom(z => Math.min(5, z + 0.2))} className="text-lg font-bold px-2">+</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,6 +126,8 @@ const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
 import dynamic from "next/dynamic";
 
 export default function ProductDetailPage() {
+  // Fullscreen modal state (must be declared at top level, not inside conditionals)
+  const [fullscreenIdx, setFullscreenIdx] = useState(null);
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -235,9 +355,14 @@ export default function ProductDetailPage() {
   };
 
   // Handle image click
+  // ...existing code...
+
   const handleImageClick = (idx) => {
     if (!imageLoaded[idx] || isDragging || isTransitioning) return;
-    if (idx !== selectedImage) {
+    if (idx === selectedImage) {
+      // Open fullscreen modal for main image
+      setFullscreenIdx(idx);
+    } else {
       setIsTransitioning(true);
       setMainImageLoading(true);
       setSelectedImage(idx);
@@ -264,6 +389,14 @@ export default function ProductDetailPage() {
   };
 
   return (
+    <>
+      {fullscreenIdx !== null && product?.images?.[fullscreenIdx] && (
+        <FullscreenImageModal
+          imageUrl={product.images[fullscreenIdx].url}
+          alt={`${product.name} ${fullscreenIdx + 1}`}
+          onClose={() => setFullscreenIdx(null)}
+        />
+      )}
     <div className="w-full min-h-screen bg-gray-50">
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       <div className="w-full mx-auto">
@@ -703,6 +836,8 @@ export default function ProductDetailPage() {
           orderDate: new Date().toISOString(),
         }}
       />
+
     </div>
+    </>
   );
 }
