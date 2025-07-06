@@ -41,10 +41,10 @@ const sampleOrder = {
 
 async function testPDFGeneration() {
   try {
-    console.log('Testing PDF generation...');
+    // console.log('Testing PDF generation...');
     const pdfBytes = await generateInvoicePDF(sampleOrder);
-    console.log('PDF generated successfully!');
-    console.log('PDF size:', pdfBytes.length, 'bytes');
+    // console.log('PDF generated successfully!');
+    // console.log('PDF size:', pdfBytes.length, 'bytes');
     return true;
   } catch (error) {
     console.error('PDF generation failed:', error);

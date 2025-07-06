@@ -46,11 +46,11 @@ export default function OrdersPage() {
       const data = await response.json();
 
       // Console log the full orders array and the first order as JSON
-      console.log('[Admin Orders] Orders result:', data.orders);
+      // console.log('[Admin Orders] Orders result:', data.orders);
       if (data.orders && data.orders.length > 0) {
-        console.log('[Admin Orders] First order:', JSON.stringify(data.orders[0], null, 2));
+        // console.log('[Admin Orders] First order:', JSON.stringify(data.orders[0], null, 2));
       } else {
-        console.log('[Admin Orders] No orders found.');
+        // console.log('[Admin Orders] No orders found.');
       }
 
       if (data.success) {

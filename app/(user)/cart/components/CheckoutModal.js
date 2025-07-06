@@ -77,7 +77,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
       });
 
       const result = await response.json();
-      console.log('Order submission result:', result);
+      // console.log('Order submission result:', result);
 
       if (response.ok) {
         setOrderResult(result);

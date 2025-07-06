@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
   useEffect(() => {
     const adminId = process.env.NEXT_PUBLIC_ADMIN_ID || process.env.ADMIN_ID;
     if (!id || id !== adminId) {
-      console.log("Admin ID : ", adminId , " : ", id);
+      // console.log("Admin ID : ", adminId , " : ", id);
       setValid(false);
     } else {
       setValid(true);
