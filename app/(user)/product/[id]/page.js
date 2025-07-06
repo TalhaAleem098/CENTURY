@@ -447,6 +447,7 @@ export default function ProductDetailPage() {
                   </p>
                 </div>
                 <div>
+                  <div className="flex items-center justify-between">
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">
                     Gender:
                   </span>
@@ -461,6 +462,7 @@ export default function ProductDetailPage() {
                   <p className="text-gray-600 text-sm sm:text-base">
                     {product.category}
                   </p>
+                </div>
                 </div>
               </div>
 
