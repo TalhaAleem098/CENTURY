@@ -776,39 +776,40 @@ export default function OrdersPage() {
           {(selectedInvoiceOrder || selectedOrder) && (
             <div id="invoice-content">
               <div style={{ 
-                width: '680px', 
-                maxWidth: '680px',
-                padding: '15px', 
-                fontFamily: 'Arial, sans-serif', 
-                background: '#fff', 
-                color: '#111', 
-                boxSizing: 'border-box',
-                margin: '0 auto',
-                fontSize: '12px',
-                lineHeight: '1.3',
-                textAlign: 'center'
-              }}>
+          width: '680px', 
+          maxWidth: '680px',
+          padding: '15px', 
+          fontFamily: 'Arial, sans-serif', 
+          background: '#fff', 
+          color: '#111', 
+          boxSizing: 'border-box',
+          margin: '0 auto',
+          fontSize: '12px',
+          lineHeight: '1.3',
+          textAlign: 'center',
+          borderRadius: '0', // No rounded corners
+        }}>
                 {/* Header */}
                 <div style={{ textAlign: 'center', marginBottom: '10px', borderBottom: '2px solid #111', paddingBottom: '6px' }}>
-                  <h1 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 3px 0', letterSpacing: '1px' }}>CENTURY.PK</h1>
-                  <div style={{ fontSize: '8px', color: '#666', margin: '0' }}>Premium Fashion | Exclusive Collections | Worldwide Delivery</div>
+                  <h1 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 3px 0', letterSpacing: '1px' }}>Centurypk.com</h1>
+                  <div style={{ fontSize: '8px', color: '#666', margin: '0' }}>Premium Fashion | Exclusive Collections | Delivery All Over Pakistan</div>
                   <h2 style={{ fontSize: '14px', fontWeight: '600', margin: '4px 0 0 0', color: '#111' }}>INVOICE</h2>
                 </div>
                 {/* Order & Customer Info */}
-                <div style={{ display: 'flex', marginBottom: '10px', fontSize: '8px', gap: '12px', justifyContent: 'center', textAlign: 'center' }}>
-                  <div style={{ flex: '1', minWidth: '0', textAlign: 'center' }}>
-                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111' }}>ORDER DETAILS</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Order ID:</strong> #{(selectedInvoiceOrder || selectedOrder)?._id.slice(-8).toUpperCase()}</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Date:</strong> {new Date((selectedInvoiceOrder || selectedOrder)?.createdAt).toLocaleDateString('en-GB')}</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Status:</strong> {(selectedInvoiceOrder || selectedOrder)?.status.charAt(0).toUpperCase() + (selectedInvoiceOrder || selectedOrder)?.status.slice(1)}</div>
-                    <div><strong>Total Items:</strong> {(selectedInvoiceOrder || selectedOrder)?.totalItems}</div>
+                <div style={{ display: 'flex', marginBottom: '10px', fontSize: '8px', gap: '12px', textAlign: 'center' }}>
+                  <div style={{ flex: '1', minWidth: '0', textAlign: 'left' }}>
+                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111', textAlign: 'left', letterSpacing: '0.5px' }}>ORDER DETAILS</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Order ID:</strong> #{(selectedInvoiceOrder || selectedOrder)?._id.slice(-8).toUpperCase()}</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Date:</strong> {new Date((selectedInvoiceOrder || selectedOrder)?.createdAt).toLocaleDateString('en-GB')}</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Status:</strong> {(selectedInvoiceOrder || selectedOrder)?.status.charAt(0).toUpperCase() + (selectedInvoiceOrder || selectedOrder)?.status.slice(1)}</div>
+                    <div style={{ textAlign: 'left' }}><strong>Total Items:</strong> {(selectedInvoiceOrder || selectedOrder)?.totalItems}</div>
                   </div>
-                  <div style={{ flex: '1', minWidth: '0', textAlign: 'center' }}>
-                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111' }}>CUSTOMER INFO</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Name:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.name}</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Phone:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.phone}</div>
-                    <div style={{ marginBottom: '1px' }}><strong>Email:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.email}</div>
-                    <div style={{ wordWrap: 'break-word', fontSize: '7px' }}><strong>Address:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.address.street}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.city}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.zipCode}</div>
+                  <div style={{ flex: '1', minWidth: '0', textAlign: 'left' }}>
+                    <div style={{ fontWeight: '700', marginBottom: '3px', fontSize: '9px', color: '#111', textAlign: 'left', letterSpacing: '0.5px' }}>CUSTOMER INFO</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Name:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.name}</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Phone:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.phone}</div>
+                    <div style={{ marginBottom: '1px', textAlign: 'left' }}><strong>Email:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.email}</div>
+                    <div style={{ wordWrap: 'break-word', fontSize: '7px', textAlign: 'left' }}><strong>Address:</strong> {(selectedInvoiceOrder || selectedOrder)?.customer.address.street}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.city}, {(selectedInvoiceOrder || selectedOrder)?.customer.address.zipCode}</div>
                   </div>
                 </div>
                 {/* Items Table */}
@@ -819,7 +820,8 @@ export default function OrdersPage() {
                   fontSize: '7px',
                   border: '1px solid #111',
                   tableLayout: 'fixed',
-                  textAlign: 'center'
+                  borderRadius: '0', // No rounded corners
+                  // textAlign: 'center'
                 }}>
                   <colgroup>
                     <col style={{ width: '40%' }} />
@@ -831,12 +833,12 @@ export default function OrdersPage() {
                   </colgroup>
                   <thead>
                     <tr style={{ backgroundColor: '#111', color: '#fff' }}>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Product</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Size</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Color</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Qty</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Unit Price</th>
-                      <th style={{ border: '1px solid #111', padding: '3px 2px', textAlign: 'center', fontWeight: '600' }}>Total</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Product</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Size</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Color</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Qty</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Unit Price</th>
+                      <th style={{ border: '1px solid #111', padding: '3px 2px 5px 2px', textAlign: 'center', fontWeight: '600' }}>Total</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -847,20 +849,21 @@ export default function OrdersPage() {
                         <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? '#fff' : '#f8f8f8' }}>
                           <td style={{ 
                             border: '1px solid #ddd', 
-                            padding: '3px 2px', 
+                            padding: '3px 2px 5px 2px', 
                             fontSize: '6px', 
                             lineHeight: '1.2', 
                             wordWrap: 'break-word',
                             overflow: 'hidden',
-                            textAlign: 'center'
+                            borderRadius: '0',
+                            // textAlign: 'center'
                           }}>
                             {truncatedName}
                           </td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedSize}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.selectedColor}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>{item.quantity}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px' }}>₨{item.finalPrice.toLocaleString()}</td>
-                          <td style={{ border: '1px solid #ddd', padding: '3px 2px', textAlign: 'center', fontSize: '6px', fontWeight: '600' }}>₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px 5px 2px', textAlign: 'center', fontSize: '6px', borderRadius: '0' }}>{item.selectedSize}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px 5px 2px', textAlign: 'center', fontSize: '6px', borderRadius: '0' }}>{item.selectedColor}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px 5px 2px', textAlign: 'center', fontSize: '6px', borderRadius: '0' }}>{item.quantity}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px 5px 2px', textAlign: 'center', fontSize: '6px', borderRadius: '0' }}>₨{item.finalPrice.toLocaleString()}</td>
+                          <td style={{ border: '1px solid #ddd', padding: '3px 2px 5px 2px', textAlign: 'center', fontSize: '6px', fontWeight: '600', borderRadius: '0' }}>₨{(item.finalPrice * item.quantity).toLocaleString()}</td>
                         </tr>
                       );
                     })}
@@ -876,38 +879,38 @@ export default function OrdersPage() {
                   textAlign: 'center'
                 }}>
                   <div style={{
-                    flex: '0 0 100%',
-                    fontSize: '8px',
-                    border: '1px solid #111',
-                    borderRadius: '6px',
-                    margin: '0 auto',
-                    padding: '5px',
-                    textAlign: 'center',
-                    background: '#fafafa',
-                    maxWidth: '400px'
-                  }}>
-                    <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '9px', color: '#111', borderBottom: '1px solid #111', paddingBottom: '2px' }}>ORDER SUMMARY</div>
+                  flex: '0 0 100%',
+                  fontSize: '8px',
+                  border: '1px solid #111',
+                  borderRadius: '0', // No rounded corners
+                  margin: '0 auto',
+                  padding: '5px',
+                  textAlign: 'center',
+                  background: '#fafafa',
+                  maxWidth: '400px'
+                }}>
+                    <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '9px', color: '#111', borderBottom: '1px solid #111', paddingBottom: '8px' }}>ORDER SUMMARY</div>
                     {/* Subtotal */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
                       <span style={{ flex: 1 }}>Subtotal:</span>
                       <span style={{ flex: 1, fontWeight: '600' }}>₨{(selectedInvoiceOrder || selectedOrder)?.subtotalAmount.toLocaleString()}</span>
                     </div>
                     {/* Delivery Charges - Only show correct value */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
                       <span style={{ flex: 1 }}>Delivery Charges:</span>
                       <span style={{ flex: 1, fontWeight: '600' }}>
                         {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0)
                           ? 'FREE'
-                          : `₨250`}
+                          : `₨ 250`}
                       </span>
                     </div>
                     {/* Payment Method */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
                       <span style={{ flex: 1 }}>Payment Method:</span>
                       <span style={{ flex: 1, fontWeight: '600' }}>{(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod || 'COD'}</span>
                     </div>
                     {/* Payment Status */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
                       <span style={{ flex: 1 }}>Payment Status:</span>
                       <span style={{ flex: 1, fontWeight: '700', color: (selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? '#059669' : '#d97706' }}>
                         {(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
@@ -915,21 +918,21 @@ export default function OrdersPage() {
                     </div>
                     {/* Total Amount */}
                     <div style={{ 
-                      borderTop: '2px solid #111', 
-                      marginTop: '4px', 
-                      paddingTop: '4px', 
-                      display: 'flex', 
-                      justifyContent: 'center',
-                      fontSize: '10px', 
-                      fontWeight: '700',
-                      backgroundColor: '#111',
-                      color: '#fff',
-                      padding: '6px 8px',
-                      border: '2px solid #111',
-                      borderRadius: '4px',
-                      marginTop: '8px',
-                      textAlign: 'center'
-                    }}>
+                  borderTop: '2px solid #111', 
+                  marginTop: '4px', 
+                  paddingTop: '4px', 
+                  display: 'flex', 
+                  justifyContent: 'center',
+                  fontSize: '10px', 
+                  fontWeight: '700',
+                  backgroundColor: '#111',
+                  color: '#fff',
+                  padding: '6px 8px',
+                  border: '2px solid #111',
+                  borderRadius: '0', // No rounded corners
+                  marginTop: '8px',
+                  textAlign: 'center'
+                }}>
                       <span style={{ flex: 1 }}>TOTAL AMOUNT:</span>
                       <span style={{ flex: 1 }}>₨{(selectedInvoiceOrder || selectedOrder)?.totalAmount.toLocaleString()}</span>
                     </div>
@@ -943,7 +946,7 @@ export default function OrdersPage() {
                   textAlign: 'center',
                   color: '#666'
                 }}>
-                  <div style={{ fontWeight: '700', marginBottom: '2px', color: '#111' }}>Thank you for choosing CENTURY.PK</div>
+                  <div style={{ fontWeight: '700', marginBottom: '2px', color: '#111' }}>Thank you for choosing Us</div>
                   <div style={{ marginBottom: '1px' }}>support@centurypk.com | +923227154205 | www.centurypk.com</div>
                   <div style={{ fontSize: '6px', fontStyle: 'italic' }}>This is a computer-generated invoice. No signature required.</div>
                 </div>
