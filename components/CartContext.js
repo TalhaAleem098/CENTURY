@@ -35,23 +35,16 @@ export function CartProvider({ children }) {
     });
   }, []);
   const removeFromCart = useCallback((item) => {
-    setCart((prev) => {
-      // Remove by _id, size, and color if present, else fallback to _id and size
-      let removed = false;
-      const filtered = prev.filter((i) => {
-        if (!removed && i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true)) {
-          removed = true;
-          return false;
-        }
-        // Fallback: if color is not present in either, match only _id and size
-        if (!removed && i._id === item._id && i.size === item.size && (!i.color && !item.color)) {
-          removed = true;
-          return false;
-        }
-        return true;
-      });
-      return filtered;
-    });
+    setCart((prev) =>
+      prev.filter(
+        (i) =>
+          !(
+            i._id === item._id &&
+            i.size === item.size &&
+            (item.color ? i.color === item.color : true)
+          )
+      )
+    );
   }, []);
   const updateQuantity = useCallback((item, quantity) => {
     setCart((prev) =>

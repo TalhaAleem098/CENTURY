@@ -1,17 +1,15 @@
-  // Fullscreen image modal state
-  "use client";
-  import React, { useEffect, useState, useRef } from "react";
-  import Image from "next/image";
-  import { useParams } from "next/navigation";
-  import { toast, ToastContainer } from "react-toastify";
-  import { OrbitProgress } from "react-loading-indicators";
-  const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
-  import dynamic from "next/dynamic";
-  
-  export default function ProductDetailPage() {
-    const { id } = useParams();
-    const [product, setProduct] = useState(null);
-    const [fullscreenImageIdx, setFullscreenImageIdx] = useState(null);
+"use client";
+import React, { useEffect, useState, useRef } from "react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import { OrbitProgress } from "react-loading-indicators";
+const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
+import dynamic from "next/dynamic";
+
+export default function ProductDetailPage() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -239,20 +237,13 @@
   // Handle image click
   const handleImageClick = (idx) => {
     if (!imageLoaded[idx] || isDragging || isTransitioning) return;
-    // If main image, open fullscreen modal
-    if (idx === selectedImage) {
-      setFullscreenImageIdx(idx);
-      return;
+    if (idx !== selectedImage) {
+      setIsTransitioning(true);
+      setMainImageLoading(true);
+      setSelectedImage(idx);
+      setTimeout(() => setIsTransitioning(false), 300);
     }
-    // Otherwise, just select the image
-    setIsTransitioning(true);
-    setMainImageLoading(true);
-    setSelectedImage(idx);
-    setTimeout(() => setIsTransitioning(false), 300);
   };
-
-  // Close fullscreen modal
-  const closeFullscreen = () => setFullscreenImageIdx(null);
 
   // Calculate opacity based on distance from center
   const getOpacityForPosition = (offset) => {
@@ -274,33 +265,6 @@
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
-      {/* Fullscreen Image Modal */}
-      {fullscreenImageIdx !== null && product?.images?.[fullscreenImageIdx] && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 transition-all"
-          style={{ animation: 'fadeIn 0.2s' }}
-        >
-          <button
-            className="absolute top-4 right-4 text-white text-3xl font-bold z-60 bg-black bg-opacity-60 rounded-full p-2 hover:bg-opacity-90 focus:outline-none"
-            onClick={closeFullscreen}
-            aria-label="Close fullscreen image"
-          >
-            &times;
-          </button>
-          <div className="bg-white rounded shadow-2xl border-4 border-white flex items-center justify-center max-h-[90vh] max-w-[95vw] p-2">
-            <Image
-              src={product.images[fullscreenImageIdx].url}
-              alt={product.name + ' Fullscreen'}
-              width={1200}
-              height={1200}
-              className="object-contain max-h-[80vh] max-w-[90vw]"
-              onClick={closeFullscreen}
-              priority
-              draggable={false}
-            />
-          </div>
-        </div>
-      )}
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       <div className="w-full mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 bg-white rounded-sm overflow-hidden">
