@@ -95,6 +95,7 @@ export async function POST(request) {
         name: orderData.customerName,
         email: orderData.customerEmail.toLowerCase(),
         phone: orderData.customerPhone,
+        paymentMethod: orderData.paymentMethod || 'COD',
         address: {
           street: orderData.address,
           city: orderData.city,

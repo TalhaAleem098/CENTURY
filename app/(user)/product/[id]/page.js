@@ -39,12 +39,32 @@ export default function ProductDetailPage() {
 
   // When selectedImage changes, set mainImageLoading to true if not loaded, else false
   useEffect(() => {
+    // Defensive: If imageLoaded is not initialized, don't set loading
+    if (!Array.isArray(imageLoaded) || imageLoaded.length === 0) {
+      setMainImageLoading(true);
+      return;
+    }
+    // If the image is already loaded, stop loading
     if (imageLoaded[selectedImage]) {
       setMainImageLoading(false);
     } else {
-      setMainImageLoading(true);
+      // If the image element is in the DOM, but not loaded, check if it is already complete
+      const imgEl = document.querySelector(
+        `img[alt='${product?.name ? product.name.replace(/'/g, "\\'") : ''} ${selectedImage + 1}']`
+      );
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        // If the image is already loaded by the browser, update state
+        setImageLoaded((prev) => {
+          const arr = [...prev];
+          arr[selectedImage] = true;
+          return arr;
+        });
+        setMainImageLoading(false);
+      } else {
+        setMainImageLoading(true);
+      }
     }
-  }, [selectedImage, imageLoaded]);
+  }, [selectedImage, imageLoaded, product]);
 
   const handleImageLoad = (idx) => {
     setImageLoaded((prev) => {
