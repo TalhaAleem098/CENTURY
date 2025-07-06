@@ -948,7 +948,7 @@ export default function OrdersPage() {
                 }}>
                   <div style={{ fontWeight: '700', marginBottom: '2px', color: '#111' }}>Thank you for choosing Us</div>
                   <div style={{ marginBottom: '1px' }}>support@centurypk.com | +923227154205 | www.centurypk.com</div>
-                  <div style={{ fontSize: '6px', fontStyle: 'italic' }}>This is a computer-generated invoice. No signature required.</div>
+                  <div style={{ fontSize: '6px', }}>This is a computer-generated invoice. No signature required.</div>
                 </div>
               </div>
             </div>
