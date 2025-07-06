@@ -65,7 +65,7 @@ function ProductCard({ product, index, onCartSuccess }) {
     };
     addToCart(cartItem);
     onCartSuccess({ ...cartItem, isUpdate: false });
-    toast.success("Product added to cart!");
+    // toast.success("Product added to cart!");
   };
 
   // Handle view details button click

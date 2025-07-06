@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useCart } from "@/components/CartContext";
+// import { useCart } from "@/components/CartContext";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,6 @@ const OrderConfirmationModal = dynamic(() => import("../product/[id]/OrderConfir
 import { FaShoppingCart } from "react-icons/fa";
 
 const CartPage = () => {
-  const { cart, setCart } = useCart();
   const [products, setProducts] = useState([]);
   const [cartEntries, setCartEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,10 +18,55 @@ const CartPage = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [confirmedEmail, setConfirmedEmail] = useState("");
 
-  useEffect(() => {
-    setLoading(false);
-  }, [cart]);
-  useEffect(() => {
+  // Direct localStorage integration for cart
+  const getCart = () => {
+    if (typeof window === 'undefined') return [];
+    try {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    } catch {
+      return [];
+    }
+  };
+  const setCart = (cart) => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
+  const addToCart = (item) => {
+    let cart = getCart();
+    const idx = cart.findIndex(
+      (i) => i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true)
+    );
+    if (idx !== -1) {
+      cart[idx] = { ...cart[idx], quantity: cart[idx].quantity + item.quantity };
+    } else {
+      cart.push({ ...item, quantity: item.quantity });
+    }
+    setCart(cart);
+  };
+  const removeFromCart = (item) => {
+    let cart = getCart();
+    cart = cart.filter(
+      (i) => !(i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true))
+    );
+    setCart(cart);
+  };
+  const updateQuantity = (item, quantity) => {
+    let cart = getCart();
+    cart = cart.map((i) =>
+      i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true)
+        ? { ...i, quantity }
+        : i
+    );
+    setCart(cart);
+  };
+  const clearCart = () => {
+    localStorage.removeItem('cart');
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
+
+  // Always fetch cart from localStorage and fetch products
+  const syncCart = () => {
+    const cart = getCart();
     if (!cart || cart.length === 0) {
       setProducts([]);
       setCartEntries([]);
@@ -61,87 +105,82 @@ const CartPage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [cart]);
+  };
 
-  const handleAddEntry = (_id, currentIndex) => {
+  useEffect(() => {
+    syncCart();
+    window.addEventListener('cartUpdated', syncCart);
+    return () => window.removeEventListener('cartUpdated', syncCart);
+    // eslint-disable-next-line
+  }, []);
+
+  const handleAddEntry = (_id) => {
     const product = products.find(p => p._id === _id);
     const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
     const availableSizes = product?.sizes?.filter(Boolean) || [];
     const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
     const defaultSize = availableSizes.length > 0 ? availableSizes[0] : "";
-    setCartEntries((prev) => {
-      const newEntry = { _id, size: defaultSize, quantity: 1, color: defaultColor };
-      const newEntries = [...prev];
-      newEntries.splice(currentIndex + 1, 0, newEntry);
-      return newEntries;
+    addToCart({
+      _id,
+      size: defaultSize,
+      color: defaultColor,
+      quantity: 1
     });
   };
 
   const handleEntryChange = (idx, field, value) => {
-    setCartEntries((prev) =>
-      prev.map((entry, i) => {
-        if (i === idx) {
-          const product = products.find(p => p._id === entry._id);
-          if (field === 'color') {
-            const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
-            const validColor = availableColors.includes(value) ? value : (availableColors[0] || "");
-            return { ...entry, color: validColor };
-          } else if (field === 'size') {
-            const availableSizes = product?.sizes?.filter(Boolean) || [];
-            const validSize = availableSizes.includes(value) ? value : (availableSizes[0] || "");
-            return { ...entry, size: validSize };
-          }
-          return { ...entry, [field]: value };
-        }
-        return entry;
-      })
-    );
+    const entry = cartEntries[idx];
+    if (!entry) return;
+    const product = products.find(p => p._id === entry._id);
+    if (field === 'color') {
+      const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
+      const validColor = availableColors.includes(value) ? value : (availableColors[0] || "");
+      removeFromCart({ _id: entry._id, size: entry.size, color: entry.color });
+      addToCart({ _id: entry._id, size: entry.size, color: validColor, quantity: entry.quantity });
+    } else if (field === 'size') {
+      const availableSizes = product?.sizes?.filter(Boolean) || [];
+      const validSize = availableSizes.includes(value) ? value : (availableSizes[0] || "");
+      removeFromCart({ _id: entry._id, size: entry.size, color: entry.color });
+      addToCart({ _id: entry._id, size: validSize, color: entry.color, quantity: entry.quantity });
+    } else if (field === 'quantity') {
+      updateQuantity({ _id: entry._id, size: entry.size, color: entry.color }, value);
+    }
   };
 
   const handleRemoveEntry = (idx) => {
-    setCartEntries((prev) => {
-      const newEntries = prev.filter((_, i) => i !== idx);
-      return newEntries;
-    });
-  };
-
-  const updateLocalStorageCart = (entries) => {
-    if (typeof window !== "undefined") {
-      // Group entries by product ID and create cart structure
-      const cartItems = {};
-      
-      entries.forEach(entry => {
-        if (!cartItems[entry.id]) {
-          cartItems[entry.id] = {
-            id: entry.id,
-            sizes: {}
-          };
-        }
-        
-        // Add size and quantity to the product
-        if (entry.size) {
-          cartItems[entry.id].sizes[entry.size] = (cartItems[entry.id].sizes[entry.size] || 0) + entry.quantity;
-        }
-      });
-      
-      // Convert to array format
-      const cartArray = Object.values(cartItems).map(item => ({
-        id: item.id,
-        sizes: item.sizes
-      }));
-      
-      localStorage.setItem("cart", JSON.stringify(cartArray));
+    const entryToRemove = cartEntries[idx];
+    if (!entryToRemove) return;
+    let cart = getCart();
+    console.log('Cart before deletion:', JSON.stringify(cart, null, 2));
+    // Try to match by _id and size only (ignore color if not present in cart)
+    const match = cart.find(
+      (i) => i._id === entryToRemove._id && i.size === entryToRemove.size
+    );
+    if (!match) {
+      console.warn('Item to delete not found in cart (by _id and size):', entryToRemove);
+      return;
     }
+    // Remove the matched item (by _id and size)
+    let removed = false;
+    cart = cart.filter((i) => {
+      if (!removed && i._id === entryToRemove._id && i.size === entryToRemove.size) {
+        removed = true;
+        return false;
+      }
+      return true;
+    });
+    setCart(cart);
+    console.log('Deleted item:', entryToRemove);
+    console.log('Cart after deletion:', JSON.stringify(cart, null, 2));
+    // Update UI
+    setCartEntries(cartEntries.filter((_, i) => i !== idx));
   };
 
   const handleClearCart = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("cart");
-      setCart([]);
-      setCartEntries([]);
-      setProducts([]);
-      toast("Cart cleared successfully!");
-    }
+    clearCart();
+    setCartEntries([]);
+    setProducts([]);
+    toast("Cart cleared successfully!");
   };
 
   const handlePlaceOrder = () => {
@@ -161,12 +200,9 @@ const CartPage = () => {
   // Called when checkout is successful
   const handleCheckoutSuccess = (email) => {
     // Reset cart state and localStorage immediately after order is placed
-    setCart(null); // Set to null for full reset
+    clearCart();
     setCartEntries([]);
     setProducts([]);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("cart");
-    }
     setShowCheckoutModal(false);
     setConfirmedEmail(email);
     setShowConfirmationModal(true);
