@@ -382,7 +382,7 @@ export default function ProductDetailPage() {
                       <button
                         key={size}
                         onClick={() => setSelectedSize(size)}
-                        className={`px-3 sm:px-4 py-2 border-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
+                        className={`px-3 sm:px-4 py-2 border-2 rounded-sm font-medium transition-all text-sm sm:text-base ${
                           selectedSize === size
                             ? "border-black bg-black text-white"
                             : "border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
@@ -408,13 +408,12 @@ export default function ProductDetailPage() {
               <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 mb-2 break-words leading-tight">
                 {product.name}
               </h1>
-              <p className="text-sm sm:text-base lg:text-lg text-gray-600 break-words">
-                {product.brand}
-              </p>
+              
             </div>
 
             {/* Price */}
-            <div className="mb-6 sm:mb-8">
+           <div className="flex justify-between items-center">
+             <div className="mb-6 sm:mb-8">
               <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">
                   ₨{finalPrice.toLocaleString()}
@@ -431,7 +430,11 @@ export default function ProductDetailPage() {
                 )}
               </div>
             </div>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 break-words">
+                {product.brand}
+              </p>
 
+           </div>
             <div className='md:hidden block'>
               {/* Product Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -600,7 +603,7 @@ export default function ProductDetailPage() {
                 Size Dimensions
               </h3>
               <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                <table className="min-w-full bg-white border border-gray-200 rounded-sm">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
