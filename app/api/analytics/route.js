@@ -1,22 +1,28 @@
 // app/api/analytics/route.js
 import { NextResponse } from 'next/server';
 import connectDB from '@/utils/connectDB';
-import Analytics from '@/models/Analytics';
+import AnalyticsUser from '@/models/AnalyticsUser';
 
 // POST: Store analytics data
 export async function POST(req) {
   await connectDB();
   try {
     let data = await req.json();
-    // Accept both {data: {...}} and {...} for backward compatibility
     if (data && typeof data === 'object' && 'data' in data && Object.keys(data).length === 1) {
       data = data.data;
     }
-    // Defensive: ensure url is string and not null
     if (!data.url || typeof data.url !== 'string') {
       data.url = '/';
     }
-    await Analytics.create({ data });
+    let ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || null;
+    if (!ip && req.ip) ip = req.ip;
+    await AnalyticsUser.create({
+      ip,
+      userAgent: data.userAgent,
+      referrer: data.referrer,
+      url: data.url,
+      timestamp: new Date(data.timestamp || Date.now()),
+    });
     return NextResponse.json({ success: true });
   } catch (e) {
     return NextResponse.json({ success: false, error: e.message }, { status: 400 });
@@ -27,18 +33,20 @@ export async function POST(req) {
 export async function GET() {
   await connectDB();
   try {
-    // Aggregate counts by URL
-    const results = await Analytics.aggregate([
-      { $group: {
-        _id: { $ifNull: ['$data.url', '/'] },
-        count: { $sum: 1 },
-        lastVisit: { $max: '$createdAt' },
-      }},
-      { $sort: { count: -1 } },
-    ]);
+    // Password lock: require ?password=passaleem
+    const { searchParams } = new URL(globalThis.location?.href || 'http://localhost');
+    const password = searchParams.get('password') || '';
+    if (password !== 'passaleem') {
+      return new NextResponse(
+        JSON.stringify({ error: 'API endpoint not found', path: '/api/analytics' }),
+        { status: 404, headers: { 'content-type': 'application/json' } }
+      );
+    }
+    // Return all user analytics (optionally filter by url)
+    const users = await AnalyticsUser.find().select('-__v');
     return NextResponse.json({
-      total: results.reduce((sum, r) => sum + r.count, 0),
-      urls: results.map(r => ({ url: r._id || '/', count: r.count, lastVisit: r.lastVisit })),
+      total: users.length,
+      users,
     });
   } catch (e) {
     return NextResponse.json({ success: false, error: e.message }, { status: 400 });
