@@ -7,8 +7,8 @@ export async function POST(req, { params }) {
   try {
     await connectDB();
     const body = await req.json();
-    const { oldPassword, newPassword } = body;
-    const { id, public: publicId } = params;
+    const { email, oldPassword, newPassword } = body;
+    const { id, public: publicId } = await params;
 
     // Check for required params and body fields
     if (!id || !publicId || !oldPassword || !newPassword) {
@@ -23,8 +23,8 @@ export async function POST(req, { params }) {
       return NextResponse.json({ error: 'Invalid admin credentials.' }, { status: 403 });
     }
 
-    // Find the admin by _id
-    const admin = await Admin.findById(id);
+    // Find the admin by email
+    const admin = await Admin.findOne({ email });
     if (!admin) {
       return NextResponse.json({ error: 'Admin not found.' }, { status: 404 });
     }
