@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { OrbitProgress } from "react-loading-indicators";
 import dynamic from "next/dynamic";
 const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
@@ -246,6 +246,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       <div className="w-full mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 bg-white rounded-sm overflow-hidden">
           {/* Left Side - Images */}
