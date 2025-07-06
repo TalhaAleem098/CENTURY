@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const ADMIN_SECRET = process.env.JWT_SECRET || 'your_admin_secret'; // Use a strong secret in production
+const ADMIN_SECRET = process.env.JWT_SECRET || 'your_admin_secret';
 
 function parseJwt(token) {
   try {
@@ -22,21 +22,6 @@ function parseJwt(token) {
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
-  console.log(`Middleware triggered for: ${pathname}`);
-  // Allow all Next.js static files, API routes, and special files
-  if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname.startsWith('/favicon.ico') ||
-    pathname.startsWith('/robots.txt') ||
-    pathname.startsWith('/sitemap') ||
-    pathname.startsWith('/api') ||
-    pathname.match(/\.(js|css|png|jpg|jpeg|svg|webp|ico|txt|xml|json|mp4)$/)
-  ) {
-    return NextResponse.next();
-  }
-
-  // Only protect /admin routes, but allow /admin/login
   if (pathname.startsWith("/admin/login")) {
     return NextResponse.next();
   }

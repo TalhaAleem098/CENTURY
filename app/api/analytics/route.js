@@ -15,6 +15,10 @@ export async function POST(req) {
     }
     let ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || null;
     if (!ip && req.ip) ip = req.ip;
+    // Do not record vercel-screenshot bot
+    if (data.userAgent && data.userAgent.toLowerCase().includes('vercel-screenshot')) {
+      return NextResponse.json({ success: true, ignored: true });
+    }
     await AnalyticsUser.create({
       ip,
       userAgent: data.userAgent,
