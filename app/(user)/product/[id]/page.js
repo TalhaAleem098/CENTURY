@@ -2,6 +2,16 @@
 import React, { useEffect, useState, useRef } from "react";
 // Fullscreen image modal with zoom
 function FullscreenImageModal({ imageUrl, alt, onClose }) {
+  // Spinner state for image loading
+  const [imgLoading, setImgLoading] = useState(true);
+
+  // Reset pan/zoom and loading on image change
+  useEffect(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setLastOffset({ x: 0, y: 0 });
+    setImgLoading(true);
+  }, [imageUrl]);
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
@@ -53,11 +63,36 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
-
+  if (imgLoading) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.85)' }}>
+        <img
+          ref={imgRef}
+          src={imageUrl}
+          alt="Loading Image"
+          style={{
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            width: 'auto',
+            height: 'auto',
+            background: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
+            userSelect: 'none',
+            display: 'block',
+            opacity: 1,
+          }}
+          draggable={false}
+          onLoad={() => setImgLoading(false)}
+          onError={() => setImgLoading(false)}
+        />
+      </div>
+    );
+  }
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.8)' }}
+      style={{ background: 'rgba(0,0,0,0.85)' }}
       onClick={onClose}
     >
       <div
@@ -65,16 +100,8 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
         style={{ padding: 0, boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}
         onClick={e => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-black bg-white bg-opacity-80 rounded-full w-9 h-9 flex items-center justify-center text-2xl font-bold shadow"
-          style={{ zIndex: 10 }}
-          aria-label="Close"
-        >
-          ×
-        </button>
         <div
-          className="overflow-hidden flex items-center justify-center"
+          className="overflow-hidden flex items-center justify-center min-w-[200px] min-h-[200px]"
           style={{ maxWidth: '90vw', maxHeight: '90vh', minWidth: 0, minHeight: 0 }}
           onWheel={handleWheel}
           onMouseDown={handleMouseDown}
@@ -103,16 +130,11 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
               boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
               userSelect: 'none',
               display: 'block',
+              opacity: 1,
             }}
             draggable={false}
             onDoubleClick={() => setZoom(zoom === 1 ? 2 : 1)}
           />
-        </div>
-        {/* Zoom controls */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-white bg-opacity-80 rounded px-3 py-1 shadow">
-          <button onClick={() => setZoom(z => Math.max(1, z - 0.2))} className="text-lg font-bold px-2">-</button>
-          <span className="text-base font-semibold">{Math.round(zoom * 100)}%</span>
-          <button onClick={() => setZoom(z => Math.min(5, z + 0.2))} className="text-lg font-bold px-2">+</button>
         </div>
       </div>
     </div>
