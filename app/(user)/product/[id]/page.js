@@ -550,17 +550,13 @@ export default function ProductDetailPage() {
             <div className="flex gap-2">
               <button
                 onClick={handlePlaceOrder}
-                disabled={product.stock === 0}
-                className="w-full py-3 bg-black text-white rounded-sm font-semibold text-base sm:text-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-3 bg-black text-white rounded-sm font-semibold text-base sm:text-lg hover:bg-gray-800 transition-colors"
               >
                 Place Order Now
               </button>
               <button
                 onClick={handleAddToCart}
-                disabled={
-                  !selectedSize || !selectedColor || product.stock === 0
-                }
-                className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-sm font-semibold hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors text-base sm:text-lg"
+                className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-sm font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
               >
                 Add to Cart
               </button>
