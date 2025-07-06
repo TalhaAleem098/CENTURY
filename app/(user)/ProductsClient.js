@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useCart } from "@/components/CartContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCart, Eye, Check, X, Star, Clock, Package, Truck } from "lucide-react";
 
 function ProductCard({ product, index, onCartSuccess }) {
+  const { addToCart } = useCart();
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -44,62 +46,26 @@ function ProductCard({ product, index, onCartSuccess }) {
   }, [index]);
 
   // Add to cart function
-  const addToCart = (e) => {
-    // Prevent event bubbling to the link
+  const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // Create cart item object
+    if (!selectedSize && product.sizes && product.sizes.length > 0) {
+      toast.info("Please select a size first.");
+      return;
+    }
     const cartItem = {
-      id: product._id,
+      _id: product._id,
       name: product.name,
       price: discountedPrice,
       originalPrice: originalPrice,
       image: currentImage,
       category: product.category,
       quantity: 1,
-      addedAt: new Date().toISOString(),
+      size: selectedSize || undefined,
     };
-
-    // Only add size if one is selected
-    if (selectedSize) {
-      cartItem.size = selectedSize;
-    }
-
-    // Get existing cart from localStorage
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    // Check if item already exists (with same size if size is selected)
-    const existingItemIndex = existingCart.findIndex(
-      (item) =>
-        item.id === product._id &&
-        (selectedSize ? item.size === selectedSize : !item.size)
-    );
-
-    if (existingItemIndex > -1) {
-      existingCart[existingItemIndex].quantity += 1;
-      toast("Quantity updated in cart! 🛒", {});
-      // Show modal for quantity update
-      onCartSuccess({
-        ...cartItem,
-        quantity: existingCart[existingItemIndex].quantity,
-        isUpdate: true,
-      });
-    } else {
-      existingCart.push(cartItem);
-      toast.info("Product added to cart successfully!");
-      // Show modal for new item
-      onCartSuccess({
-        ...cartItem,
-        isUpdate: false,
-      });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(existingCart));
-
-    // Show success message
-    const event = new CustomEvent("cartUpdated", { detail: existingCart });
-    window.dispatchEvent(event);
+    addToCart(cartItem);
+    onCartSuccess({ ...cartItem, isUpdate: false });
+    toast.success("Product added to cart!");
   };
 
   // Handle view details button click
@@ -199,7 +165,7 @@ function ProductCard({ product, index, onCartSuccess }) {
           {/* Action Buttons */}
           <div className="flex gap-2">
             <button
-              onClick={addToCart}
+              onClick={handleAddToCart}
               className="flex-1 bg-gray-900 text-white py-2 px-3 rounded text-xs font-medium hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-1"
             >
               <ShoppingCart size={12} />
@@ -414,7 +380,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full mx-4 overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-sm max-w-md w-full mx-4 overflow-hidden">
         {/* Header */}
         <div className="bg-green-50 px-6 py-4 border-b border-green-100">
           <div className="flex items-center justify-between">
@@ -480,20 +446,10 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
               </div>
             </div>
           </div>
-
-          {/* Cart Summary */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Total items in cart:</span>
-              <span className="font-semibold text-gray-900">{cartCount}</span>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50 transition-colors duration-200 font-medium"
             >
               Continue Shopping
             </button>
@@ -502,7 +458,7 @@ function CartSuccessModal({ isOpen, onClose, cartItem }) {
                 onClose();
                 router.push("/cart");
               }}
-              className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
+              className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-sm hover:bg-gray-800 transition-colors duration-200 font-medium"
             >
               View Cart
             </button>

@@ -108,7 +108,9 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
           zipCode: "",
           notes: "",
         });
-      } else {
+        localStorage.removeItem("cart");
+        toast.success("Order placed successfully!");
+    } else {
         throw new Error(result.error || "Failed to place order");
       }
     } catch (error) {
@@ -120,14 +122,20 @@ const CheckoutModal = ({ isOpen, onClose, orderData }) => {
 
   if (!isOpen) return null;
   if (showConfirmation) {
+    const handleContinueShopping = () => {
+      setShowConfirmation(false);
+      setConfirmedEmail("");
+      onClose();
+      if (typeof window !== "undefined") {
+        setTimeout(() => {
+          window.location.reload();
+        }, 200); // slight delay for modal close animation
+      }
+    };
     return (
       <OrderConfirmationModal
         isOpen={showConfirmation}
-        onClose={() => {
-          setShowConfirmation(false);
-          setConfirmedEmail("");
-          onClose();
-        }}
+        onClose={handleContinueShopping}
         email={confirmedEmail}
       />
     );

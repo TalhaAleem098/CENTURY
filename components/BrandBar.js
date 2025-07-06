@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
+import { useCart } from "@/components/CartContext";
 import {
   FaSearch,
   FaUserCircle,
@@ -22,7 +23,7 @@ const BrandBar = ({ onToggleSidebar }) => {
 
   const [showProfile, setShowProfile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const { cartCount } = useCart();
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -46,30 +47,7 @@ const BrandBar = ({ onToggleSidebar }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Update cart count when cart changes
-  useEffect(() => {
-    const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      setCartCount(totalItems);
-    };
-
-    // Initial load
-    updateCartCount();
-
-    // Listen for cart updates
-    const handleCartUpdate = () => {
-      updateCartCount();
-    };
-
-    window.addEventListener("cartUpdated", handleCartUpdate);
-    window.addEventListener("storage", handleCartUpdate);
-
-    return () => {
-      window.removeEventListener("cartUpdated", handleCartUpdate);
-      window.removeEventListener("storage", handleCartUpdate);
-    };
-  }, []);
+  // Cart count is now provided by CartContext
   // SEARCH FUNCTIONALITY - COMMENTED OUT FOR NOW (FUTURE USE)
   // Handle click outside search to close it (only if no text)
   useEffect(() => {

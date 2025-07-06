@@ -1,36 +1,36 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useCart } from "@/components/CartContext";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CheckoutModal from "./components/CheckoutModal";
+import dynamic from "next/dynamic";
+
+const CheckoutModal = dynamic(() => import("../product/[id]/CheckoutModal"), { ssr: false });
+const OrderConfirmationModal = dynamic(() => import("../product/[id]/OrderConfirmationModal"), { ssr: false });
 import { FaShoppingCart } from "react-icons/fa";
 
 const CartPage = () => {
-  const [cart, setCart] = useState([]);
+  const { cart, setCart } = useCart();
   const [products, setProducts] = useState([]);
   const [cartEntries, setCartEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [confirmedEmail, setConfirmedEmail] = useState("");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const cartData = localStorage.getItem("cart");
-      if (cartData) {
-        setCart(JSON.parse(cartData));
-      }
-      setLoading(false);
-    }
-  }, []);
+    setLoading(false);
+  }, [cart]);
   useEffect(() => {
-    if (cart.length === 0) {
+    if (!cart || cart.length === 0) {
       setProducts([]);
       setCartEntries([]);
       setLoading(false);
       return;
     }
     setLoading(true);
-    const ids = cart.map((item) => item.id).join(",");
+    const ids = cart.map((item) => item._id).join(",");
     fetch(`/api/cart-products?ids=${ids}`)
       .then(async (res) => {
         const data = await res.json();
@@ -39,49 +39,19 @@ const CartPage = () => {
           setProducts([]);
         } else {
           setProducts(data.products || []);
-          const entries = [];
-          JSON.parse(localStorage.getItem("cart") || "[]").forEach((item) => {
-            const product = data.products.find((p) => p._id === item.id);
-            if (product && product.category === "TShirt") {
-              // Set default color and size with better fallbacks
-              const availableColors = product.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
-              const availableSizes = product.sizes?.filter(Boolean) || [];
-              const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
-              const defaultSize = availableSizes.length > 0 ? availableSizes[0] : "";
-              
-              if (item.sizes) {
-                Object.entries(item.sizes).forEach(([size, qty]) => {
-                  // Ensure the size exists in product sizes, otherwise use default
-                  const validSize = availableSizes.includes(size) ? size : defaultSize;
-                  entries.push({
-                    id: item.id,
-                    size: validSize,
-                    quantity: qty,
-                    color: defaultColor,
-                  });
-                });
-              } else {
-                entries.push({
-                  id: item.id,
-                  size: defaultSize,
-                  quantity: 1,
-                  color: defaultColor,
-                });
-              }
-            }
+          // Map cart items to entries for display
+          const entries = cart.map((item) => {
+            const product = data.products.find((p) => p._id === item._id);
+            const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
+            const availableSizes = product?.sizes?.filter(Boolean) || [];
+            return {
+              _id: item._id,
+              size: item.size || (availableSizes[0] || ""),
+              quantity: item.quantity || 1,
+              color: item.color || (availableColors[0] || ""),
+            };
           });
-          // Remove duplicates based on id, size, and color
-          const uniqueEntries = entries.filter(
-            (entry, index, self) =>
-              index ===
-              self.findIndex(
-                (e) =>
-                  e.id === entry.id &&
-                  e.size === entry.size &&
-                  e.color === entry.color
-              )
-          );
-          setCartEntries(uniqueEntries);
+          setCartEntries(entries);
         }
       })
       .catch((err) => {
@@ -93,22 +63,16 @@ const CartPage = () => {
       });
   }, [cart]);
 
-  const handleAddEntry = (id, currentIndex) => {
-    const product = products.find(p => p._id === id);
-    // Better default selection with validation
+  const handleAddEntry = (_id, currentIndex) => {
+    const product = products.find(p => p._id === _id);
     const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
     const availableSizes = product?.sizes?.filter(Boolean) || [];
     const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
     const defaultSize = availableSizes.length > 0 ? availableSizes[0] : "";
-    
     setCartEntries((prev) => {
-      const newEntry = { id, size: defaultSize, quantity: 1, color: defaultColor };
+      const newEntry = { _id, size: defaultSize, quantity: 1, color: defaultColor };
       const newEntries = [...prev];
       newEntries.splice(currentIndex + 1, 0, newEntry);
-      
-      // Update localStorage
-      updateLocalStorageCart(newEntries);
-      
       return newEntries;
     });
   };
@@ -117,8 +81,7 @@ const CartPage = () => {
     setCartEntries((prev) =>
       prev.map((entry, i) => {
         if (i === idx) {
-          // Validate the value against available options
-          const product = products.find(p => p._id === entry.id);
+          const product = products.find(p => p._id === entry._id);
           if (field === 'color') {
             const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
             const validColor = availableColors.includes(value) ? value : (availableColors[0] || "");
@@ -138,10 +101,6 @@ const CartPage = () => {
   const handleRemoveEntry = (idx) => {
     setCartEntries((prev) => {
       const newEntries = prev.filter((_, i) => i !== idx);
-      
-      // Update localStorage
-      updateLocalStorageCart(newEntries);
-      
       return newEntries;
     });
   };
@@ -188,53 +147,58 @@ const CartPage = () => {
   const handlePlaceOrder = () => {
     // Validate that all items have size and color selected
     const invalidItems = cartEntries.filter(entry => !entry.size || !entry.color);
-    
     if (invalidItems.length > 0) {
       const invalidProductNames = invalidItems.map(entry => {
-        const product = products.find(p => p._id === entry.id);
+        const product = products.find(p => p._id === entry._id);
         return product?.name || 'Unknown Product';
       });
-      
       toast(`Please select size and color for: ${invalidProductNames.join(', ')}`);
       return;
     }
-
-    // Open checkout modal
     setShowCheckoutModal(true);
+  };
+
+  // Called when checkout is successful
+  const handleCheckoutSuccess = (email) => {
+    // Reset cart state and localStorage immediately after order is placed
+    setCart(null); // Set to null for full reset
+    setCartEntries([]);
+    setProducts([]);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("cart");
+    }
+    setShowCheckoutModal(false);
+    setConfirmedEmail(email);
+    setShowConfirmationModal(true);
+  };
+
+  // Called when confirmation modal closes
+  const handleConfirmationClose = () => {
+    setShowConfirmationModal(false);
+    // Give a short delay for modal close animation, then reload
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    }
   };
 
   const tshirtProducts = products.filter((p) => p.category === "TShirt");
 
   return (
     <div className="min-h-screen w-full bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Shopping Cart
-              </h1>
-              <p className="text-gray-600 text-base sm:text-lg max-w-2xl">
-                Review your selected T-Shirts below. Add multiple sizes and
-                quantities for each product using the plus button.
-              </p>
-            </div>
-            {cartEntries.length > 0 && (
-              <button
-                onClick={handleClearCart}
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors shadow-lg"
-                title="Clear entire cart"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                <span className="hidden sm:inline">Clear Cart</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </div>{" "}
-      {/* Main Content */}
+      <header className="w-full px-4 pt-8 pb-4 flex flex-col items-center text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-2 leading-tight" style={{letterSpacing: '-0.02em'}}>
+          <span className="inline-block align-middle mr-2">
+            <FaShoppingCart className="inline-block text-black text-2xl sm:text-3xl md:text-4xl align-middle mb-1" />
+          </span>
+          Your Cart
+        </h1>
+        <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-xl mx-auto mb-2 font-medium leading-relaxed">
+          All your selected T-Shirts are listed below. You can add, remove, or adjust sizes and quantities for each product. Checkout is just a tap away!
+        </p>
+       
+      </header>
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="text-center py-16">
@@ -256,19 +220,19 @@ const CartPage = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 mb-8 w-full max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 mb-8 w-full mx-auto">
               {cartEntries.map((entry, idx) => {
-                const product = products.find((p) => p._id === entry.id);
+                const product = products.find((p) => p._id === entry._id);
                 if (!product) return null;
 
                 return (
                   <div
                     key={idx}
-                    className={`bg-white rounded-lg sm:rounded-xl border-2 border-black shadow-lg overflow-hidden relative hover:shadow-xl transition-shadow duration-300 w-full`}
+                    className={`bg-white rounded-sm border-2 border-black shadow-lg overflow-hidden relative hover:shadow-xl transition-shadow duration-300 w-full`}
                   >
                     <button 
                       onClick={() => handleAddEntry(product._id, idx)}
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 bg-black text-white rounded-lg px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs font-bold hover:bg-gray-800 transition-colors shadow-lg"
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 bg-black text-white rounded-sm px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs font-bold hover:bg-gray-800 transition-colors shadow-lg"
                       title={`Add another ${product.name}`}
                     >
                       Duplicate
@@ -277,7 +241,7 @@ const CartPage = () => {
                     <div className="grid grid-cols-3 h-full transform transition-all duration-300 ease-in-out">
                       <div className="col-span-1 bg-gray-100 flex items-center justify-center p-2 sm:p-4 relative">
                         {product.sale && product.sale.percentage && (
-                          <div className="absolute top-1 left-1 sm:top-2 sm:left-2 z-10 bg-red-500 text-white px-1 py-0.5 rounded text-xs font-bold shadow-lg">
+                          <div className="absolute top-1 left-1 sm:top-2 sm:left-2 z-10 bg-red-500 text-white px-1 py-0.5 rounded-sm text-xs font-bold shadow-lg">
                             -{product.sale.percentage}%
                           </div>
                         )}
@@ -286,7 +250,7 @@ const CartPage = () => {
                           alt={product.name}
                           width={520}
                           height={550}
-                          className="w-full h-auto object-cover rounded-lg shadow-md"
+                          className="w-full h-auto object-cover rounded-sm border border-black"
                           style={{ minHeight: "120px", maxHeight: "180px" }}
                         />
                       </div>
@@ -442,12 +406,12 @@ const CartPage = () => {
             </div>
 
             {/* Total Bill Section */}
-            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 max-w-md mx-auto mb-6">
+            <div className="bg-white rounded-sm shadow-lg p-4 sm:p-6 sm:max-w-md w-full mx-auto mb-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
               {/* Calculate subtotal and delivery charges */}
               {(() => {
                 const subtotal = cartEntries.reduce((sum, entry) => {
-                  const product = products.find(p => p._id === entry.id);
+                  const product = products.find(p => p._id === entry._id);
                   const salePrice = product?.sale?.percentage 
                     ? Math.round(product.price * (1 - product.sale.percentage / 100))
                     : product?.price || 0;
@@ -456,7 +420,7 @@ const CartPage = () => {
                 const deliveryCharges = subtotal > 0 && subtotal < 4999 ? 250 : 0;
                 const total = subtotal + deliveryCharges;
                 const youSave = cartEntries.reduce((sum, entry) => {
-                  const product = products.find(p => p._id === entry.id);
+                  const product = products.find(p => p._id === entry._id);
                   if (product?.sale?.percentage) {
                     const originalPrice = product.price * entry.quantity;
                     const salePrice = Math.round(product.price * (1 - product.sale.percentage / 100)) * entry.quantity;
@@ -517,14 +481,14 @@ const CartPage = () => {
         )}
       </div>
 
-      {/* Checkout Modal */}
-      {/* Checkout Modal with delivery charges logic */}
+
+      {/* New Checkout Modal usage */}
       <CheckoutModal
         isOpen={showCheckoutModal}
         onClose={() => setShowCheckoutModal(false)}
         orderData={(() => {
           const subtotal = cartEntries.reduce((sum, entry) => {
-            const product = products.find(p => p._id === entry.id);
+            const product = products.find(p => p._id === entry._id);
             const salePrice = product?.sale?.percentage 
               ? Math.round(product.price * (1 - product.sale.percentage / 100))
               : product?.price || 0;
@@ -534,12 +498,12 @@ const CartPage = () => {
           const total = subtotal + deliveryCharges;
           return {
             items: cartEntries.map(entry => {
-              const product = products.find(p => p._id === entry.id);
+              const product = products.find(p => p._id === entry._id);
               const salePrice = product?.sale?.percentage 
                 ? Math.round(product.price * (1 - product.sale.percentage / 100))
                 : product?.price || 0;
               return {
-                productId: entry.id,
+                productId: entry._id,
                 productName: product?.name || 'Unknown Product',
                 selectedSize: entry.size || 'Not Selected',
                 selectedColor: entry.color || 'Not Selected',
@@ -561,8 +525,14 @@ const CartPage = () => {
             orderDate: new Date().toISOString()
           };
         })()}
-        cartEntries={cartEntries}
-        products={products}
+        onSuccess={handleCheckoutSuccess}
+      />
+
+      {/* Confirmation Modal, shown after successful checkout */}
+      <OrderConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={handleConfirmationClose}
+        email={confirmedEmail}
       />
 
     </div>

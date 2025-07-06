@@ -1,8 +1,10 @@
+
 import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import Ribon from "@/components/Ribon";
 import { ToastContainer } from "react-toastify";
 import { siteConfig } from "./metadata.config";
+import { CartProvider } from "@/components/CartContext";
 
 
 export const metadata = {
@@ -79,20 +81,22 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SessionProviderWrapper>
-         <div className='z-[9999]'>
-           <ToastContainer
-            position="top-right"
-            autoClose={2500}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-         </div>
-          {children}
+          <CartProvider>
+            <div className='z-[9999]'>
+              <ToastContainer
+                position="top-right"
+                autoClose={2500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </div>
+            {children}
+          </CartProvider>
         </SessionProviderWrapper>
       </body>
     </html>
