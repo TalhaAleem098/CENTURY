@@ -63,8 +63,6 @@ const CartPage = () => {
     localStorage.removeItem('cart');
     window.dispatchEvent(new Event('cartUpdated'));
   };
-
-  // Always fetch cart from localStorage and fetch products
   const syncCart = () => {
     const cart = getCart();
     if (!cart || cart.length === 0) {
@@ -83,7 +81,6 @@ const CartPage = () => {
           setProducts([]);
         } else {
           setProducts(data.products || []);
-          // Map cart items to entries for display
           const entries = cart.map((item) => {
             const product = data.products.find((p) => p._id === item._id);
             const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
