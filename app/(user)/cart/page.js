@@ -22,7 +22,13 @@ const CartPage = () => {
   const getCart = () => {
     if (typeof window === 'undefined') return [];
     try {
-      return JSON.parse(localStorage.getItem('cart')) || [];
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      // Normalize: ensure every item has _id (copy from id if needed)
+      return cart.map(item => {
+        if (item._id) return item;
+        if (item.id) return { ...item, _id: item.id };
+        return item;
+      });
     } catch {
       return [];
     }
@@ -34,7 +40,9 @@ const CartPage = () => {
   const addToCart = (item) => {
     let cart = getCart();
     const idx = cart.findIndex(
-      (i) => i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true)
+      (i) => (i._id === item._id || i.id === item._id || i._id === item.id || i.id === item.id)
+        && i.size === item.size
+        && (item.color ? i.color === item.color : true)
     );
     if (idx !== -1) {
       cart[idx] = { ...cart[idx], quantity: cart[idx].quantity + item.quantity };
@@ -46,14 +54,18 @@ const CartPage = () => {
   const removeFromCart = (item) => {
     let cart = getCart();
     cart = cart.filter(
-      (i) => !(i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true))
+      (i) => !((i._id === item._id || i.id === item._id || i._id === item.id || i.id === item.id)
+        && i.size === item.size
+        && (item.color ? i.color === item.color : true))
     );
     setCart(cart);
   };
   const updateQuantity = (item, quantity) => {
     let cart = getCart();
     cart = cart.map((i) =>
-      i._id === item._id && i.size === item.size && (item.color ? i.color === item.color : true)
+      (i._id === item._id || i.id === item._id || i._id === item.id || i.id === item.id)
+        && i.size === item.size
+        && (item.color ? i.color === item.color : true)
         ? { ...i, quantity }
         : i
     );
@@ -74,8 +86,10 @@ const CartPage = () => {
       return;
     }
     setLoading(true);
-    const ids = cart.map((item) => item._id).join(",");
-    fetch(`/api/cart-products?ids=${ids}`)
+    // Collect all unique ids (from _id or id)
+    const idsArr = cart.map((item) => item._id || item.id).filter(Boolean);
+    const ids = Array.from(new Set(idsArr)).join(",");
+    fetch(`/api/cart-products?ids=${encodeURIComponent(ids)}`)
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) {
@@ -85,11 +99,12 @@ const CartPage = () => {
           setProducts(data.products || []);
           // Map cart items to entries for display
           const entries = cart.map((item) => {
-            const product = data.products.find((p) => p._id === item._id);
+            const id = item._id || item.id;
+            const product = data.products.find((p) => p._id === id || p.id === id);
             const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
             const availableSizes = product?.sizes?.filter(Boolean) || [];
             return {
-              _id: item._id,
+              _id: id,
               size: item.size || (availableSizes[0] || ""),
               quantity: item.quantity || 1,
               color: item.color || (availableColors[0] || ""),
@@ -115,7 +130,7 @@ const CartPage = () => {
   }, []);
 
   const handleAddEntry = (_id) => {
-    const product = products.find(p => p._id === _id);
+    const product = products.find(p => p._id === _id || p.id === _id);
     const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
     const availableSizes = product?.sizes?.filter(Boolean) || [];
     const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
@@ -131,7 +146,7 @@ const CartPage = () => {
   const handleEntryChange = (idx, field, value) => {
     const entry = cartEntries[idx];
     if (!entry) return;
-    const product = products.find(p => p._id === entry._id);
+    const product = products.find(p => p._id === entry._id || p.id === entry._id);
     if (field === 'color') {
       const availableColors = product?.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
       const validColor = availableColors.includes(value) ? value : (availableColors[0] || "");
@@ -220,6 +235,7 @@ const CartPage = () => {
   };
 
   const tshirtProducts = products.filter((p) => p.category === "TShirt");
+// ...existing code...
 
   return (
     <div className="min-h-screen w-full bg-gray-50">

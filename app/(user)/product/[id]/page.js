@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
     }
     // Build the cart item structure
     const cartItem = {
-      id: product._id,
+      _id: product._id,
       name: product.name,
       image: product.images && product.images.length > 0 ? product.images[0].url : '',
       size: selectedSize,
@@ -289,7 +289,7 @@ export default function ProductDetailPage() {
     }
     // Check if same product, size, color exists
     const existingIndex = existingCart.findIndex(
-      (item) => item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color
+      (item) => item._id === cartItem._id && item.size === cartItem.size && item.color === cartItem.color
     );
     if (existingIndex !== -1) {
       // If exists, just increase quantity
