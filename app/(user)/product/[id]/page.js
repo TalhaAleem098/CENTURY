@@ -265,40 +265,27 @@ export default function ProductDetailPage() {
       toast.info("Please select a color.");
       return;
     }
-    // Build the cart item structure
-    const cartItem = {
-      _id: product._id,
-      name: product.name,
-      image: product.images && product.images.length > 0 ? product.images[0].url : '',
-      size: selectedSize,
-      color: selectedColor,
-      price: finalPrice,
-      quantity: quantity,
-      originalPrice: product.price,
-      salePercentage: product.sale?.percentage || 0,
-      brand: product.brand,
-      category: product.category,
-      material: product.material,
-    };
-    // Get existing cart
-    let existingCart = [];
-    try {
-      existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    } catch (e) {
-      existingCart = [];
-    }
-    // Check if same product, size, color exists
-    const existingIndex = existingCart.findIndex(
-      (item) => item._id === cartItem._id && item.size === cartItem.size && item.color === cartItem.color
+    // Note: In a real app, you'd use proper state management instead of localStorage
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingProductIndex = existingCart.findIndex(
+      (item) => item.id === product._id
     );
-    if (existingIndex !== -1) {
-      // If exists, just increase quantity
-      existingCart[existingIndex].quantity += cartItem.quantity;
+    if (existingProductIndex !== -1) {
+      if (existingCart[existingProductIndex].sizes[selectedSize]) {
+        existingCart[existingProductIndex].sizes[selectedSize] += quantity;
+      } else {
+        existingCart[existingProductIndex].sizes[selectedSize] = quantity;
+      }
     } else {
-      existingCart.push(cartItem);
+      existingCart.push({
+        id: product._id,
+        sizes: {
+          [selectedSize]: quantity,
+        },
+      });
     }
     localStorage.setItem("cart", JSON.stringify(existingCart));
-    toast.success(`${product.name} (${selectedColor}, ${selectedSize}) added to cart!`);
+    toast.success(`${product.name} added to cart!`);
   };
 
   const handlePlaceOrder = () => {
