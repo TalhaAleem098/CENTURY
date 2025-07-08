@@ -1,33 +1,26 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-// Fullscreen image modal with zoom
+import { useCart } from "@/components/CartContext";
 function FullscreenImageModal({ imageUrl, alt, onClose }) {
-  // Spinner state for image loading
   const [imgLoading, setImgLoading] = useState(true);
-
-  // Reset pan/zoom and loading on image change
-  useEffect(() => {
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setLastOffset({ x: 0, y: 0 });
-    setImgLoading(true);
-  }, [imageUrl]);
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [lastOffset, setLastOffset] = useState({ x: 0, y: 0 });
   const imgRef = useRef(null);
-
-  // Handle wheel zoom
+  useEffect(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setLastOffset({ x: 0, y: 0 });
+    setImgLoading(true);
+  }, [imageUrl]);
   const handleWheel = (e) => {
     e.preventDefault();
     let newZoom = zoom + (e.deltaY < 0 ? 0.15 : -0.15);
     newZoom = Math.max(1, Math.min(newZoom, 5));
     setZoom(newZoom);
   };
-
-  // Handle mouse/touch pan
   const handleMouseDown = (e) => {
     e.preventDefault();
     setIsPanning(true);
@@ -49,46 +42,11 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
     setIsPanning(false);
     setLastOffset(offset);
   };
-
-  // Reset pan/zoom on image change
-  useEffect(() => {
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setLastOffset({ x: 0, y: 0 });
-  }, [imageUrl]);
-
-  // Close on ESC
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
-  if (imgLoading) {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.85)' }}>
-        <img
-          ref={imgRef}
-          src={imageUrl}
-          alt="Loading Image"
-          style={{
-            maxWidth: '90vw',
-            maxHeight: '90vh',
-            width: 'auto',
-            height: 'auto',
-            background: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
-            userSelect: 'none',
-            display: 'block',
-            opacity: 1,
-          }}
-          draggable={false}
-          onLoad={() => setImgLoading(false)}
-          onError={() => setImgLoading(false)}
-        />
-      </div>
-    );
-  }
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
@@ -112,11 +70,17 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
           onTouchMove={handleMouseMove}
           onTouchEnd={handleMouseUp}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {imgLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse z-20">
+              <div className="w-10 h-10 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
+          <Image
             ref={imgRef}
             src={imageUrl}
-            alt={alt}
+            alt={alt || "Product Image"}
+            width={1200}
+            height={1200}
             style={{
               maxWidth: '90vw',
               maxHeight: '90vh',
@@ -130,17 +94,23 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
               boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
               userSelect: 'none',
               display: 'block',
-              opacity: 1,
+              opacity: imgLoading ? 0 : 1,
             }}
             draggable={false}
-            onDoubleClick={() => setZoom(zoom === 1 ? 2 : 1)}
+            onLoad={() => setImgLoading(false)}
+            onError={() => setImgLoading(false)}
+            priority
+            loading="eager"
+            sizes="(max-width: 1200px) 90vw, 1200px"
           />
         </div>
       </div>
     </div>
   );
+// End of FullscreenImageModal
 }
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { OrbitProgress } from "react-loading-indicators";
@@ -148,7 +118,7 @@ const CheckoutModal = dynamic(() => import("./CheckoutModal"), { ssr: false });
 import dynamic from "next/dynamic";
 
 export default function ProductDetailPage() {
-  // Fullscreen modal state (must be declared at top level, not inside conditionals)
+  const { addToCart } = useCart();
   const [fullscreenIdx, setFullscreenIdx] = useState(null);
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -160,42 +130,30 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [descriptionState, setDescriptionState] = useState("short");
   const [quantity, setQuantity] = useState(1);
-
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [imageLoaded, setImageLoaded] = useState([]);
-
-  // Ref for size selection section
   const sizeSectionRef = useRef(null);
-
-  // Carousel drag state
   const [dragStartX, setDragStartX] = useState(null);
   const [dragDelta, setDragDelta] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
   useEffect(() => {
     if (product?.images) {
       setImageLoaded(Array(product.images.length).fill(false));
     }
   }, [product]);
-
-  // When selectedImage changes, set mainImageLoading to true if not loaded, else false
   useEffect(() => {
-    // Defensive: If imageLoaded is not initialized, don't set loading
     if (!Array.isArray(imageLoaded) || imageLoaded.length === 0) {
       setMainImageLoading(true);
       return;
     }
-    // If the image is already loaded, stop loading
     if (imageLoaded[selectedImage]) {
       setMainImageLoading(false);
     } else {
-      // If the image element is in the DOM, but not loaded, check if it is already complete
       const imgEl = document.querySelector(
         `img[alt='${product?.name ? product.name.replace(/'/g, "\\'") : ''} ${selectedImage + 1}']`
       );
       if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
-        // If the image is already loaded by the browser, update state
         setImageLoaded((prev) => {
           const arr = [...prev];
           arr[selectedImage] = true;
@@ -244,8 +202,6 @@ export default function ProductDetailPage() {
       ? product.price * (1 - product.sale.percentage / 100)
       : product?.price || 0;
   const totalPrice = finalPrice * quantity;
-
-  // Available colors (handling multiple colors separated by commas)
   const availableColors = product?.color
     ? product.color
         .split(",")
@@ -265,26 +221,21 @@ export default function ProductDetailPage() {
       toast.info("Please select a color.");
       return;
     }
-    // Note: In a real app, you'd use proper state management instead of localStorage
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existingProductIndex = existingCart.findIndex(
-      (item) => item.id === product._id
-    );
-    if (existingProductIndex !== -1) {
-      if (existingCart[existingProductIndex].sizes[selectedSize]) {
-        existingCart[existingProductIndex].sizes[selectedSize] += quantity;
-      } else {
-        existingCart[existingProductIndex].sizes[selectedSize] = quantity;
-      }
-    } else {
-      existingCart.push({
-        id: product._id,
-        sizes: {
-          [selectedSize]: quantity,
-        },
-      });
-    }
-    localStorage.setItem("cart", JSON.stringify(existingCart));
+    
+    // Use consistent cart structure with CartContext
+    const cartItem = {
+      _id: product._id,
+      name: product.name,
+      price: finalPrice,
+      image: product.images?.[0]?.url || "",
+      category: product.category,
+      brand: product.brand,
+      size: selectedSize,
+      color: selectedColor,
+      quantity: quantity
+    };
+    
+    addToCart(cartItem);
     toast.success(`${product.name} added to cart!`);
   };
 
@@ -303,7 +254,6 @@ export default function ProductDetailPage() {
     setShowCheckoutModal(true);
   };
 
-  // Render product description with real line breaks
   const getDescriptionDisplay = () => {
     if (!product?.description)
       return "No description available for this product.";
@@ -327,7 +277,6 @@ export default function ProductDetailPage() {
     return <div className="text-red-500 text-center mt-10 px-4">{error}</div>;
   if (!product) return null;
 
-  // Handle carousel navigation
   const goToNext = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -346,7 +295,6 @@ export default function ProductDetailPage() {
     setTimeout(() => setIsTransitioning(false), 300);
   };
 
-  // Handle drag start
   const handleDragStart = (e) => {
     if (isTransitioning) return;
     setIsDragging(true);
@@ -354,14 +302,12 @@ export default function ProductDetailPage() {
     setDragDelta(0);
   };
 
-  // Handle drag move
   const handleDragMove = (e) => {
     if (!isDragging || isTransitioning) return;
     const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
     setDragDelta(clientX - dragStartX);
   };
 
-  // Handle drag end
   const handleDragEnd = () => {
     if (!isDragging || isTransitioning) return;
     setIsDragging(false);
@@ -376,13 +322,9 @@ export default function ProductDetailPage() {
     setDragDelta(0);
   };
 
-  // Handle image click
-  // ...existing code...
-
   const handleImageClick = (idx) => {
     if (!imageLoaded[idx] || isDragging || isTransitioning) return;
     if (idx === selectedImage) {
-      // Open fullscreen modal for main image
       setFullscreenIdx(idx);
     } else {
       setIsTransitioning(true);
@@ -392,13 +334,12 @@ export default function ProductDetailPage() {
     }
   };
 
-  // Calculate opacity based on distance from center
   const getOpacityForPosition = (offset) => {
     const absOffset = Math.abs(offset);
-    if (absOffset === 0) return 1; // Main image
-    if (absOffset === 1) return 0.8; // Adjacent images
-    if (absOffset === 2) return 0.5; // Far images
-    return 0.3; // Very far images
+    if (absOffset === 0) return 1;
+    if (absOffset === 1) return 0.8;
+    if (absOffset === 2) return 0.5;
+    return 0.3;
   };
 
   // Calculate scale based on distance from center

@@ -171,12 +171,12 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
     );
   }
 
-  const totalAmount = cartEntries.reduce((sum, entry) => {
-    const product = products.find(p => p._id === entry.id);
+  const totalAmount = cartEntries.reduce((sum, cartItem) => {
+    const product = products.find(p => p._id === cartItem._id);
     const salePrice = product?.sale?.percentage 
       ? Math.round(product.price * (1 - product.sale.percentage / 100))
       : product?.price || 0;
-    return sum + (salePrice * entry.quantity);
+    return sum + (salePrice * cartItem.quantity);
   }, 0);
 
   return (
@@ -299,8 +299,8 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
               
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="space-y-4 max-h-80 overflow-y-auto">
-                  {cartEntries.map((entry, idx) => {
-                    const product = products.find(p => p._id === entry.id);
+                  {cartEntries.map((cartItem, idx) => {
+                    const product = products.find(p => p._id === cartItem._id);
                     if (!product) return null;
 
                     const salePrice = product?.sale?.percentage 
@@ -308,10 +308,10 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
                       : product?.price || 0;
 
                     return (
-                      <div key={idx} className="flex items-center gap-3 bg-white rounded-lg p-3">
+                      <div key={`${cartItem._id}-${cartItem.size}-${cartItem.color}`} className="flex items-center gap-3 bg-white rounded-lg p-3">
                         <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                           <Image
-                            src={product.images?.[0]?.url || product.image}
+                            src={product.images?.[0]?.url || cartItem.image}
                             alt={product.name}
                             fill
                             className="object-cover"
@@ -321,16 +321,16 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-medium text-gray-900 truncate">{product.name}</h4>
                           <p className="text-sm text-gray-600">
-                            {entry.color} • {entry.size.toUpperCase()} • Qty: {entry.quantity}
+                            {cartItem.color} • {cartItem.size?.toUpperCase()} • Qty: {cartItem.quantity}
                           </p>
                           <p className="text-sm font-medium text-gray-900">
-                            Rs. {salePrice.toLocaleString()} × {entry.quantity}
+                            Rs. {salePrice.toLocaleString()} × {cartItem.quantity}
                           </p>
                         </div>
                         
                         <div className="text-right">
                           <p className="font-bold text-gray-900">
-                            Rs. {(salePrice * entry.quantity).toLocaleString()}
+                            Rs. {(salePrice * cartItem.quantity).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -344,7 +344,7 @@ const CheckoutModal = ({ isOpen, onClose, orderData, cartEntries, products }) =>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Items ({cartEntries.length})</span>
-                    <span>{cartEntries.reduce((sum, entry) => sum + entry.quantity, 0)} pieces</span>
+                    <span>{cartEntries.reduce((sum, cartItem) => sum + cartItem.quantity, 0)} pieces</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal</span>

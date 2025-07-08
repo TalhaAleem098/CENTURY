@@ -144,7 +144,7 @@ export default function PrivacyPage() {
         content: [
           'If you have any questions about this Privacy Policy or our privacy practices, please contact us:',
           'Email: centuryapparelpk@gmail.com',
-          'Phone: +92 322 7154205'
+          'Phone: +923227154205'
         ]
       }
     ]

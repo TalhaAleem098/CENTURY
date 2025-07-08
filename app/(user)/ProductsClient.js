@@ -53,6 +53,11 @@ function ProductCard({ product, index, onCartSuccess }) {
       toast.info("Please select a size first.");
       return;
     }
+    
+    // Get default color if not selected
+    const availableColors = product.color?.split(",").map(c => c.trim()).filter(Boolean) || [];
+    const defaultColor = availableColors.length > 0 ? availableColors[0] : "";
+    
     const cartItem = {
       _id: product._id,
       name: product.name,
@@ -60,8 +65,10 @@ function ProductCard({ product, index, onCartSuccess }) {
       originalPrice: originalPrice,
       image: currentImage,
       category: product.category,
+      brand: product.brand,
       quantity: 1,
       size: selectedSize || undefined,
+      color: defaultColor
     };
     addToCart(cartItem);
     onCartSuccess({ ...cartItem, isUpdate: false });

@@ -243,7 +243,7 @@ export default function AboutClient() {
                 </svg>
               </div>
               <h3 className="font-bold mb-2">Call Us</h3>
-              <p className="text-gray-700">+92 322 7154205</p>
+              <p className="text-gray-700">+923227154205</p>
             </div>
             <div className="text-center p-6 border border-gray-200 rounded-2xl" data-aos="fade-up" data-aos-delay="200">
               <div className="w-12 h-12 bg-black rounded-full mx-auto mb-4 flex items-center justify-center">
