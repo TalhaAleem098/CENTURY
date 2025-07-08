@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useCart } from "@/components/CartContext";
-function FullscreenImageModal({ imageUrl, alt, onClose }) {
+function FullscreenImageModal({ imageUrl, alt, onClose, images, currentIdx, setCurrentIdx }) {
   const [imgLoading, setImgLoading] = useState(true);
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
@@ -9,18 +9,39 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [lastOffset, setLastOffset] = useState({ x: 0, y: 0 });
   const imgRef = useRef(null);
+
   useEffect(() => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
     setLastOffset({ x: 0, y: 0 });
     setImgLoading(true);
   }, [imageUrl]);
+
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const handleWheel = (e) => {
     e.preventDefault();
     let newZoom = zoom + (e.deltaY < 0 ? 0.15 : -0.15);
     newZoom = Math.max(1, Math.min(newZoom, 5));
     setZoom(newZoom);
   };
+
+  const handleZoomIn = () => setZoom((z) => Math.min(z + 0.3, 5));
+  const handleZoomOut = () => setZoom((z) => Math.max(z - 0.3, 1));
+  const handleResetZoom = () => setZoom(1);
+
+  const handleDoubleClick = (e) => {
+    e.preventDefault();
+    setZoom((z) => (z === 1 ? 2 : 1));
+  };
+
   const handleMouseDown = (e) => {
     e.preventDefault();
     setIsPanning(true);
@@ -42,11 +63,30 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
     setIsPanning(false);
     setLastOffset(offset);
   };
+
+  // Keyboard navigation and close
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (images && images.length > 1) {
+        if (e.key === 'ArrowRight') setCurrentIdx((idx) => (idx + 1) % images.length);
+        if (e.key === 'ArrowLeft') setCurrentIdx((idx) => (idx - 1 + images.length) % images.length);
+      }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, images, setCurrentIdx]);
+
+  // Next/Prev image
+  const handleNext = (e) => {
+    e.stopPropagation();
+    if (images && images.length > 1) setCurrentIdx((idx) => (idx + 1) % images.length);
+  };
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    if (images && images.length > 1) setCurrentIdx((idx) => (idx - 1 + images.length) % images.length);
+  };
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
@@ -58,6 +98,51 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
         style={{ padding: 0, boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}
         onClick={e => e.stopPropagation()}
       >
+        {/* Navigation Buttons */}
+        {images && images.length > 1 && (
+          <>
+            <button
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center z-30 hover:bg-black/80"
+              onClick={handlePrev}
+              tabIndex={0}
+              aria-label="Previous image"
+            >
+              &#8592;
+            </button>
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center z-30 hover:bg-black/80"
+              onClick={handleNext}
+              tabIndex={0}
+              aria-label="Next image"
+            >
+              &#8594;
+            </button>
+          </>
+        )}
+        {/* Zoom Controls */}
+        <div className="absolute top-2 right-2 flex gap-2 z-30">
+          <button
+            className="bg-black/70 text-white rounded px-2 py-1 text-lg hover:bg-black"
+            onClick={(e) => { e.stopPropagation(); handleZoomIn(); }}
+            aria-label="Zoom in"
+          >
+            +
+          </button>
+          <button
+            className="bg-black/70 text-white rounded px-2 py-1 text-lg hover:bg-black"
+            onClick={(e) => { e.stopPropagation(); handleZoomOut(); }}
+            aria-label="Zoom out"
+          >
+            -
+          </button>
+          <button
+            className="bg-black/70 text-white rounded px-2 py-1 text-lg hover:bg-black"
+            onClick={(e) => { e.stopPropagation(); handleResetZoom(); }}
+            aria-label="Reset zoom"
+          >
+            1x
+          </button>
+        </div>
         <div
           className="overflow-hidden flex items-center justify-center min-w-[200px] min-h-[200px]"
           style={{ maxWidth: '90vw', maxHeight: '90vh', minWidth: 0, minHeight: 0 }}
@@ -69,6 +154,7 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
           onTouchStart={handleMouseDown}
           onTouchMove={handleMouseMove}
           onTouchEnd={handleMouseUp}
+          onDoubleClick={handleDoubleClick}
         >
           {imgLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse z-20">
@@ -107,7 +193,6 @@ function FullscreenImageModal({ imageUrl, alt, onClose }) {
       </div>
     </div>
   );
-// End of FullscreenImageModal
 }
 import Image from "next/image";
 import Link from "next/link";
@@ -358,6 +443,9 @@ export default function ProductDetailPage() {
           imageUrl={product.images[fullscreenIdx].url}
           alt={`${product.name} ${fullscreenIdx + 1}`}
           onClose={() => setFullscreenIdx(null)}
+          images={product.images}
+          currentIdx={fullscreenIdx}
+          setCurrentIdx={setFullscreenIdx}
         />
       )}
     <div className="w-full min-h-screen bg-gray-50">
@@ -440,7 +528,6 @@ export default function ProductDetailPage() {
                                 <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
                               </div>
                             )}
-
                             <Image
                               src={image.url}
                               alt={`${product.name} ${idx + 1}`}
@@ -452,6 +539,7 @@ export default function ProductDetailPage() {
                                   : "opacity-100"
                               }`}
                               draggable={false}
+                              onDragStart={e => e.preventDefault()}
                               onLoad={() => handleImageLoad(idx)}
                               onError={() => handleImageLoad(idx)}
                               priority={absOffset <= 1}

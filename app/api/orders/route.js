@@ -89,7 +89,7 @@ export async function POST(request) {
     );
 
     const subtotalAmount = orderData.totalAmount;
-    const shippingCost = subtotalAmount >= 4999 ? 0 : 150;
+    const shippingCost = subtotalAmount >= 4999 ? 0 : 250;
     const finalTotalAmount = subtotalAmount + shippingCost;    const newOrder = new Order({
       customer: {
         name: orderData.customerName,
