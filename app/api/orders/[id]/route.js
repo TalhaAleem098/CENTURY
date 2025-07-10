@@ -86,34 +86,18 @@ export async function PATCH(request, { params }) {
   }
 }
 
+// Only delete the order, do not touch monthly sales
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
-
+    const { id } = await params;
     const order = await Order.findByIdAndDelete(id);
-
     if (!order) {
-      return NextResponse.json(
-        { success: false, error: 'Order not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Order deleted successfully'
-    });
-
+    return NextResponse.json({ success: true, message: 'Order deleted successfully' });
   } catch (error) {
     console.error('Error deleting order:', error);
-    return NextResponse.json(
-      { 
-        success: false,
-        error: 'Failed to delete order',
-        details: error.message 
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Failed to delete order', details: error.message }, { status: 500 });
   }
 }

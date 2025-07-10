@@ -100,6 +100,57 @@ MonthlySalesSchema.statics.addOrder = async function(orderAmount = 0, orderDate 
   }
 };
 
+// Static method to deduct an order from monthly sales
+MonthlySalesSchema.statics.deductOrder = async function(orderAmount = 0, orderDate = null) {
+  try {
+    // Use provided date or current date
+    const date = orderDate ? new Date(orderDate) : new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth() returns 0-11, we need 1-12
+    
+    // Month names array
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    const monthName = monthNames[month - 1];
+    
+    // Find existing record
+    let record = await this.findOne({ year: year, month: month });
+    
+    if (!record) {
+      // No record found to deduct from
+      return {
+        success: false,
+        error: `No monthly sales record found for ${monthName} ${year}`
+      };
+    }
+    
+    // Deduct from existing record
+    record.totalOrders = Math.max(0, record.totalOrders - 1);
+    record.totalSales = Math.max(0, record.totalSales - orderAmount);
+    
+    // Save the record
+    await record.save();
+    
+    return {
+      success: true,
+      month: monthName,
+      year: year,
+      totalOrders: record.totalOrders,
+      totalSales: record.totalSales
+    };
+    
+  } catch (error) {
+    console.error('Error deducting order from monthly sales:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
 // Static method to get monthly data for a specific year
 MonthlySalesSchema.statics.getYearData = async function(year) {
   try {

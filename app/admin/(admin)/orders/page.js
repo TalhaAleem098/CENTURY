@@ -117,6 +117,62 @@ export default function OrdersPage() {
     }
   };
 
+  // Cancel order and update monthly sales
+  const handleCancelOrder = async (orderId) => {
+    if (!confirm('Are you sure you want to cancel this order? This will update monthly sales data.')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/orders/cancel/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast.success(data.message || 'Order cancelled successfully');
+        fetchOrders(); // Refresh orders
+      } else {
+        toast.error(data.error || 'Failed to cancel order');
+      }
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      toast.error('Error cancelling order');
+    }
+  };
+
+  // Delete order permanently (no monthly sales update)
+  const handleDeleteOrder = async (orderId) => {
+    if (!confirm('Are you sure you want to DELETE this order permanently? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast.success(data.message || 'Order deleted successfully');
+        fetchOrders(); // Refresh orders
+      } else {
+        toast.error(data.error || 'Failed to delete order');
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast.error('Error deleting order');
+    }
+  };
+
   // Generate barcode for invoice (client fetches from API route)
   useEffect(() => {
     if (showInvoiceModal && selectedInvoiceOrder) {
@@ -477,6 +533,30 @@ export default function OrdersPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                           Download PDF
+                        </button>
+                        
+                        {/* Cancel Button - Only show if order is not already cancelled */}
+                        {order.status !== 'cancelled' && (
+                          <button
+                            onClick={() => handleCancelOrder(order._id)}
+                            className="bg-orange-600 text-white px-3 py-1 rounded text-xs hover:bg-orange-700 transition-colors flex items-center justify-center gap-1"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancel Order
+                          </button>
+                        )}
+                        
+                        {/* Delete Button - Always show with warning */}
+                        <button
+                          onClick={() => handleDeleteOrder(order._id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700 transition-colors flex items-center justify-center gap-1"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Delete
                         </button>
                       </div>
                     </td>
