@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-
 const ADMIN_SECRET = process.env.JWT_SECRET || 'your_admin_secret';
-
 function parseJwt(token) {
   try {
     const base64Url = token.split('.')[1];
@@ -19,7 +17,6 @@ function parseJwt(token) {
     return null;
   }
 }
-
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   if (pathname.startsWith("/admin/login")) {
@@ -40,7 +37,6 @@ export function middleware(request) {
   }
   return NextResponse.next();
 }
-
 export const config = {
   matcher: ['/admin/:path*'],
 };

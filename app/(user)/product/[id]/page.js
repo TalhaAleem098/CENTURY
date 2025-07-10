@@ -738,26 +738,51 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Total Price */}
-            <div className="mb-6 sm:mb-8 p-4 bg-gray-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-base sm:text-lg font-semibold">
-                  Total:
-                </span>
-                <span className="text-xl sm:text-2xl font-bold text-black">
-                  ₨{totalPrice.toLocaleString()}
-                </span>
-              </div>
-            </div>
+
+            {(() => {
+              const deliveryCharge = 250;
+              const grandTotal = totalPrice + deliveryCharge;
+              return (
+                <div className="mb-6 sm:mb-8 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900 flex items-center gap-2">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-blue-500"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6 1a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Order Summary
+                  </h3>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-700">Subtotal</span>
+                    <span className="font-medium text-gray-900">₨{totalPrice.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-700">Delivery Charges</span>
+                    <span className="font-medium text-gray-900">₨{deliveryCharge.toLocaleString()}</span>
+                  </div>
+                  <div className="border-t border-gray-200 my-2"></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-bold text-gray-900">Grand Total</span>
+                    <span className="text-xl font-bold text-green-700">₨{grandTotal.toLocaleString()}</span>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Action Buttons */}
             <div className="flex gap-2">
-              <button
-                onClick={handlePlaceOrder}
-                className="w-full py-3 bg-black text-white rounded-sm font-semibold text-base sm:text-lg hover:bg-gray-800 transition-colors"
-              >
-                Place Order Now
-              </button>
+              {(() => {
+                const deliveryCharge = 250;
+                const grandTotal = totalPrice + deliveryCharge;
+                return (
+                  <button
+                    onClick={handlePlaceOrder}
+                    className="w-full py-3 bg-black text-white rounded-sm font-semibold text-base sm:text-lg hover:bg-gray-800 transition-colors flex flex-col items-center justify-center"
+                  >
+                    <span className="block sm:hidden">Place</span>
+                    <span className="hidden sm:block">Place Order Now</span>
+                    <span className="text-xs sm:text-sm font-normal mt-1 text-gray-200">
+                      Bill: ₨{grandTotal.toLocaleString()}
+                    </span>
+                  </button>
+                );
+              })()}
               <button
                 onClick={handleAddToCart}
                 className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-sm font-semibold hover:bg-gray-50 transition-colors text-base sm:text-lg"
