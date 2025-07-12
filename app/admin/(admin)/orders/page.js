@@ -970,52 +970,56 @@ export default function OrdersPage() {
                   maxWidth: '400px'
                 }}>
                     <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '9px', color: '#111', borderBottom: '1px solid #111', paddingBottom: '8px' }}>ORDER SUMMARY</div>
-                    {/* Subtotal */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
-                      <span style={{ flex: 1 }}>Subtotal:</span>
-                      <span style={{ flex: 1, fontWeight: '600' }}>₨{(selectedInvoiceOrder || selectedOrder)?.subtotalAmount.toLocaleString()}</span>
-                    </div>
-                    {/* Delivery Charges - Only show correct value */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
-                      <span style={{ flex: 1 }}>Delivery Charges:</span>
-                      <span style={{ flex: 1, fontWeight: '600' }}>
-                        {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0)
-                          ? 'FREE'
-                          : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
-                      </span>
-                    </div>
-                    {/* Payment Method */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
-                      <span style={{ flex: 1 }}>Payment Method:</span>
-                      <span style={{ flex: 1, fontWeight: '600' }}>{(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod || 'COD'}</span>
-                    </div>
-                    {/* Payment Status */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
-                      <span style={{ flex: 1 }}>Payment Status:</span>
-                      <span style={{ flex: 1, fontWeight: '700', color: (selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? '#059669' : '#d97706' }}>
-                        {(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
-                      </span>
-                    </div>
-                    {/* Total Amount - Subtotal + shippingCost only once */}
-                    <div style={{ 
-                      borderTop: '2px solid #111', 
-                      marginTop: '4px', 
-                      paddingTop: '4px', 
-                      display: 'flex', 
-                      justifyContent: 'center',
-                      fontSize: '10px', 
-                      fontWeight: '700',
-                      backgroundColor: '#111',
-                      color: '#fff',
-                      padding: '6px 8px',
-                      border: '2px solid #111',
-                      borderRadius: '0', // No rounded corners
-                      marginTop: '8px',
-                      textAlign: 'center'
-                    }}>
-                      <span style={{ flex: 1 }}>TOTAL AMOUNT:</span>
-                      <span style={{ flex: 1 }}>₨{((selectedInvoiceOrder || selectedOrder)?.totalAmount || 0).toLocaleString()}</span>
-                    </div>
+                    {/* Subtotal, Delivery, and Total calculated live from items */}
+                    {(() => {
+                      const order = selectedInvoiceOrder || selectedOrder;
+                      const subtotal = order?.items?.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0) || 0;
+                      const freeDeliveryThreshold = 4999;
+                      const shippingCost = subtotal >= freeDeliveryThreshold ? 0 : 250;
+                      const total = subtotal + shippingCost;
+                      return (
+                        <>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
+                            <span style={{ flex: 1 }}>Subtotal:</span>
+                            <span style={{ flex: 1, fontWeight: '600' }}>₨{subtotal.toLocaleString()}</span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
+                            <span style={{ flex: 1 }}>Delivery Charges:</span>
+                            <span style={{ flex: 1, fontWeight: '600' }}>{shippingCost === 0 ? 'FREE' : `₨${shippingCost.toLocaleString()}`}</span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2px', padding: '1px 0', textAlign: 'left' }}>
+                            <span style={{ flex: 1 }}>Payment Method:</span>
+                            <span style={{ flex: 1, fontWeight: '600' }}>{order?.customer?.paymentMethod || 'COD'}</span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px', padding: '1px 0', textAlign: 'left' }}>
+                            <span style={{ flex: 1 }}>Payment Status:</span>
+                            <span style={{ flex: 1, fontWeight: '700', color: order?.customer?.paymentMethod === 'Online' ? '#059669' : '#d97706' }}>
+                              {order?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
+                            </span>
+                          </div>
+                          <div style={{ 
+                            borderTop: '2px solid #111', 
+                            marginTop: '4px', 
+                            paddingTop: '4px', 
+                            display: 'flex', 
+                            justifyContent: 'center',
+                            fontSize: '10px', 
+                            fontWeight: '700',
+                            backgroundColor: '#111',
+                            color: '#fff',
+                            padding: '6px 8px',
+                            border: '2px solid #111',
+                            borderRadius: '0', // No rounded corners
+                            marginTop: '8px',
+                            textAlign: 'center'
+                          }}>
+                            <span style={{ flex: 1 }}>TOTAL AMOUNT:</span>
+                            <span style={{ flex: 1 }}>₨{total.toLocaleString()}</span>
+                          </div>
+                        </>
+                      );
+                    })()}
+                   
                   </div>
                 </div>
                 {/* Footer */}
