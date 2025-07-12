@@ -981,7 +981,7 @@ export default function OrdersPage() {
                       <span style={{ flex: 1, fontWeight: '600' }}>
                         {((selectedInvoiceOrder || selectedOrder)?.shippingCost === 0)
                           ? 'FREE'
-                          : `₨ 250`}
+                          : `₨${(selectedInvoiceOrder || selectedOrder)?.shippingCost.toLocaleString()}`}
                       </span>
                     </div>
                     {/* Payment Method */}
@@ -996,25 +996,25 @@ export default function OrdersPage() {
                         {(selectedInvoiceOrder || selectedOrder)?.customer?.paymentMethod === 'Online' ? 'PAID' : 'PENDING'}
                       </span>
                     </div>
-                    {/* Total Amount */}
+                    {/* Total Amount - Subtotal + shippingCost only once */}
                     <div style={{ 
-                  borderTop: '2px solid #111', 
-                  marginTop: '4px', 
-                  paddingTop: '4px', 
-                  display: 'flex', 
-                  justifyContent: 'center',
-                  fontSize: '10px', 
-                  fontWeight: '700',
-                  backgroundColor: '#111',
-                  color: '#fff',
-                  padding: '6px 8px',
-                  border: '2px solid #111',
-                  borderRadius: '0', // No rounded corners
-                  marginTop: '8px',
-                  textAlign: 'center'
-                }}>
+                      borderTop: '2px solid #111', 
+                      marginTop: '4px', 
+                      paddingTop: '4px', 
+                      display: 'flex', 
+                      justifyContent: 'center',
+                      fontSize: '10px', 
+                      fontWeight: '700',
+                      backgroundColor: '#111',
+                      color: '#fff',
+                      padding: '6px 8px',
+                      border: '2px solid #111',
+                      borderRadius: '0', // No rounded corners
+                      marginTop: '8px',
+                      textAlign: 'center'
+                    }}>
                       <span style={{ flex: 1 }}>TOTAL AMOUNT:</span>
-                      <span style={{ flex: 1 }}>₨{(selectedInvoiceOrder || selectedOrder)?.totalAmount.toLocaleString()}</span>
+                      <span style={{ flex: 1 }}>₨{((selectedInvoiceOrder || selectedOrder)?.totalAmount || 0).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
