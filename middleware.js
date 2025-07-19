@@ -18,23 +18,23 @@ function parseJwt(token) {
   }
 }
 export function middleware(request) {
-  const { pathname } = request.nextUrl;
-  if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
-  }
-  if (pathname.startsWith('/admin')) {
-    const token = request.cookies.get('admin_token')?.value;
-    if (!token) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-    const decoded = parseJwt(token);
-    if (!decoded || decoded.name !== 'admin' || !decoded.email) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-      return NextResponse.rewrite(new URL('/404', request.url));
-    }
-  }
+  // const { pathname } = request.nextUrl;
+  // if (pathname.startsWith("/admin/login")) {
+  //   return NextResponse.next();
+  // }
+  // if (pathname.startsWith('/admin')) {
+  //   const token = request.cookies.get('admin_token')?.value;
+  //   if (!token) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  //   const decoded = parseJwt(token);
+  //   if (!decoded || decoded.name !== 'admin' || !decoded.email) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  //   if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+  //     return NextResponse.rewrite(new URL('/404', request.url));
+  //   }
+  // }
   return NextResponse.next();
 }
 export const config = {
