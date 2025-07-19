@@ -397,11 +397,11 @@ const getEmailTemplate = (title, message, contactEmail, contactInfo) => {
                     ` : ''}
                 </div>
                 <div class="footer">
-                    <div class="footer-brand">CENTURY.COM</div>
+                    <div class="footer-brand">centurypk.com</div>
                     <div class="footer-description">Premium Fashion • Exclusive Collections • Worldwide Delivery</div>
                     <div class="unsubscribe">
                         You're receiving this email because you subscribed to our premium updates.<br>
-                        <a href="mailto:support@century.com?subject=Unsubscribe">Click here to unsubscribe</a> or contact our support team.
+                        <a href="mailto:support@centurypk.com?subject=Unsubscribe">Click here to unsubscribe</a> or contact our support team.
                     </div>
                 </div>
             </div>

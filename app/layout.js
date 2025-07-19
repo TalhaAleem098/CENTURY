@@ -80,7 +80,6 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify(structuredData),
           }}
         />
-        {/* Meta Pixel Code */}
         <Script id="fb-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -95,10 +94,8 @@ export default function RootLayout({ children }) {
             fbq('track', 'PageView');
           `}
         </Script>
-        {/* End Meta Pixel Code */}
       </head>
       <body>
-        {/* Meta Pixel NoScript */}
         <noscript>
           <img
             height="1"

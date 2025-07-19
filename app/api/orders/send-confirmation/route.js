@@ -407,12 +407,12 @@ const getOrderConfirmationTemplate = (order) => {
             
             <!-- Footer -->
             <div class="footer">
-                <div class="footer-brand">CENTURY.COM</div>
+                <div class="footer-brand">centurypk.com</div>
                 <div class="footer-description">Premium Fashion • Exclusive Collections • Worldwide Delivery</div>
                 <div class="contact-info">
-                    📧 <a href="mailto:support@century.com" class="contact-email">support@century.com</a><br>
+                    📧 <a href="mailto:support@centurypk.com" class="contact-email">support@centurypk.com</a><br>
                     📞 +92 123 456 7890<br>
-                    🌐 www.century.com<br><br>
+                    🌐 www.centurypk.com<br><br>
                     Thank you for choosing Century for your fashion needs!
                 </div>
             </div>

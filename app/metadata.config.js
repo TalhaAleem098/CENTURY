@@ -1,6 +1,6 @@
 export const siteConfig = {
   author: "Centuary Team",
-  siteUrl: "https://centuary.com", // Replace with actual Centuary domain
+  siteUrl: "https://centuarypk.com", // Replace with actual Centuary domain
   description:
     "Discover the latest trends in fashion at Centuary. Shop online for premium clothing, accessories, and lifestyle products. Enjoy exclusive deals, fast delivery, and a seamless shopping experience at your trusted ecommerce fashion store.",
   keywords: [
