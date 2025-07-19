@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://centuary.com
+Host: https://centurypk.com
 
 # Sitemaps
-Sitemap: https://centuary.com/sitemap.xml
+Sitemap: https://centurypk.com/sitemap.xml
