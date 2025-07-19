@@ -6,7 +6,7 @@ import rateLimit from '@/utils/rateLimit';
 import jwt from 'jsonwebtoken';
 
 const limiter = rateLimit({ windowMs: 60 * 1000, max: 5 }); // 5 requests per minute
-const JWT_SECRET = process.env.JWT_SECRET || 'centuarySuperSecretJwtKey';
+const JWT_SECRET = process.env.JWT_SECRET || 'centurySuperSecretJwtKey';
 
 export async function POST(req) {
   try {

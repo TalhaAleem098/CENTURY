@@ -2,7 +2,7 @@ import Link from 'next/link';
 import ProductCard from '../../../components/ProductCard';
 
 export const metadata = {
-  title: 'Shop All - Centuary Fashion Store',
+  title: 'Shop All - century Fashion Store',
   description: 'Browse our complete collection of premium clothing items. Find everything from oversized tees to hoodies.',
   keywords: 'shop all, clothing store, fashion, oversized tees, hoodies, sweatshirts, winter collection',
 };

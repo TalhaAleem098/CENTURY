@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ProductCard from '../../../components/ProductCard';
 
 export const metadata = {
-  title: 'Category - Centuary Fashion Store',
+  title: 'Category - century Fashion Store',
   description: 'Browse our premium collection of clothing items by category.',
 };
 

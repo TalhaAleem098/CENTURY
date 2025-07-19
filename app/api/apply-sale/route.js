@@ -3,7 +3,7 @@ import connectDB from '@/utils/connectDB';
 import Product from '@/models/Product.base';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'centuarySuperSecretJwtKey';
+const JWT_SECRET = process.env.JWT_SECRET || 'centurySuperSecretJwtKey';
 
 function verifyAdminToken(req) {
   // Get the cookie named 'admin_token' from the request

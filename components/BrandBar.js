@@ -162,7 +162,7 @@ const BrandBar = ({ onToggleSidebar }) => {
             <Link href="/" className="cursor-pointer">
               <Image
                 src="/CENTURY.png"
-                alt="Centuary Logo"
+                alt="century Logo"
                 width={180}
                 height={60}
                 className="select-none"
@@ -237,7 +237,7 @@ const BrandBar = ({ onToggleSidebar }) => {
             <Link href="/" className="cursor-pointer mr-3">
               <Image
                 src="/CENTURY.png"
-                alt="Centuary Logo"
+                alt="century Logo"
                 width={110}
                 height={36}
                 className="select-none"

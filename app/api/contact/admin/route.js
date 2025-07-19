@@ -3,7 +3,7 @@ import connectDB from "@/utils/connectDB";
 import Contact from "@/models/Contact";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "centuarySuperSecretJwtKey";
+const JWT_SECRET = process.env.JWT_SECRET || "centurySuperSecretJwtKey";
 
 function verifyAdminToken(req) {
   const cookieHeader = req.headers.get("cookie") || "";

@@ -1,11 +1,11 @@
 export const siteConfig = {
-  author: "Centuary Team",
-  siteUrl: "https://centurypk.com", // Replace with actual Centuary domain
+  author: "century Team",
+  siteUrl: "https://centurypk.com", // Replace with actual century domain
   description:
-    "Discover the latest trends in fashion at Centuary. Shop online for premium clothing, accessories, and lifestyle products. Enjoy exclusive deals, fast delivery, and a seamless shopping experience at your trusted ecommerce fashion store.",
+    "Discover the latest trends in fashion at century. Shop online for premium clothing, accessories, and lifestyle products. Enjoy exclusive deals, fast delivery, and a seamless shopping experience at your trusted ecommerce fashion store.",
   keywords: [
-    "Centuary",
-    "Centuary Marketplace",
+    "century",
+    "century Marketplace",
     "Online Marketplace",
     "Shop Online",
     "Buy and Sell Products",
@@ -19,25 +19,25 @@ export const siteConfig = {
     "Best Online Store",
     "Ecommerce Website",
     "Quality Items Cheap Prices",
-    "Centuary Storefront",
+    "century Storefront",
     "Multi Vendor Marketplace",
     "Shop Now Deals",
     "Top Online Deals",
-    "Centuary Best Prices",
+    "century Best Prices",
     "Reliable Online Shopping",
     "Safe Online Payments",
     "One Stop Marketplace",
-    "Centuary Mega Sale",
+    "century Mega Sale",
     "Modern Marketplace UI",
     "Next.js Ecommerce",
     "Fast and Secure Shopping",
-    "Centuary Shop",
-    "Centuary Buy Online",
+    "century Shop",
+    "century Buy Online",
     "Online Bazaar",
-    "Centuary Web Solutions"
+    "century Web Solutions"
   ],
   openGraphDescription:
-    "Centuary is your trusted online marketplace offering premium products at the best prices. Browse categories like electronics, fashion, home decor, and more.",
+    "century is your trusted online marketplace offering premium products at the best prices. Browse categories like electronics, fashion, home decor, and more.",
   twitterDescription:
-    "Explore trending deals on Centuary – a full-featured ecommerce marketplace built for smart shoppers.",
+    "Explore trending deals on century – a full-featured ecommerce marketplace built for smart shoppers.",
 };

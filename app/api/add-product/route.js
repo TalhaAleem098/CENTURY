@@ -3,7 +3,7 @@ import connectDB from '@/utils/connectDB';
 import { Product, TShirt } from '@/models/Product';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'centuarySuperSecretJwtKey';
+const JWT_SECRET = process.env.JWT_SECRET || 'centurySuperSecretJwtKey';
 
 function verifyAdminToken(req) {
   // const auth = req.headers.get('authorization') || '';

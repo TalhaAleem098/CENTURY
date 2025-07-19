@@ -5,28 +5,28 @@ import { siteConfig } from '@/app/metadata.config';
 export default function SeoProvider() {
   return (
     <DefaultSeo
-      title="Centuary – Premium Online Marketplace"
+      title="century – Premium Online Marketplace"
       description={siteConfig.description}
       canonical={siteConfig.siteUrl}
       openGraph={{
         type: 'website',
         locale: 'en_US',
         url: siteConfig.siteUrl,
-        site_name: 'Centuary',
-        title: 'Centuary – Premium Online Marketplace',
+        site_name: 'century',
+        title: 'century – Premium Online Marketplace',
         description: siteConfig.openGraphDescription,
         images: [
           {
             url: `${siteConfig.siteUrl}/og-image.jpg`,
             width: 1200,
             height: 630,
-            alt: 'Centuary Homepage Banner',
+            alt: 'century Homepage Banner',
           },
         ],
       }}
       twitter={{
-        handle: '@centuary',
-        site: '@centuary',
+        handle: '@century',
+        site: '@century',
         cardType: 'summary_large_image',
       }}
       additionalMetaTags={[
