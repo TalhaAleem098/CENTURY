@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Tooltip } from "react-tooltip";
 import { uploadImageToCloudinary } from "./cloudinary-server";
 import { readFileAsArrayBuffer } from "@/utils/readFileAsArrayBuffer";
+import { fetchWithTimeout, uploadImageWithRetry } from "@/utils/fetchUtils";
 
 export default function AddProductPage() {
   const { register, handleSubmit, control, reset, watch, setValue } = useForm({
@@ -159,23 +160,42 @@ export default function AddProductPage() {
   }
   async function uploadToCloudinary(files) {
     setTooltip("Uploading images to Cloudinary...");
+    
     const uploaders = files.map(async (file, idx) => {
-      const buffer = await readFileAsArrayBuffer(file);
-      const baseName = file.name.replace(/\.[^/.]+$/, "");
-      const uniqueSuffix = `${Date.now()}-${Math.random()
-        .toString(36)
-        .substr(2, 6)}`;
-      const fileName = `${baseName}-${uniqueSuffix}`;
-      const result = await uploadImageToCloudinary(buffer, fileName);
-      if (!result.public_id || !result.url)
-        throw new Error("Cloudinary upload failed");
-      return { public_id: result.public_id, url: result.url };
+      try {
+        setTooltip(`Uploading image ${idx + 1} of ${files.length}...`);
+        
+        const buffer = await readFileAsArrayBuffer(file);
+        const baseName = file.name.replace(/\.[^/.]+$/, "");
+        const uniqueSuffix = `${Date.now()}-${Math.random()
+          .toString(36)
+          .substr(2, 6)}`;
+        const fileName = `${baseName}-${uniqueSuffix}`;
+        
+        // Use retry logic for image upload
+        const result = await uploadImageWithRetry(uploadImageToCloudinary, buffer, fileName);
+        
+        if (!result.public_id || !result.url) {
+          throw new Error(`Cloudinary upload failed for image ${idx + 1}`);
+        }
+        
+        return { public_id: result.public_id, url: result.url };
+      } catch (error) {
+        console.error(`Failed to upload image ${idx + 1}:`, error);
+        throw new Error(`Failed to upload image ${idx + 1}: ${error.message}`);
+      }
     });
-    const uploaded = await Promise.all(uploaders);
-    setTooltip("Images uploaded successfully!");
-    await new Promise((res) => setTimeout(res, 800));
-    setTooltip("Uploading product data...");
-    return uploaded;
+
+    try {
+      const uploaded = await Promise.all(uploaders);
+      setTooltip("Images uploaded successfully!");
+      await new Promise((res) => setTimeout(res, 800));
+      setTooltip("Uploading product data...");
+      return uploaded;
+    } catch (error) {
+      setTooltip("");
+      throw new Error(`Image upload failed: ${error.message}`);
+    }
   }
 
   const onSubmit = async (data) => {
@@ -259,16 +279,40 @@ export default function AddProductPage() {
           formData.append(key, value);
         }
       });
-      const res = await fetch("/api/add-product", {
-        method: "POST",
-        body: formData,
-      });
-      if (!res.ok) throw new Error("Failed to add product");
-      setSuccess(true);
-      reset();
-      setPreviews([]);
-      setTooltip("");
-      toast("Product added successfully!");
+
+      // Create AbortController for timeout handling
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+      try {
+        const res = await fetch("/api/add-product", {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+          // Add headers for better handling
+          headers: {
+            'Cache-Control': 'no-cache',
+          }
+        });
+        clearTimeout(timeoutId);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Failed to add product: ${errorText}`);
+        }
+        
+        setSuccess(true);
+        reset();
+        setPreviews([]);
+        setTooltip("");
+        toast("Product added successfully!");
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === 'AbortError') {
+          throw new Error("Request timed out. Please try again.");
+        }
+        throw fetchError;
+      }
     } catch (err) {
       setError(err.message || "Something went wrong");
       setTooltip("");
